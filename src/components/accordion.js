@@ -1,6 +1,7 @@
 // src/components/Accordion.js
 import React, { useState } from "react"
 import styled from "@emotion/styled"
+import { CaretDown, CaretUp } from "@phosphor-icons/react"
 
 const Accordion = ({ title, children, defaultOpen = false }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen)
@@ -9,7 +10,7 @@ const Accordion = ({ title, children, defaultOpen = false }) => {
     <AccordionContainer>
       <AccordionHeader onClick={() => setIsOpen(!isOpen)}>
         {title}
-        <span>{isOpen ? "-" : "+"}</span>
+        <span>{isOpen ? <CaretUp /> : <CaretDown />}</span>
       </AccordionHeader>
       <AccordionContent isOpen={isOpen}>{children}</AccordionContent>
     </AccordionContainer>

@@ -1,39 +1,68 @@
 import * as React from "react"
+import { useState } from "react"
 import { Link } from "gatsby"
 import styled from "@emotion/styled"
+import { List } from "@phosphor-icons/react"
 
 import logo from "../images/logo.svg"
-import ButtonPrimary from "./buttons/buttonPrimary"
+import { breakpoints } from "../styles/breakpoints"
 
-const Header = ({ siteTitle }) => (
-  <Container>
-    <Link to="/">
-      <Logo src={logo} alt={siteTitle} />
-    </Link>
-    <Nav>
-      <ul>
-        <NavItem>
-          <Link to="/docs">Docs</Link>
-        </NavItem>
-        <NavItem>
-          <Link to="/apis">APIs</Link>
-        </NavItem>
-        <NavItem>
-          <Link to="/user-guide">User Guides</Link>
-        </NavItem>
-        <li>
-          <ButtonPrimary title="Login" url="https://console.phygrid.com" />
-        </li>
-      </ul>
-    </Nav>
-  </Container>
-)
+import {
+  primaryButtonStyles,
+  secondaryButtonStyles,
+} from "../styles/buttonStyles"
+
+const Header = ({ siteTitle }) => {
+  const [openMenu, setOpenMenu] = useState(false)
+  const toggleMenu = () => {
+    setOpenMenu(prev => !prev)
+  }
+
+  return (
+    <Container>
+      <Link to="/">
+        <Logo src={logo} alt={siteTitle} />
+      </Link>
+      <Nav open={openMenu}>
+        <ul>
+          <NavItem>
+            <Link to="/docs">Docs</Link>
+          </NavItem>
+          <NavItem>
+            <Link to="/apis">APIs</Link>
+          </NavItem>
+          <NavItem>
+            <Link to="/user-guide">User Guides</Link>
+          </NavItem>
+          <li>
+            <ButtonPrimary href="https://console.phygrid.com">
+              Login
+            </ButtonPrimary>
+          </li>
+          <li>
+            <MenuButton onClick={toggleMenu}>
+              <List />
+            </MenuButton>
+          </li>
+        </ul>
+      </Nav>
+    </Container>
+  )
+}
 
 export default Header
 
+const ButtonPrimary = styled.a`
+  ${primaryButtonStyles}
+
+  font-size: var(--font-lg);
+  padding: var(--space-1) var(--space-2);
+`
+
 const Nav = styled.nav`
-  display: flex;
   align-items: center;
+  display: flex;
+
   ul {
     display: flex;
     list-style: none;
@@ -48,10 +77,14 @@ const Nav = styled.nav`
 `
 
 const NavItem = styled.li`
+  display: none;
+  @media (min-width: ${breakpoints.md}) {
+    display: block;
+  }
+
   a {
     color: var(--color-text);
     text-decoration: none;
-    display: block;
     padding: var(--space-1) var(--space-2);
     border-radius: var(--border-radius);
 
@@ -65,6 +98,15 @@ const NavItem = styled.li`
     }
   }
 `
+
+const MenuButton = styled.button`
+  ${secondaryButtonStyles}
+  color: var(--color-text);
+  @media (min-width: ${breakpoints.md}) {
+    display: none !important;
+  }
+`
+
 const Logo = styled.img`
   height: 40px;
   margin: 0;
@@ -76,8 +118,4 @@ const Container = styled.header`
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--color-border);
-  a {
-    align-self: center;
-    display: flex;
-  }
 `

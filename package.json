@@ -11,6 +11,7 @@
     "@emotion/styled": "^11.13.0",
     "@gatsby-contrib/gatsby-plugin-elasticlunr-search": "^3.0.2",
     "@mdx-js/react": "^3.1.0",
+    "@phosphor-icons/react": "^2.1.7",
     "add": "^2.0.6",
     "gatsby": "^5.14.0",
     "gatsby-plugin-algolia": "^1.0.3",

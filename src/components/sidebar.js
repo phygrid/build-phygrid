@@ -4,6 +4,7 @@ import { graphql, useStaticQuery, Link } from "gatsby"
 import styled from "@emotion/styled"
 import Accordion from "./accordion"
 import { useLocation } from "@reach/router"
+import { CaretDown, CaretUp } from "@phosphor-icons/react"
 
 import { breakpoints } from "../styles/breakpoints"
 
@@ -92,7 +93,10 @@ const Sidebar = () => {
 
   return (
     <SidebarContainer>
-      <ToggleSidebar onClick={toggleBrowseTopics}>Browse Topics</ToggleSidebar>
+      <ToggleSidebar onClick={toggleBrowseTopics}>
+        <span>Browse Topics</span>
+        {browseTopics ? <CaretUp /> : <CaretDown />}
+      </ToggleSidebar>
       <Nav open={browseTopics}>{renderSections(nestedSections)}</Nav>
     </SidebarContainer>
   )
@@ -102,6 +106,11 @@ export default Sidebar
 
 const ToggleSidebar = styled.div`
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--font-sm);
+  padding: var(--space-1) var(--space-2);
+
   @media (min-width: ${breakpoints.md}) {
     display: none;
   }
@@ -123,18 +132,18 @@ const SidebarContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
   padding: var(--space-2);
 
   @media (min-width: ${breakpoints.md}) {
     width: 300px;
     border-bottom: 0;
+    border-right: 1px solid var(--color-border);
   }
 
   /* Target top-level <li> elements in the sidebar navigation */
   nav > ul > li {
-    margin-bottom: var(--space-2);
+    /* margin-bottom: var(--space-2); */
     /* border-left: 1px solid #fff; */
   }
   ul {

@@ -1,3 +1,4 @@
+// src/templates/docTemplate.js
 import React from "react"
 import { graphql } from "gatsby"
 import { MDXProvider } from "@mdx-js/react"
@@ -7,15 +8,26 @@ import Layout from "../components/layout"
 
 const DocTemplate = ({ data, children }) => {
   const { title } = data.mdx.frontmatter
+  const { slug } = data.mdx.fields
 
-  // Customize MDX elements
-  // const components = {
-  //   h1: (props) => <h1 style={{ color: "tomato" }} {...props} />,
-  //   p: (props) => <p style={{ fontSize: "18px", lineHeight: 1.6 }} {...props} />,
-  // };
+  // Function to convert slug to title format, reversed for desired hierarchy
+  const generateTitleFromSlug = slug => {
+    return slug
+      .split("/")
+      .filter(part => part) // Remove empty strings from leading/trailing slashes
+      .reverse() // Reverse the order to match desired hierarchy
+      .map(part =>
+        part.replace(/-/g, " ").replace(/\b\w/g, char => char.toUpperCase())
+      )
+      .join(" - ")
+  }
+
+  // Use either the frontmatter title or a generated title from slug
+  const seoTitle = title || generateTitleFromSlug(slug)
 
   return (
     <Layout>
+      <Seo title={seoTitle} />
       <h1>{title}</h1>
       <MDXProvider>
         <div>{children}</div>
@@ -29,6 +41,9 @@ export const query = graphql`
     mdx(id: { eq: $id }) {
       frontmatter {
         title
+      }
+      fields {
+        slug
       }
     }
   }
