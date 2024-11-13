@@ -96,6 +96,7 @@ const SidebarContainer = styled.div`
   width: 300px;
   display: flex;
   border-right: 1px solid var(--color-border);
+  padding: var(--space-2);
 
   nav {
     width: 100%;
@@ -104,10 +105,19 @@ const SidebarContainer = styled.div`
     align-self: flex-start;
   }
 
+  /* Target top-level <li> elements in the sidebar navigation */
+  nav > ul > li {
+    margin-bottom: var(--space-2);
+    /* border-left: 1px solid #fff; */
+  }
   ul {
     margin: 0;
     padding: 0;
     list-style: none;
+
+    li {
+      margin: 0;
+    }
   }
 
   a.active {

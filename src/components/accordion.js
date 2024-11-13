@@ -19,7 +19,6 @@ const Accordion = ({ title, children, defaultOpen = false }) => {
 export default Accordion
 
 const AccordionContainer = styled.div`
-  margin-bottom: var(--space-1);
   display: block;
   width: 100%;
 `
@@ -30,10 +29,11 @@ const AccordionHeader = styled.div`
   justify-content: space-between;
   cursor: pointer;
   font-weight: bold;
-  padding: var(--space-1) 0;
+  padding: var(--space-2);
   color: var(--color-title);
   font-size: var(--font-xs);
   text-transform: uppercase;
+  border-radius: var(--border-radius);
 
   &:hover {
     background: var(--color-hover-bg);
@@ -44,6 +44,11 @@ const AccordionContent = styled.div`
   max-height: ${({ isOpen }) => (isOpen ? "1000px" : "0")};
   overflow: hidden;
   transition: max-height 0.3s ease;
+  display: block;
   padding: ${({ isOpen }) =>
-    isOpen ? "var(--space-1) var(--space-2)" : "0 var(--space-2)"};
+    isOpen
+      ? "var(--space-1) 0 var(--space-1) var(--space-2)"
+      : "0 0 0 var(--space-2)"};
+  /* border-left: ${({ isOpen }) =>
+    isOpen ? "1px solid var(--color-primary)" : "0"}; */
 `

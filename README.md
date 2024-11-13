@@ -1,6 +1,6 @@
 # Phygrid Developer Documentation 🚀
 
-This is a Gatsby-based documentation website for **Project Name**. The site is organized using a folder-based structure, with support for MDX files that allow for React components, interactive elements, and custom styling. The documentation is organized into sections, and an expandable sidebar enables easy navigation through the nested folder structure.
+The site is organized using a folder-based structure, with support for MDX files that allow for React components, interactive elements, and custom styling. The documentation is organized into sections, and an expandable sidebar enables easy navigation through the nested folder structure.
 
 ![Alt Text](https://media.giphy.com/media/o0vwzuFwCGAFO/giphy.gif?cid=790b7611tpq5m5otqerlnwslqo4w0768xq1sjcsy6ikewcse&ep=v1_gifs_search&rid=giphy.gif)
 

@@ -52,18 +52,21 @@ const NavItem = styled.li`
     color: var(--color-text);
     text-decoration: none;
     display: block;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--border-radius);
+
     & .active {
       color: var(--color-title);
     }
 
     &:hover {
       color: var(--color-title);
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--color-hover-bg);
     }
   }
 `
 const Logo = styled.img`
-  height: 30px;
+  height: 40px;
   margin: 0;
 `
 const Container = styled.header`
