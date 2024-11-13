@@ -2,6 +2,8 @@
 
 This is a Gatsby-based documentation website for **Project Name**. The site is organized using a folder-based structure, with support for MDX files that allow for React components, interactive elements, and custom styling. The documentation is organized into sections, and an expandable sidebar enables easy navigation through the nested folder structure.
 
+[hacker](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExOGswZ2pvMGMxaTJsMzlmeG1waGs5cHMzZTRoOXJ3dWpyeGVoazdiNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YQitE4YNQNahy/giphy-downsized-large.gif)
+
 ## Table of Contents
 
 - [Phygrid Developer Documentation 🚀](#phygrid-developer-documentation-)
@@ -110,7 +112,7 @@ Here’s a breakdown of the primary folders in the project:
 
 ## Contributing
 
-If you’d like to contribute to this project, please fork the repository and create a pull request with your changes. Make sure to run the project locally and test your changes before submitting.
+If you’d like to contribute to this project, please create a pull request with your changes. Make sure to run the project locally and test your changes before submitting.
 
 ## License
 
