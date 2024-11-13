@@ -2,7 +2,7 @@
 
 This is a Gatsby-based documentation website for **Project Name**. The site is organized using a folder-based structure, with support for MDX files that allow for React components, interactive elements, and custom styling. The documentation is organized into sections, and an expandable sidebar enables easy navigation through the nested folder structure.
 
-[hacker](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExOGswZ2pvMGMxaTJsMzlmeG1waGs5cHMzZTRoOXJ3dWpyeGVoazdiNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YQitE4YNQNahy/giphy-downsized-large.gif)
+![Alt Text](https://media.giphy.com/media/o0vwzuFwCGAFO/giphy.gif?cid=790b7611tpq5m5otqerlnwslqo4w0768xq1sjcsy6ikewcse&ep=v1_gifs_search&rid=giphy.gif)
 
 ## Table of Contents
 
