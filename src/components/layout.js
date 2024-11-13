@@ -9,6 +9,7 @@ import * as React from "react"
 import { useStaticQuery, graphql } from "gatsby"
 import styled from "@emotion/styled"
 
+import { breakpoints } from "../styles/breakpoints"
 import Header from "./header"
 import Sidebar from "./sidebar"
 import "./global.css"
@@ -56,6 +57,10 @@ const Wrapper = styled.div``
 
 const Container = styled.div`
   display: flex;
+  flex-direction: column;
+  @media (min-width: ${breakpoints.md}) {
+    flex-direction: row;
+  }
 `
 const Page = styled.div`
   display: flex;

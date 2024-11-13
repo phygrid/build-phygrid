@@ -40,7 +40,7 @@ const Nav = styled.nav`
     align-items: center;
     margin: 0;
     padding: 0;
-    gap: var(--space-4);
+    gap: var(--space-2);
   }
   li {
     margin: 0;

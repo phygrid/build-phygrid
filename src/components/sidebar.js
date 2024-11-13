@@ -1,9 +1,11 @@
 // src/components/Sidebar.js
-import React from "react"
+import React, { useState } from "react"
 import { graphql, useStaticQuery, Link } from "gatsby"
 import styled from "@emotion/styled"
 import Accordion from "./accordion"
 import { useLocation } from "@reach/router"
+
+import { breakpoints } from "../styles/breakpoints"
 
 const Sidebar = () => {
   const location = useLocation()
@@ -27,6 +29,11 @@ const Sidebar = () => {
       }
     }
   `)
+
+  const [browseTopics, setBrowseTopics] = useState(false)
+  const toggleBrowseTopics = () => {
+    setBrowseTopics(prev => !prev)
+  }
 
   // Build a nested structure from the folder paths
   const buildNestedStructure = nodes => {
@@ -85,24 +92,44 @@ const Sidebar = () => {
 
   return (
     <SidebarContainer>
-      <nav>{renderSections(nestedSections)}</nav>
+      <ToggleSidebar onClick={toggleBrowseTopics}>Browse Topics</ToggleSidebar>
+      <Nav open={browseTopics}>{renderSections(nestedSections)}</Nav>
     </SidebarContainer>
   )
 }
 
 export default Sidebar
 
-const SidebarContainer = styled.div`
-  width: 300px;
+const ToggleSidebar = styled.div`
   display: flex;
+  @media (min-width: ${breakpoints.md}) {
+    display: none;
+  }
+`
+
+const Nav = styled.nav`
+  width: 100%;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  display: ${props => (props.open ? "block" : "none")};
+
+  @media (min-width: ${breakpoints.md}) {
+    display: block;
+  }
+`
+
+const SidebarContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
   border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
   padding: var(--space-2);
 
-  nav {
-    width: 100%;
-    position: sticky;
-    top: 0;
-    align-self: flex-start;
+  @media (min-width: ${breakpoints.md}) {
+    width: 300px;
+    border-bottom: 0;
   }
 
   /* Target top-level <li> elements in the sidebar navigation */
