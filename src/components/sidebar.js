@@ -1,0 +1,130 @@
+// src/components/Sidebar.js
+import React from "react"
+import { graphql, useStaticQuery, Link } from "gatsby"
+import styled from "@emotion/styled"
+import Accordion from "./accordion"
+import { useLocation } from "@reach/router"
+
+const Sidebar = () => {
+  const location = useLocation()
+  const data = useStaticQuery(graphql`
+    query {
+      allMdx(
+        sort: [{ fields: { section: ASC } }, { frontmatter: { order: ASC } }]
+      ) {
+        nodes {
+          fields {
+            slug
+            section
+            title
+            pathParts
+          }
+          frontmatter {
+            title
+            order
+          }
+        }
+      }
+    }
+  `)
+
+  // Build a nested structure from the folder paths
+  const buildNestedStructure = nodes => {
+    const nestedStructure = {}
+
+    nodes.forEach(node => {
+      const { pathParts, slug } = node.fields
+      const title = node.frontmatter.title || node.fields.title
+
+      let currentLevel = nestedStructure
+
+      pathParts.forEach((part, index) => {
+        if (!currentLevel[part]) {
+          currentLevel[part] = { title: part, children: {} }
+        }
+        if (index === pathParts.length - 1) {
+          currentLevel[part].children[slug] = { title, slug }
+        } else {
+          currentLevel = currentLevel[part].children
+        }
+      })
+    })
+
+    return nestedStructure
+  }
+
+  const nestedSections = buildNestedStructure(data.allMdx.nodes)
+
+  // Recursive function to render nested sections as accordions
+  const renderSections = sections => (
+    <ul>
+      {Object.keys(sections).map(key => {
+        const section = sections[key]
+        const isFolder =
+          section.children && Object.keys(section.children).length > 0
+
+        return (
+          <li key={key}>
+            {isFolder ? (
+              <Accordion
+                title={section.title.replace(/-/g, " ").toUpperCase()}
+                defaultOpen={location.pathname.includes(key)}
+              >
+                {renderSections(section.children)}
+              </Accordion>
+            ) : (
+              <StyledLink to={section.slug} activeClassName="active">
+                {section.title}
+              </StyledLink>
+            )}
+          </li>
+        )
+      })}
+    </ul>
+  )
+
+  return (
+    <SidebarContainer>
+      <nav>{renderSections(nestedSections)}</nav>
+    </SidebarContainer>
+  )
+}
+
+export default Sidebar
+
+const SidebarContainer = styled.div`
+  width: 300px;
+  display: flex;
+  border-right: 1px solid var(--color-border);
+
+  nav {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  a.active {
+    background: var(--color-primary);
+    color: #fff;
+  }
+`
+
+const StyledLink = styled(Link)`
+  color: var(--color-text);
+  display: block;
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--font-sm);
+  text-decoration: none;
+  border-radius: var(--border-radius);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+`
