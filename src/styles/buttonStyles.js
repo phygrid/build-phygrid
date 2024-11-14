@@ -5,7 +5,7 @@ export const primaryButtonStyles = css`
   all: unset;
   display: flex;
   flex: 0 none;
-  padding: 10px 20px;
+  /* padding: 10px 20px; */
   color: var(--color-black);
   background-color: var(--color-primary);
   border-radius: var(--border-radius);
@@ -13,7 +13,7 @@ export const primaryButtonStyles = css`
   justify-content: center;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  /* transition: all 0.3s ease; */
   font-size: var(--font-sm);
   /* line-height: 1; */
   font-weight: 700;
@@ -21,7 +21,7 @@ export const primaryButtonStyles = css`
 
   &:hover {
     color: var(--color-primary);
-    background: var(--color-black);
+    background: var(--color-hover-bg);
   }
 `
 
