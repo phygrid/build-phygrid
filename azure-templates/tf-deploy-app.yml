@@ -1,0 +1,55 @@
+steps:
+  - task: DownloadBuildArtifacts@0
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: 'drop'
+      publishLocation: 'Container'
+      downloadType: 'single'
+      downloadPath: '$(System.ArtifactsDirectory)'
+      cleanDestinationFolder: true
+  - bash: |
+      export GRID_ENV=${{ parameters.dataResidency }}
+      export GRID_ENV=${GRID_ENV^^}
+      export AZURE_STORAGE_KEY=$(ARM_ACCESS_KEY)
+      export ARM_SUBSCRIPTION_VARIABLE=ARM_SUBSCRIPTION_ID_${GRID_ENV}
+      export ARM_SUBSCRIPTION_ID=${!ARM_SUBSCRIPTION_VARIABLE}
+      export ARM_ACCESS_KEY=$(ARM_ACCESS_KEY)
+      export ARM_CLIENT_SECRET=$(ARM_CLIENT_SECRET)
+      export PROJECT_NAME=${{ parameters.projectName }}
+
+      if [ $GRID_ENV == "DEV" ]; then
+        echo "DEVELOPER GLOBAL SUBSCRIPTION"
+        export ARM_GLOBAL_SUBSCRIPTION_VARIABLE=ARM_SUBSCRIPTION_ID_GLOBALDEV
+      else
+        echo "PRODUCTION GLOBAL SUBSCRIPTION"
+        export ARM_GLOBAL_SUBSCRIPTION_VARIABLE=ARM_SUBSCRIPTION_ID_GLOBAL
+      fi
+      export ARM_GLOBAL_SUBSCRIPTION_ID=${!ARM_GLOBAL_SUBSCRIPTION_VARIABLE}
+
+      unzip $(System.ArtifactsDirectory)/drop/$(Build.BuildId).zip -d ./deployment
+
+      # Deploy app to Cloudflare pages
+
+      pushd .
+      cd ./terraform
+      perl -pi.bak -e "s/__project_name__/${{ parameters.projectName }}/g" main.tf
+      perl -pi.bak -e "s/__global_subscription_id__/${ARM_GLOBAL_SUBSCRIPTION_ID}/g" main.tf
+
+      terraform init
+      terraform workspace select ${GRID_ENV^^}
+
+      export NVM_DIR="$HOME/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+      nvm -v
+      nvm install --lts
+      npm install wrangler --save-dev
+      npx wrangler --version
+
+      export CLOUDFLARE_API_TOKEN=$(terraform output -raw console_deployment_cloudflare_token)
+      export CLOUDFLARE_ACCOUNT_ID=$(terraform output -raw console_deployment_cloudflare_account_id)
+      export CLOUDFLARE_PAGES_PROJECT_NAME=$(terraform output -raw console_deployment_cloudflare_pages_name)
+      
+      popd
+      
+      npx wrangler pages deploy --project-name $CLOUDFLARE_PAGES_PROJECT_NAME --branch main ./deployment

@@ -1,0 +1,49 @@
+steps:
+  # - task: AuthenticatedBash@1
+  #   displayName: 'Snyk Security Scan'
+  #   inputs:
+  #     serviceConnection: 'snykscript'
+  #     targetType: inline
+  #     script: |
+  #       export SNYK_TOKEN=$AS_SC_PASSWORD
+  #       echo Downloading Snyk
+  #       curl https://static.snyk.io/cli/latest/snyk-win.exe -o snyk.exe
+  #       chmod +x ./snyk.exe
+
+  #       echo Executing Snyk
+  #       # ./snyk.exe code test --severity-threshold=medium .
+  #       # ./snyk.exe test --severity-threshold=medium .
+  #       cd terraform
+  #       # TODO tmp disable
+  #       # ./snyk.exe iac test --severity-threshold=medium .
+  - task: NodeTool@0
+    displayName: 'Install Node.js'
+    inputs:
+      versionSpec: '16.x'
+  - script: |
+      export NPM_TOKEN=$(NPM_TOKEN)
+      npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN
+    displayName: 'Configure the private NPM registry'
+  - script: |
+      yarn install --frozen-lockfile
+    displayName: 'Install NPM dependencies'
+  - script: yarn test
+    displayName: 'Test'
+  - script: yarn run build
+    displayName: 'Build'
+    env:
+      NODE_OPTIONS: --max_old_space_size=16384
+  - task: ArchiveFiles@2
+    displayName: 'Archive files'
+    inputs:
+      rootFolderOrFile: '$(Build.SourcesDirectory)/build'
+      includeRootFolder: false
+      archiveType: 'zip'
+      replaceExistingArchive: true
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish the artifact'
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: 'drop'
+      publishLocation: 'Container'

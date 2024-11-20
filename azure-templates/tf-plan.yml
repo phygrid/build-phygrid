@@ -1,0 +1,31 @@
+steps:
+  - checkout: self
+  - bash: |
+      export GRID_ENV=${{ parameters.dataResidency }}
+      export GRID_ENV=${GRID_ENV^^}
+      export AZURE_STORAGE_KEY=$(ARM_ACCESS_KEY)
+      export ARM_SUBSCRIPTION_VARIABLE=ARM_SUBSCRIPTION_ID_${GRID_ENV}
+      export ARM_SUBSCRIPTION_ID=${!ARM_SUBSCRIPTION_VARIABLE}
+      export ARM_ACCESS_KEY=$(ARM_ACCESS_KEY)
+      export ARM_CLIENT_SECRET=$(ARM_CLIENT_SECRET)
+      export PROJECT_NAME=${{ parameters.projectName }}
+
+      if [ $GRID_ENV == "DEV" ]; then
+        echo "DEVELOPER GLOBAL SUBSCRIPTION"
+        export ARM_GLOBAL_SUBSCRIPTION_VARIABLE=ARM_SUBSCRIPTION_ID_GLOBALDEV
+      else
+        echo "PRODUCTION GLOBAL SUBSCRIPTION"
+        export ARM_GLOBAL_SUBSCRIPTION_VARIABLE=ARM_SUBSCRIPTION_ID_GLOBAL
+      fi
+
+      export ARM_GLOBAL_SUBSCRIPTION_ID=${!ARM_GLOBAL_SUBSCRIPTION_VARIABLE}
+
+      cd ./terraform
+      perl -pi.bak -e "s/__project_name__/${{ parameters.projectName }}/g" main.tf
+      perl -pi.bak -e "s/__global_subscription_id__/${ARM_GLOBAL_SUBSCRIPTION_ID}/g" main.tf
+      
+      terraform init
+      terraform workspace new ${GRID_ENV^^} || :
+      terraform workspace select ${GRID_ENV^^}
+      terraform plan
+    displayName: Plan Infra

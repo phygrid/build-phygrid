@@ -1,0 +1,111 @@
+variables:
+  - name: projectName
+    value: 'phygridbuild'
+
+  - name: isMain
+    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+  - name: isDev
+    value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), startsWith(variables['Build.SourceBranch'], 'refs/heads/feature/DEVOPS-'))]
+
+trigger:
+ branches:
+   include:
+     - dev
+     - main
+     - feature/DEVOPS-*
+
+stages:
+  - stage: ScanAndCommitInfra
+    variables:
+    - group: omg-azure-developer
+    pool:
+      vmImage: ubuntu-latest
+    displayName: Prepare Infra
+    jobs:
+      - job: ScanAndBuildInfra
+        workspace:
+          clean: all
+        displayName: Scan and Build Infra
+        steps:
+          - checkout: self
+            lfs: true
+          - template: azure-templates/tf-scanandbuild-infra.yml
+            parameters:
+              dataResidency: dev
+              projectName: ${{ variables.projectName }}
+              npmToken: ${{ variables.NPM_TOKEN }}
+
+  - stage: ScanAndCommitApp
+    dependsOn: ScanAndCommitInfra
+    variables:
+    - group: omg-azure-developer
+    pool:
+      vmImage: ubuntu-latest
+    displayName: Prepare App
+    jobs:
+      - job: ScanAndBuildApp
+        workspace:
+          clean: all
+        displayName: Scan and Build App
+        steps:
+          - checkout: self
+            lfs: true
+          - template: azure-templates/tf-scanandbuild-app.yml
+            parameters:
+              dataResidency: dev
+              projectName: ${{ variables.projectName }}
+              npmToken: ${{ variables.NPM_TOKEN }}
+
+  - stage: DeployDev
+    variables:
+    - group: omg-azure-developer
+    displayName: Deploy to DEV
+    dependsOn: ScanAndCommitApp
+    condition: |
+      and(
+        succeeded('ScanAndCommitApp'),
+        eq(variables.isDev, 'true')
+      )
+    jobs:
+    - template: azure-templates/tf-workspace.yml
+      parameters:
+        dataResidency: dev
+        projectName: ${{ variables.projectName }}
+        azureSubscription: omg-global-dev
+        agentPool: omg-devops-globaldev
+
+  - stage: DeployQA
+    variables:
+    - group: omg-azure-production
+    displayName: Deploy to QA
+    dependsOn: ScanAndCommitApp
+    condition: |
+      and(
+        succeeded('ScanAndCommitApp'),
+        eq(variables.isMain, 'true')
+      )
+    jobs:
+      - template: azure-templates/tf-workspace.yml
+        parameters:
+          dataResidency: qa
+          projectName: ${{ variables.projectName }}
+          azureSubscription: omg-global
+          agentPool: omg-devops
+
+  - stage: DeployEU
+    variables:
+    - group: omg-azure-production
+    displayName: Deploy to PROD
+    dependsOn: ScanAndCommitApp
+    condition: |
+      and(
+        succeeded('ScanAndCommitApp'),
+        eq(variables.isMain, 'true')
+      )
+    jobs:
+      - template: azure-templates/tf-workspace.yml
+        parameters:
+          dataResidency: eu
+          projectName: ${{ variables.projectName }}
+          azureSubscription: omg-global
+          agentPool: omg-devops
