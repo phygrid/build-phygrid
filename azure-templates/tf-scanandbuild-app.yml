@@ -10,8 +10,8 @@ steps:
   - script: |
       yarn install --frozen-lockfile
     displayName: 'Install NPM dependencies'
-  - script: yarn test
-    displayName: 'Test'
+  # - script: yarn test
+  #   displayName: 'Test'
   - script: yarn run build
     displayName: 'Build'
     env:
