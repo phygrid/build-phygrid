@@ -1,4 +1,3 @@
-// src/components/Sidebar.js
 import React, { useState } from "react"
 import { graphql, useStaticQuery, Link } from "gatsby"
 import styled from "@emotion/styled"
@@ -10,21 +9,18 @@ import { breakpoints } from "../styles/breakpoints"
 
 const Sidebar = () => {
   const location = useLocation()
+
   const data = useStaticQuery(graphql`
     query {
-      allMdx(
-        sort: [{ fields: { section: ASC } }, { frontmatter: { order: ASC } }]
-      ) {
+      allMdx(sort: { fields: [fields___order], order: ASC }) {
         nodes {
           fields {
             slug
-            section
-            title
+            order
             pathParts
           }
           frontmatter {
             title
-            order
           }
         }
       }
@@ -36,26 +32,44 @@ const Sidebar = () => {
     setBrowseTopics(prev => !prev)
   }
 
-  // Build a nested structure from the folder paths
   const buildNestedStructure = nodes => {
     const nestedStructure = {}
 
     nodes.forEach(node => {
-      const { pathParts, slug } = node.fields
-      const title = node.frontmatter.title || node.fields.title
+      const { slug, order, pathParts } = node.fields
+      const title = node.frontmatter.title || "Untitled" // Get title from frontmatter
+      const folderKey = pathParts[0] // Top-level folder (e.g., "1-getting-started")
 
-      let currentLevel = nestedStructure
+      // Extract folder order and clean up folder title
+      const folderOrderMatch = folderKey.match(/^(\d+)-/)
+      const folderOrder = folderOrderMatch
+        ? parseInt(folderOrderMatch[1], 10)
+        : 0
+      const folderTitle = folderKey
+        .replace(/^\d+-/, "")
+        .replace(/-/g, " ")
+        .toUpperCase()
 
-      pathParts.forEach((part, index) => {
-        if (!currentLevel[part]) {
-          currentLevel[part] = { title: part, children: {} }
+      // Ensure the folder exists in the structure
+      if (!nestedStructure[folderKey]) {
+        nestedStructure[folderKey] = {
+          title: folderTitle,
+          order: folderOrder,
+          children: [],
         }
-        if (index === pathParts.length - 1) {
-          currentLevel[part].children[slug] = { title, slug }
-        } else {
-          currentLevel = currentLevel[part].children
-        }
+      }
+
+      // Add the file to the folder's children
+      nestedStructure[folderKey].children.push({
+        slug,
+        title, // Use the title from frontmatter
+        order,
       })
+    })
+
+    // Sort files within each folder by their order
+    Object.values(nestedStructure).forEach(folder => {
+      folder.children.sort((a, b) => a.order - b.order)
     })
 
     return nestedStructure
@@ -63,33 +77,44 @@ const Sidebar = () => {
 
   const nestedSections = buildNestedStructure(data.allMdx.nodes)
 
-  // Recursive function to render nested sections as accordions
-  const renderSections = sections => (
-    <ul>
-      {Object.keys(sections).map(key => {
-        const section = sections[key]
-        const isFolder =
-          section.children && Object.keys(section.children).length > 0
+  // Render nested sections as accordions
+  const renderSections = sections => {
+    // Sort folders by their order
+    const sortedFolders = Object.keys(sections).sort((a, b) => {
+      const orderA = sections[a].order || 0
+      const orderB = sections[b].order || 0
+      return orderA - orderB
+    })
 
-        return (
-          <li key={key}>
-            {isFolder ? (
-              <Accordion
-                title={section.title.replace(/-/g, " ").toUpperCase()}
-                defaultOpen={location.pathname.includes(key)}
-              >
-                {renderSections(section.children)}
+    return (
+      <ul>
+        {sortedFolders.map(key => {
+          const section = sections[key]
+
+          // Check if any child slug matches the current path to determine defaultOpen
+          const isDefaultOpen = section.children.some(child =>
+            location.pathname.includes(child.slug)
+          )
+
+          return (
+            <li key={key}>
+              <Accordion title={section.title} defaultOpen={isDefaultOpen}>
+                <ul>
+                  {section.children.map(child => (
+                    <li key={child.slug}>
+                      <StyledLink to={child.slug} activeClassName="active">
+                        {child.title}
+                      </StyledLink>
+                    </li>
+                  ))}
+                </ul>
               </Accordion>
-            ) : (
-              <StyledLink to={section.slug} activeClassName="active">
-                {section.title}
-              </StyledLink>
-            )}
-          </li>
-        )
-      })}
-    </ul>
-  )
+            </li>
+          )
+        })}
+      </ul>
+    )
+  }
 
   return (
     <SidebarContainer>
@@ -141,11 +166,10 @@ const SidebarContainer = styled.div`
     border-right: 1px solid var(--color-border);
   }
 
-  /* Target top-level <li> elements in the sidebar navigation */
   nav > ul > li {
-    /* margin-bottom: var(--space-2); */
-    /* border-left: 1px solid #fff; */
+    margin-bottom: var(--space-2);
   }
+
   ul {
     margin: 0;
     padding: 0;

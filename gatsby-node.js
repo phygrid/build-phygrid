@@ -7,22 +7,29 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     const fileNode = getNode(node.parent)
     if (fileNode && fileNode.relativePath) {
       const relativePath = fileNode.relativePath
-      const slug = `/${relativePath.replace(/\.mdx?$/, "")}` // Remove .md/.mdx extension
 
-      // Extract section (top-level folder) and title (filename without extension)
-      const pathParts = relativePath.split("/")
-      const section = pathParts.length > 1 ? pathParts[0] : null
-      const title = pathParts[pathParts.length - 1].replace(/\.mdx?$/, "")
+      // Extract folder and file info
+      const parts = relativePath.split(path.sep) // Split path into parts
+      const section = parts[0].replace(/^\d+-/, "") // Remove prefix from folder
+      const title = parts[parts.length - 1]
+        .replace(/^\d+-/, "")
+        .replace(/\.mdx?$/, "") // Remove prefix and file extension
 
-      // Add fields for slug, section, title, and pathParts (array of folder structure)
+      // Sortable numeric prefix
+      const prefixMatch = parts[parts.length - 1].match(/^(\d+)-/) // Match numeric prefix
+      const order = prefixMatch ? parseInt(prefixMatch[1], 10) : 0
+
+      // Build slug
+      const slug = `/${parts
+        .map(part => part.replace(/^\d+-/, "").replace(/\.mdx?$/, ""))
+        .join("/")}`
+
+      // Add fields to the node
       createNodeField({ node, name: "slug", value: slug })
       createNodeField({ node, name: "section", value: section })
       createNodeField({ node, name: "title", value: title })
-      createNodeField({
-        node,
-        name: "pathParts",
-        value: pathParts.slice(0, -1),
-      }) // Exclude filename
+      createNodeField({ node, name: "order", value: order })
+      createNodeField({ node, name: "pathParts", value: parts }) // Add pathParts for sidebar logic
     }
   }
 }
@@ -38,11 +45,8 @@ exports.createSchemaCustomization = ({ actions }) => {
       slug: String
       section: String
       title: String
-      pathParts: [String]
-    }
-    type MdxFrontmatter {
-      title: String
       order: Int
+      pathParts: [String]
     }
   `)
 }
