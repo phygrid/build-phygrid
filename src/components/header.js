@@ -26,13 +26,13 @@ const Header = ({ siteTitle }) => {
       <Nav open={openMenu}>
         <ul>
           <NavItem>
-            <Link to="/docs">Docs</Link>
+            <Link to="https://build.phygrid.com">Build</Link>
           </NavItem>
           <NavItem>
             <Link to="/apis">APIs</Link>
           </NavItem>
           <NavItem>
-            <Link to="/user-guide">User Guides</Link>
+            <Link to="https://learn.phygrid.com">Learn</Link>
           </NavItem>
           <li>
             <ButtonPrimary href="https://console.phygrid.com">
