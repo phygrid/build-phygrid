@@ -2,94 +2,137 @@
 title: "Building Your First IoT App"
 ---
 
-## Getting started
+IoT Apps are critical in the Ombori Grid infrastructure. They are headless applications running on your hardware in containers. They are key in communication between apps and hardware.
 
-Welcome to the Ombori Grid. To get started with Ombori Grid App Development you need to know what components you want to develop, but first, you need to set up your own environment.
+Some great examples of IoT Apps are communication with barcode scanners and camera's, but could also host a local database, perform API calls to your own systems and much more.
 
-[CLI Setup](/cli/setup)
+## Prerequisites
 
-<hr />
+To create a new IoT app there are a few prerequisites.
 
-## App Types
+- NodeJS and NPM - install latest LTS
+- Yarn - run `[sudo] npm i -g yarn` if it is not already installed
+- Ombori CLI - [Check installation guide](/cli/setup.md)
+- Git
+- Docker
+- Docker Image Registry - [Setup Guide](/iot-development/setup-docker-image-registry.md)
 
-Now that you have CLI setup you can start developing apps. We have 3 kinds of applications you can develop. Let's quickly go over the different types.
+## Creating your first IoT App
 
-**Screen Apps**
+To create an IoT App, run the following command.
 
-Screen apps are web-based applications that run on a screen. You can develop with any web technology you want. We have templates for ReactJS and Basic HTML, of which the latter can be used to develop anything in your own technology
+```bash
+omg app create [app-name]
+```
 
-**Edge Apps**
+> Replace `[app-name]` with your own project name you want to use.
 
-Edge Apps are headless applications that can run on your hardware. By default, we support Python, C#, and of course NodeJS. These applications can run on the same hardware as your screen apps, but can also run on standalone devices. IoT Apps are perfect for doing computations, connect to hardware or manage data-flow between different devices or apps. These are for example also perfect to handle any remote API connections.
+You will get prompted with the following response.
 
-**Mobile Apps**
+```
+? What kind of app do you want to create? (Use arrow keys)
+  Basic (HTML/JS)
+  React
+❯ IoT Application (node.js)
+```
 
-Mobile apps can be used to generate mobile screens to be used by either staff or your customers. They can be used as remote PWA or as a direct connection to local devices. There is a wide range of possibilities with these.
+For an IoT app we're going to be picking the bottom option, IoT Application. This is NodeJS based.
 
-## What should you choose?
+Once the template is downloaded, open the project in your IDE.
 
-So now is the question, what should you choose? Well for this you have to imagine your use-case. Some examples can help you determine how to do it.
+## Configuration
 
-### Screen which responds to data coming from a camera
+Once you've created your IoT app you need to configure it correctly to be able to deploy it to the grid. The most important part is the name and description of your module.
 
-For this situation, you want to analyze the data from a camera and alter what is on the screen based on that. For example, based on age/gender estimations.
+### App Name
 
-- IoT App to parse camera feed
-- Screen App to display data
+The format of the name is `[org-slug].[app-name]`.
 
-You will also want to set up communication between the IoT and Screen applications, and then install both of these applications on the same device, preferable an Intel NUC or Raspberry Pi.
+To get the slug of your organisation, run `omg org list` command ([Reference](/cli/reference?id=list-organizations)).
 
-### Barcode Scanner that prints a ticket based on code scanned
+You can set the name of the IoT App in `package.json` name property.
 
-If you need a barcode scanner that will print a ticket based on what is scanned, then you don't need a screen. In fact, you might be good with only 1 IoT app, though it might also be smart to separate this. So there could be multiple solutions.
+### App Description
 
-Option 1:
+The description of the IoT app is the visible part in the console. You want this to have a recognizable name so you can easily use it in the console. There is no rule for setting the name, but it is recommended to keep it short, for example "Barcode Reader".
 
-- Single IoT App that parses barcode scanner results, and connects to a printer
+## Code Structure
 
-Option 2:
+The code structure of the IoT app is a basic NodeJS application, you can see the relevant source in the `src` directory. There's 2 files by default, `app.ts` and `schema.ts`. The Settings Schema file is for configuration purposes which we also discussed in the Screen App Development guide. But more importantly is the `app.ts` file that contains your basic application.
 
-- Barcode Scanner IoT app that transmits data via the event bus.
-- Printer IoT App that listens for events and prints based on results
+> Read more about [Settings Schema](/general/schema.md)
 
-Option 3:
+### App.ts
 
-- Barcode Scanner IoT app that transmits data via the event bus.
-- Manager IoT App that takes the result from a barcode scanner, and transmits relevant data over the event bus
-- Printer IoT App that listens for the event the manager sends.
+By default the `app.ts` file contains some sample code how to communicate with different apps on the same instalation. You can read about communication more in-depth in our dedeicated guides.
 
-In the 3rd option, you can include, for example, an API call to your custom backend in the manager app.
+- [Communication with an IoT App](/iot-development/communication)
+- [Communicate with your Screen app](/app-development/communication)
 
-### Interactive touch-display that prints
+Your app file is the start of your NodeJS application, just like any NodeJS application you've worked on in the past and there's not much more to it besides our internals like communication.
 
-If you have a touch display, that is interactive and based on the user input can print something, you could solve this with either one or two devices depending on your use-case.
+## Deploying your IoT App to the grid
 
-One device solution:
+To build your IoT App you will need to have Docker and a Docker Registry up-and-running. Once that is done, run the following command in the root of your project to build.
 
-- Connect touch-display to Intel NUC device
-- Develop Screen App that listens to inputs and transmits events relevant to print
-- Develop IoT App that listens for print events, and then sends print instructions to the printer
+```bash
+yarn build
+```
 
-Two device solution:
+This will create a dockerized package to be uploaded to the registry. This can take some time, so let it run until it finishes.
 
-- Set up touch-display with screen app installed that transmits print events on the message bus
-- Set up Raspberry Pi connected to the printer that listens for print events and then sends print instructions to the printer.
+Once this is done, the next step is to upload your IoT app to the Grid. If this is the first version, it will be created in the grid automatically for you. You can initiate this by running the following command
 
-### Interactive screen that users can control from their phone
+```bash
+omg app publish
+```
 
-If you have an interactive screen where the input is "not touch", but control is via users' phones, then you'll need a mobile app for sure. Your setup could be something like this:
+This will initiate the upload of your package, and should deploy it to be used in your organisation in the console.
 
-- Mobile App which is launched after a QR code is scanned.
-- QR code somewhere visible near the screen, can be digital or analog.
-- Screen Application that displays information and can listen to events
-- IoT App that parses events coming from mobile phone(s) and transmits events to the screen
+## Installing the IoT app on a device
 
-The IoT app could be on the same device as the screen, but can also be on a different device. The event bus can handle multi-device just as easily as a single device.
+Now that your IoT App is published to the grid it is time to deploy it to the device. First, head over to the console and open "Marketplace" and then select "Your apps" on top.
 
-## Next steps
+![](/images/marketplace-your-apps.png ":size=600")
 
-You should now have a general understanding of what each app can do, but of course, there are many many more use-cases than the few outlined above. So next steps would be to learn about developing the apps and learning more about how to interact with them.
+Then next step, find the IoT App you just uploaded, and press `Install`.
 
-- [Building a screen-app](/app-development/building-your-first-screen-app)
-- [Building an IoT App](/iot-development/creating-your-first-iot-app.md)
-- [Events from Apps](/iot-development/communication)
+![](/images/marketplace-iot-app.png ":size=600")
+
+This will install the IoT app for your organisation, but not to a device directly, just now. Follow to dialog to install it and once it is done, find the installation in the sidebar. Then click on the "devices" tab on top, and add the device you want to install the IoT app on. This is all you need to do get it installed on the device.
+
+The installation can take a little time, but should be relatively quick (depending on the size of the Docker image, and your internet speed connecting to the device). To verify it installed correctly run the following command on CLI
+
+```bash
+omg dev modules [device-name]
+```
+
+> Replace `[device-name]` with the name of the device you just deployed
+
+This should list all apps running on the device, including modules and IoT apps. If you haven't changed any code from the template it should still publish telemetry from an interval it is running.
+
+```bash
+running [app-name] 0.1.0
+  messagesSent 42
+  mqttMessagesSent 42
+```
+
+## Testing Dev Builds on Device
+
+!> This part does not work yet for IoT apps, but does for modules.
+
+Once you've deployed an Iot App once to a device (this is a hard requirement) you can direct-deploy a new version to your device. You can do this easily using the following command
+
+```bash
+yarn deploy [device-name]
+```
+
+> Replace `[device-name]` with the name of the device you want to direct-deploy a new version of the module.
+
+This will direct-deploy a new version of the module, bypassing the grid. Keep in mind this will not register a new version in the grid, and any changes pushed to the device will not be permanent as a redeploy from the grid will override any manual versions. However, this is a great way to test the module you're working on.
+
+To make this process even smoother, check out [auto direct-deploy](/iot-development/direct-deploy-debug.md).
+
+## Understand the yarn commands
+
+To understand what the different `yarn` commands do we've used, you can check `package.json` to see what the commands actually triggered. These commands are mostly a short and easy reference to the `omg` CLI, for which any more information you can find in the [CLI Reference](/cli/reference.md).
