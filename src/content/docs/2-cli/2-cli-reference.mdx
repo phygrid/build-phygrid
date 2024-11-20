@@ -2,94 +2,199 @@
 title: "CLI Reference"
 ---
 
-## Getting started
+To develop on the Phygrid Ecosystem you will need to install the Phygrid `phy` CLI. You can find information about setup on the [CLI setup](cli/setup.md) page.
 
-Welcome to the Ombori Grid. To get started with Ombori Grid App Development you need to know what components you want to develop, but first, you need to set up your own environment.
+This page contains all the information on the CLI and its components. If you want more in-depth information you will have to check out the guides.
 
-[CLI Setup](/cli/setup)
+!> **Under Construction** - This page is still evolving and doesn't contain all items. If you need a CLI command not listed use the `-h` command on the CLI.
 
-<hr />
+- [Generic commands](#generic-commands)
+- [Developer](#developer)
+- [Applications](#applications)
+- [Modules](#modules)
+- [Organisation](#organisation)
 
-## App Types
+## Generic commands
 
-Now that you have CLI setup you can start developing apps. We have 3 kinds of applications you can develop. Let's quickly go over the different types.
+Some commands that are useful for using the CLI itself
 
-**Screen Apps**
+### Help command
 
-Screen apps are web-based applications that run on a screen. You can develop with any web technology you want. We have templates for ReactJS and Basic HTML, of which the latter can be used to develop anything in your own technology
+The help command explains how to use the CLI, can be useful for a quick reference.
 
-**Edge Apps**
+```bash
+phy --help
+phy -h
+```
 
-Edge Apps are headless applications that can run on your hardware. By default, we support Python, C#, and of course NodeJS. These applications can run on the same hardware as your screen apps, but can also run on standalone devices. IoT Apps are perfect for doing computations, connect to hardware or manage data-flow between different devices or apps. These are for example also perfect to handle any remote API connections.
+This command can also be used within subsections of the CLI. Some examples. It works everywhere, so if you need to know any information about a specific subset, just add `-h`.
 
-**Mobile Apps**
+```bash
+phy dev -h
+phy module -h
+phy app -h
+```
 
-Mobile apps can be used to generate mobile screens to be used by either staff or your customers. They can be used as remote PWA or as a direct connection to local devices. There is a wide range of possibilities with these.
+### Checking version
 
-## What should you choose?
+To check the version of the CLI, initiate the version call
 
-So now is the question, what should you choose? Well for this you have to imagine your use-case. Some examples can help you determine how to do it.
+```bash
+phy --version
+phy -V
+```
 
-### Screen which responds to data coming from a camera
+### Update CLI
 
-For this situation, you want to analyze the data from a camera and alter what is on the screen based on that. For example, based on age/gender estimations.
+To get the latest CLI version, run `phy update`. This will automatically check if you have the latest version, and if not, download the newest version and install potential new dependencies for you.
 
-- IoT App to parse camera feed
-- Screen App to display data
+## Developer
 
-You will also want to set up communication between the IoT and Screen applications, and then install both of these applications on the same device, preferable an Intel NUC or Raspberry Pi.
+Within the Phygrid CLI, there's a `dev` subsection. This can be used to work with and debug devices.
 
-### Barcode Scanner that prints a ticket based on code scanned
+The following commands are available on the `dev CLI`. They're all explained in their own subsection below.
 
-If you need a barcode scanner that will print a ticket based on what is scanned, then you don't need a screen. In fact, you might be good with only 1 IoT app, though it might also be smart to separate this. So there could be multiple solutions.
+| Command  | Description                                       |
+| -------- | ------------------------------------------------- |
+| list     | List devices                                      |
+| modules  | List modules running on device                    |
+| logs     | Show logs for a module running on device          |
+| invoke   | Execute a method on a module                      |
+| settings | Show and alter module settings                    |
+| deploy   | deploy the configuration to device                |
+| pub      | Publish an event to the event bus                 |
+| sub      | Retrieve recent events from the event bus         |
+| ws       | Proxy message bus via local web socket            |
+| shell    | Open a shell session to the device                |
+| vnc      | Open a VNC session to the device                  |
+| rdp      | Open an RDP session to the device                 |
+| debug    | Open debugger session to a screen app on a device |
+| forward  | Access an URL from the device's local network     |
+| move     | Move device to a different organization           |
 
-Option 1:
+> All these commands can be triggered using `phy dev [command]`
 
-- Single IoT App that parses barcode scanner results, and connects to a printer
+### List Devices
 
-Option 2:
+To retrieve the list of devices accessible for your token. This command will return the device name plus serial number.
 
-- Barcode Scanner IoT app that transmits data via the event bus.
-- Printer IoT App that listens for events and prints based on results
+```bash
+phy dev list
+```
 
-Option 3:
+There are a few flags that can be added to the command
 
-- Barcode Scanner IoT app that transmits data via the event bus.
-- Manager IoT App that takes the result from a barcode scanner, and transmits relevant data over the event bus
-- Printer IoT App that listens for the event the manager sends.
+| Flag                         | Description                         |
+| ---------------------------- | ----------------------------------- |
+| `-d` <br /> `--show-deleted` | Shows deleted devices               |
+| `-l`<br />`--long`           | Add more details to the device list |
 
-In the 3rd option, you can include, for example, an API call to your custom backend in the manager app.
+You can follow the command with a search string, which will filter the results. This can be very useful if you have a large amount of devices
 
-### Interactive touch-display that prints
+```bash
+phy dev list [searchstring]
+phy dev list -l [searchstring]
+```
 
-If you have a touch display, that is interactive and based on the user input can print something, you could solve this with either one or two devices depending on your use-case.
+> Replace `[searchstring]` with whatever you want to filter on.
 
-One device solution:
+### List Modules on Device
 
-- Connect touch-display to Intel NUC device
-- Develop Screen App that listens to inputs and transmits events relevant to print
-- Develop IoT App that listens for print events, and then sends print instructions to the printer
+You can list all installed modules on a device using this command. This command will return a very extensive list of information from your device.
 
-Two device solution:
+```bash
+phy dev modules <device-name>
+```
 
-- Set up touch-display with screen app installed that transmits print events on the message bus
-- Set up Raspberry Pi connected to the printer that listens for print events and then sends print instructions to the printer.
+> You should replace `<device-name>` with the name of the device you can find using `phy dev list`.
 
-### Interactive screen that users can control from their phone
+### Logs
 
-If you have an interactive screen where the input is "not touch", but control is via users' phones, then you'll need a mobile app for sure. Your setup could be something like this:
+To retrieve logs from any installed module or app on a device, you can use this command.
 
-- Mobile App which is launched after a QR code is scanned.
-- QR code somewhere visible near the screen, can be digital or analog.
-- Screen Application that displays information and can listen to events
-- IoT App that parses events coming from mobile phone(s) and transmits events to the screen
+The format for the call is as follows
 
-The IoT app could be on the same device as the screen, but can also be on a different device. The event bus can handle multi-device just as easily as a single device.
+```bash
+phy dev logs <device-name> <module-name> [flags]
+```
 
-## Next steps
+> You should replace `<device-name>` with the device slug, which you can find through `phy dev list`.<br />
+> You should replace `<module-name>` with the module slug which you can find through `phy dev modules`
 
-You should now have a general understanding of what each app can do, but of course, there are many many more use-cases than the few outlined above. So next steps would be to learn about developing the apps and learning more about how to interact with them.
+Then of course there are several, optional, flags you can add to the command
 
-- [Building a screen-app](/app-development/building-your-first-screen-app)
-- [Building an IoT App](/iot-development/creating-your-first-iot-app.md)
-- [Events from Apps](/iot-development/communication)
+| Flag                                        | Description                                                               |
+| ------------------------------------------- | ------------------------------------------------------------------------- |
+| `-n <numlines>` <br /> `--lines <numlines>` | Number of lines (`<numlines>`) to return                                  |
+| `-t`<br /> `--timestamp`                    | Add the timestamp to the log                                              |
+| `-f`<br /> `--follow`                       | Tail the logs, this will keep streaming logs to you while this is running |
+| `--filter <query>`                          | Only display log messages which match your `<query>`.                     |
+
+## Applications
+
+This subsection is dedicated to app development and management, and is nested under `phy app`.
+
+There are several functions available in the app subsection of the CLI.
+
+| Command            | Description                                                   |
+| ------------------ | ------------------------------------------------------------- |
+| create             | To create an app                                              |
+| build              | To build a created app to prepare it for deployment           |
+| settings           | Download settings from an existing grid app installation      |
+| upload-settings    | Upload settings to an existing grid app installation          |
+| publish            | Publish an app                                                |
+| upload-description | Upload a markdown file as the description for a published app |
+| list               | List all apps                                                 |
+
+> All these commands can be triggered using `phy app [command]`
+
+### Create
+
+To create an application you need to run the create command with the name of the application you want to create.
+
+```bash
+phy app create [app-name]
+```
+
+> Replace `[app-name]` with the name of the app you want to create, it is recommended to use `kebab-case` for your name.
+
+To see a guided-through guide to create an app check out [Building your first app](/app-development/building-your-first-app)
+
+### Publish
+
+To publish an app, make sure you have configured it correctly. Check the [Building your first app](/app-development/building-your-first-app) guide if you don't know how.
+
+Once you've configured your app, you are ready to publish. Run the publish command
+
+```bash
+phy app publish
+```
+
+Optional arguments
+
+- `--file [filename]` - To tell the publish command where the `.gridapp` file is located.
+- `--overwrite` - To overwrite the app version. Only use this when you know what you're doing.
+
+```bash
+phy app publish --file path/to/file.gridapp --overwrite
+```
+
+## Organisation
+
+This subsection is placed under the `phy org` CLI, and currently only has one function, to list the organizations you're part of.
+
+### List organizations
+
+```bash
+phy org list
+```
+
+This will return a list of organizations you're part of, plus the organization slug you need to use to configure modules and apps.
+
+If you want to filter the list, there is an optional parameter you can pass along that will filter it for you.
+
+```bash
+phy org list [search-string]
+```
+
+> Replace `[search-string]` with the parameter you want to search with. This will search in both the name and the slug.

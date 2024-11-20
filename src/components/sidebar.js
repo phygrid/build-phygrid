@@ -88,6 +88,12 @@ const Sidebar = () => {
 
     return (
       <ul>
+        <li>
+          <StyledLink to="/" activeClassName="active">
+            Welcome
+          </StyledLink>
+        </li>
+
         {sortedFolders.map(key => {
           const section = sections[key]
 
