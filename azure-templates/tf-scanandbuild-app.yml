@@ -19,7 +19,7 @@ steps:
   - task: ArchiveFiles@2
     displayName: 'Archive files'
     inputs:
-      rootFolderOrFile: '$(Build.SourcesDirectory)/build'
+      rootFolderOrFile: '$(Build.SourcesDirectory)/public'
       includeRootFolder: false
       archiveType: 'zip'
       replaceExistingArchive: true
