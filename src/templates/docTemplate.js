@@ -2,9 +2,14 @@
 import React from "react"
 import { graphql } from "gatsby"
 import { MDXProvider } from "@mdx-js/react"
+import { StaticImage } from "gatsby-plugin-image"
 
 import Seo from "../components/seo"
 import Layout from "../components/layout"
+
+const components = {
+  StaticImage, // Add StaticImage to MDX scope
+}
 
 const DocTemplate = ({ data, children }) => {
   const { title } = data.mdx.frontmatter
@@ -29,7 +34,7 @@ const DocTemplate = ({ data, children }) => {
     <Layout>
       <Seo title={seoTitle} />
       <h1>{title}</h1>
-      <MDXProvider>
+      <MDXProvider components={components}>
         <div>{children}</div>
       </MDXProvider>
     </Layout>
