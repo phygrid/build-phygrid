@@ -63,12 +63,6 @@ module.exports = {
         icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
       },
     },
-    {
-      resolve: `gatsby-plugin-algolia`,
-      options: {
-        // Algolia Search configuration
-      },
-    },
     `gatsby-plugin-catch-links`, // Automatically catch all internal links and use Gatsby's Link
   ],
 }
