@@ -25,6 +25,14 @@ variable "service_name" {
 }
 
 provider "azurerm" {
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
+}
+
+provider "azurerm" {
   alias = "GLOBAL"
   subscription_id = "__global_subscription_id__"
 
@@ -36,7 +44,7 @@ locals {
 }
 
 data "azurerm_key_vault_secret" "cloudflare_token" {
-  name         = "omg-${var.service_name}-deployment-${local.env}"
+  name         = "${var.service_name}-deployment-${local.env}"
   key_vault_id = data.azurerm_key_vault.devops_keyvault.id
 }
 

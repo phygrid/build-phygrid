@@ -46,9 +46,9 @@ steps:
       npm install wrangler --save-dev
       npx wrangler --version
 
-      export CLOUDFLARE_API_TOKEN=$(terraform output -raw console_deployment_cloudflare_token)
-      export CLOUDFLARE_ACCOUNT_ID=$(terraform output -raw console_deployment_cloudflare_account_id)
-      export CLOUDFLARE_PAGES_PROJECT_NAME=$(terraform output -raw console_deployment_cloudflare_pages_name)
+      export CLOUDFLARE_API_TOKEN=$(terraform output -raw cloudflare_token)
+      export CLOUDFLARE_ACCOUNT_ID=$(terraform output -raw cloudflare_account_id)
+      export CLOUDFLARE_PAGES_PROJECT_NAME=$(terraform output -raw cloudflare_pages_name)
       
       popd
       
