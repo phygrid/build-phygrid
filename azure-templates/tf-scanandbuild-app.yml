@@ -1,0 +1,32 @@
+steps:
+  - task: NodeTool@0
+    displayName: 'Install Node.js'
+    inputs:
+      versionSpec: '22.x'
+  - script: |
+      export NPM_TOKEN=$(NPM_TOKEN)
+      npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN
+    displayName: 'Configure the private NPM registry'
+  - script: |
+      yarn install --frozen-lockfile
+    displayName: 'Install NPM dependencies'
+  # - script: yarn test
+  #   displayName: 'Test'
+  - script: yarn run build
+    displayName: 'Build'
+    env:
+      NODE_OPTIONS: --max_old_space_size=16384
+  - task: ArchiveFiles@2
+    displayName: 'Archive files'
+    inputs:
+      rootFolderOrFile: '$(Build.SourcesDirectory)/public'
+      includeRootFolder: false
+      archiveType: 'zip'
+      replaceExistingArchive: true
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish the artifact'
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: 'drop'
+      publishLocation: 'Container'

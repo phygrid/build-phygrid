@@ -1,0 +1,40 @@
+jobs:
+  - job: plan
+    workspace:
+      clean: all
+    displayName: Plan
+    pool: ${{ parameters.agentPool }}
+    steps:
+    - template: tf-plan.yml
+      parameters:
+        dataResidency: ${{ parameters.dataResidency }}
+        projectName: ${{ parameters.projectName }}
+
+  - job: approve
+    displayName: Approve
+    dependsOn: plan
+    condition: succeeded()
+    pool: server
+    steps:
+    - template: tf-approve.yml
+
+  - deployment: deployInfra
+    environment: ${{ parameters.dataResidency }}
+    workspace:
+      clean: all
+    displayName: Deploy Infra
+    dependsOn: approve
+    condition: and(succeeded(), or( in(variables['Build.SourceBranchName'], 'main', 'dev'), startsWith(variables['Build.SourceBranch'], 'refs/heads/feature/DEVOPS-')))
+    pool: ${{ parameters.agentPool }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - template: tf-deploy-infra.yml
+            parameters:
+              dataResidency: ${{ parameters.dataResidency }}
+              projectName: ${{ parameters.projectName }}
+          - template: tf-deploy-app.yml
+            parameters:
+              dataResidency: ${{ parameters.dataResidency }}
+              projectName: ${{ parameters.projectName }}
