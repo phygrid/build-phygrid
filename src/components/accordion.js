@@ -10,7 +10,7 @@ const Accordion = ({ title, children, defaultOpen = false }) => {
     <AccordionContainer>
       <AccordionHeader onClick={() => setIsOpen(!isOpen)}>
         {title}
-        <span>{isOpen ? <CaretUp /> : <CaretDown />}</span>
+        <span>{isOpen ? <CaretUp size={12} /> : <CaretDown size={12} />}</span>
       </AccordionHeader>
       <AccordionContent isOpen={isOpen}>{children}</AccordionContent>
     </AccordionContainer>
@@ -22,22 +22,27 @@ export default Accordion
 const AccordionContainer = styled.div`
   display: block;
   width: 100%;
+  padding: 0 0 var(--space-3) 0;
 `
 
 const AccordionHeader = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
+  align-items: center;
   cursor: pointer;
-  font-weight: bold;
-  padding: var(--space-2);
-  color: var(--color-title);
-  font-size: var(--font-xs);
-  text-transform: uppercase;
-  border-radius: var(--border-radius);
+  padding: 0 var(--space-2) var(--space-1) var(--space-2);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: var(--font-sm);
+  line-height: 1;
+
+  span {
+    display: flex;
+    align-items: center;
+  }
 
   &:hover {
-    background: var(--color-hover-bg);
+    color: var(--color-title);
   }
 `
 
@@ -46,10 +51,4 @@ const AccordionContent = styled.div`
   overflow: hidden;
   transition: max-height 0.3s ease;
   display: block;
-  padding: ${({ isOpen }) =>
-    isOpen
-      ? "var(--space-1) 0 var(--space-1) var(--space-2)"
-      : "0 0 0 var(--space-2)"};
-  /* border-left: ${({ isOpen }) =>
-    isOpen ? "1px solid var(--color-primary)" : "0"}; */
 `

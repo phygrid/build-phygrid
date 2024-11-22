@@ -35,9 +35,10 @@ const Layout = ({ children }) => {
         </Main>
       </Container>
       <Footer>
-        © {new Date().getFullYear()} &middot; Built with
-        {` `}
-        <a href="https://www.gatsbyjs.com">Gatsby</a>
+        <p>
+          © {new Date().getFullYear()} &middot; Phygrid. An{" "}
+          <a href="https://ombori.com">Ombori</a> company
+        </p>
       </Footer>
     </Wrapper>
   )
@@ -48,9 +49,13 @@ export default Layout
 const Footer = styled.footer`
   width: 100%;
   display: flex;
+  flex-direction: column;
   border-top: 1px solid var(--color-border);
   font-size: var(--font-sm);
   padding: var(--space-3);
+  p {
+    margin: 0;
+  }
 `
 
 const Wrapper = styled.div``
@@ -58,6 +63,7 @@ const Wrapper = styled.div``
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+
   @media (min-width: ${breakpoints.md}) {
     flex-direction: row;
   }
@@ -65,12 +71,10 @@ const Container = styled.div`
 const Page = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: var(--size-content);
-  padding: var(--space-4);
-  margin: var(--space-4) auto;
+  margin: var(--space-4) 0;
   border-radius: var(--border-radius);
 `
 const Main = styled.main`
   flex: 1 auto;
-  background: var(--color-pageBg);
+  /* background: var(--color-pageBg); */
 `

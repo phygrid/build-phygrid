@@ -3,9 +3,10 @@ import { graphql, useStaticQuery, Link } from "gatsby"
 import styled from "@emotion/styled"
 import Accordion from "./accordion"
 import { useLocation } from "@reach/router"
-import { CaretDown, CaretUp } from "@phosphor-icons/react"
+import * as PhosphorIcons from "@phosphor-icons/react"
 
 import { breakpoints } from "../styles/breakpoints"
+import { navButtonStyles } from "../styles/buttonStyles"
 
 const Sidebar = () => {
   const location = useLocation()
@@ -21,6 +22,7 @@ const Sidebar = () => {
           }
           frontmatter {
             title
+            icon
           }
         }
       }
@@ -37,18 +39,14 @@ const Sidebar = () => {
 
     nodes.forEach(node => {
       const { slug, order, pathParts } = node.fields
-      const title = node.frontmatter.title || "Untitled" // Get title from frontmatter
+      const { title = "Untitled", icon } = node.frontmatter
       const folderKey = pathParts[0] // Top-level folder (e.g., "1-getting-started")
 
-      // Extract folder order and clean up folder title
       const folderOrderMatch = folderKey.match(/^(\d+)-/)
       const folderOrder = folderOrderMatch
         ? parseInt(folderOrderMatch[1], 10)
         : 0
-      const folderTitle = folderKey
-        .replace(/^\d+-/, "")
-        .replace(/-/g, " ")
-        .toUpperCase()
+      const folderTitle = folderKey.replace(/^\d+-/, "").replace(/-/g, " ")
 
       // Ensure the folder exists in the structure
       if (!nestedStructure[folderKey]) {
@@ -62,12 +60,12 @@ const Sidebar = () => {
       // Add the file to the folder's children
       nestedStructure[folderKey].children.push({
         slug,
-        title, // Use the title from frontmatter
+        title,
+        icon,
         order,
       })
     })
 
-    // Sort files within each folder by their order
     Object.values(nestedStructure).forEach(folder => {
       folder.children.sort((a, b) => a.order - b.order)
     })
@@ -79,7 +77,6 @@ const Sidebar = () => {
 
   // Render nested sections as accordions
   const renderSections = sections => {
-    // Sort folders by their order
     const sortedFolders = Object.keys(sections).sort((a, b) => {
       const orderA = sections[a].order || 0
       const orderB = sections[b].order || 0
@@ -88,34 +85,38 @@ const Sidebar = () => {
 
     return (
       <ul>
-        <li>
+        <NavSection>
           <StyledLink to="/" activeClassName="active">
             Welcome
           </StyledLink>
-        </li>
+        </NavSection>
 
         {sortedFolders.map(key => {
           const section = sections[key]
-
-          // Check if any child slug matches the current path to determine defaultOpen
           const isDefaultOpen = section.children.some(child =>
             location.pathname.includes(child.slug)
           )
 
           return (
-            <li key={key}>
-              <Accordion title={section.title} defaultOpen={isDefaultOpen}>
+            <NavSection key={key}>
+              <Accordion title={section.title} defaultOpen={true}>
                 <ul>
-                  {section.children.map(child => (
-                    <li key={child.slug}>
-                      <StyledLink to={child.slug} activeClassName="active">
-                        {child.title}
-                      </StyledLink>
-                    </li>
-                  ))}
+                  {section.children.map(child => {
+                    const IconComponent = child.icon
+                      ? PhosphorIcons[child.icon]
+                      : null
+
+                    return (
+                      <li key={child.slug}>
+                        <StyledLink to={child.slug} activeClassName="active">
+                          {IconComponent && <IconComponent />} {child.title}
+                        </StyledLink>
+                      </li>
+                    )
+                  })}
                 </ul>
               </Accordion>
-            </li>
+            </NavSection>
           )
         })}
       </ul>
@@ -126,7 +127,7 @@ const Sidebar = () => {
     <SidebarContainer>
       <ToggleSidebar onClick={toggleBrowseTopics}>
         <span>Browse Topics</span>
-        {browseTopics ? <CaretUp /> : <CaretDown />}
+        {browseTopics ? <PhosphorIcons.CaretUp /> : <PhosphorIcons.CaretDown />}
       </ToggleSidebar>
       <Nav open={browseTopics}>{renderSections(nestedSections)}</Nav>
     </SidebarContainer>
@@ -135,11 +136,15 @@ const Sidebar = () => {
 
 export default Sidebar
 
+const NavSection = styled.li`
+  padding: var(--space-2) var(--space-1);
+`
+
 const ToggleSidebar = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: var(--font-sm);
+  font-size: var(--font-md);
   padding: var(--space-1) var(--space-2);
 
   @media (min-width: ${breakpoints.md}) {
@@ -167,9 +172,9 @@ const SidebarContainer = styled.div`
   padding: var(--space-2);
 
   @media (min-width: ${breakpoints.md}) {
-    width: 300px;
+    width: auto;
     border-bottom: 0;
-    border-right: 1px solid var(--color-border);
+    /* border-right: 1px solid var(--color-border); */
   }
 
   nav > ul > li {
@@ -185,22 +190,8 @@ const SidebarContainer = styled.div`
       margin: 0;
     }
   }
-
-  a.active {
-    background: var(--color-primary);
-    color: #fff;
-  }
 `
 
 const StyledLink = styled(Link)`
-  color: var(--color-text);
-  display: block;
-  padding: var(--space-1) var(--space-2);
-  font-size: var(--font-sm);
-  text-decoration: none;
-  border-radius: var(--border-radius);
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
+  ${navButtonStyles};
 `

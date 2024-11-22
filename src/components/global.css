@@ -34,17 +34,18 @@
   --size-content: 54rem;
   --size-gutter: var(--space-5);
   --size-gap: var(--space-6);
-  --max-width: 1320px;
+  --max-width: 1440px;
 }
 html {
   -webkit-text-size-adjust: 100%;
   box-sizing: border-box;
   font: sans-serif;
-  font-size: var(--font-lg);
+  font-size: var(--font-md);
   line-height: var(--line-height-normal);
   overflow-y: scroll;
-  background: var(--color-dark);
+  background: var(--color-black);
   color: var(--color-text);
+  scroll-behavior: smooth;
 }
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -89,14 +90,20 @@ h3,
 h4,
 h5,
 h6 {
+  font-family: "eurostile_extd";
   color: #fff;
-  margin: 0;
+  margin: 2rem 0 0.5rem 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 h1 {
+  margin: 0;
   margin-bottom: 2rem;
   padding: 0;
   line-height: var(--line-height-dense);
   letter-spacing: -0.01em;
+  border: 0;
+  font-size: var(--space-6);
 }
 h1 > b {
   color: var(--color-primary);
@@ -143,10 +150,15 @@ ol,
 dl,
 dd,
 p,
-.gatsby-highlight {
+.gatsby-highlight,
+.gatsby-resp-image-wrapper {
   margin: 0;
   padding: 0;
   margin-bottom: var(--space-4);
+}
+.gatsby-resp-image-wrapper {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 ul,
 ol {
@@ -187,9 +199,6 @@ li > ul {
   margin-top: calc(var(--space-4) / 2);
 }
 blockquote *:last-child {
-  margin-bottom: 0;
-}
-li *:last-child {
   margin-bottom: 0;
 }
 p *:last-child {

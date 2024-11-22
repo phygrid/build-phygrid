@@ -26,13 +26,13 @@ const Header = ({ siteTitle }) => {
       <Nav open={openMenu}>
         <ul>
           <NavItem>
-            <Link to="https://build.phygrid.com">Build</Link>
+            <a href="https://build.phygrid.com">Build</a>
           </NavItem>
           <NavItem>
             <Link to="/apis">APIs</Link>
           </NavItem>
           <NavItem>
-            <Link to="https://learn.phygrid.com">Learn</Link>
+            <a href="https://learn.phygrid.com">Learn</a>
           </NavItem>
           <li>
             <ButtonPrimary href="https://console.phygrid.com">
@@ -54,9 +54,14 @@ export default Header
 
 const ButtonPrimary = styled.a`
   ${primaryButtonStyles}
-
-  font-size: var(--font-lg);
+  font-size: var(--font-md);
+  line-height: 1;
   padding: var(--space-1) var(--space-2);
+
+  &:hover {
+    background: #fff;
+    color: var(--color-black);
+  }
 `
 
 const Nav = styled.nav`

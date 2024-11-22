@@ -3,7 +3,7 @@ module.exports = {
     title: `Phygrid Developers`,
     description: `Learn how to use the Phygrid platform with tips, tricks, and user guides`,
     author: `@rmalpass`,
-    siteUrl: `https://phygrid.com`,
+    siteUrl: `https://build.phygrid.com`,
   },
   plugins: [
     `gatsby-plugin-image`,
@@ -28,6 +28,14 @@ module.exports = {
       options: {
         extensions: [`.md`, `.mdx`],
         gatsbyRemarkPlugins: [
+          {
+            resolve: `gatsby-remark-autolink-headers`,
+            options: {
+              offsetY: `100`,
+              className: `header-anchor`,
+              maxDepth: 3,
+            },
+          },
           {
             resolve: `gatsby-remark-prismjs`,
           },
