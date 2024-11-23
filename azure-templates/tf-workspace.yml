@@ -10,20 +10,12 @@ jobs:
         dataResidency: ${{ parameters.dataResidency }}
         projectName: ${{ parameters.projectName }}
 
-  - job: approve
-    displayName: Approve
-    dependsOn: plan
-    condition: succeeded()
-    pool: server
-    steps:
-    - template: tf-approve.yml
-
   - deployment: deployInfra
     environment: ${{ parameters.dataResidency }}
     workspace:
       clean: all
     displayName: Deploy Infra
-    dependsOn: approve
+    dependsOn: plan
     condition: and(succeeded(), or( in(variables['Build.SourceBranchName'], 'main', 'dev'), startsWith(variables['Build.SourceBranch'], 'refs/heads/feature/DEVOPS-')))
     pool: ${{ parameters.agentPool }}
     strategy:
