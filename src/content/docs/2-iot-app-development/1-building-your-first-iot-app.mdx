@@ -13,10 +13,11 @@ To create a new IoT app there are a few prerequisites.
 
 - NodeJS and NPM - install latest LTS
 - Yarn - run `[sudo] npm i -g yarn` if it is not already installed
-- Ombori CLI - [Check installation guide](/cli/setup.md)
+- Ombori CLI - [Check installation guide](../../phygrid-cli/cli-setup/)
 - Git
 - Docker
-- Docker Image Registry - [Setup Guide](/iot-development/setup-docker-image-registry.md)
+
+Deploying modules to the Ombori Grid requires a **Docker Image Registry**. We recommmend signing up for the [Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/).
 
 ## Creating your first IoT App
 
@@ -26,7 +27,9 @@ To create an IoT App, run the following command.
 omg app create [app-name]
 ```
 
-> Replace `[app-name]` with your own project name you want to use.
+<InfoBox>
+  Replace `[app-name]` with your own project name you want to use.
+</InfoBox>
 
 You will get prompted with the following response.
 
@@ -49,7 +52,7 @@ Once you've created your IoT app you need to configure it correctly to be able t
 
 The format of the name is `[org-slug].[app-name]`.
 
-To get the slug of your organisation, run `omg org list` command ([Reference](/cli/reference?id=list-organizations)).
+To get the slug of your organisation, run `omg org list` command ([Reference](/phygrid-cli/cli-reference/#list-organizations)).
 
 You can set the name of the IoT App in `package.json` name property.
 
@@ -61,7 +64,7 @@ The description of the IoT app is the visible part in the console. You want this
 
 The code structure of the IoT app is a basic NodeJS application, you can see the relevant source in the `src` directory. There's 2 files by default, `app.ts` and `schema.ts`. The Settings Schema file is for configuration purposes which we also discussed in the Screen App Development guide. But more importantly is the `app.ts` file that contains your basic application.
 
-> Read more about [Settings Schema](/general/schema.md)
+<InfoBox>Read more about [Settings Schema](/general/schema.md)</InfoBox>
 
 ### App.ts
 
@@ -94,11 +97,11 @@ This will initiate the upload of your package, and should deploy it to be used i
 
 Now that your IoT App is published to the grid it is time to deploy it to the device. First, head over to the console and open "Marketplace" and then select "Your apps" on top.
 
-![](/images/marketplace-your-apps.png ":size=600")
+![Your Apps](./images/marketplace-your-apps.png)
 
 Then next step, find the IoT App you just uploaded, and press `Install`.
 
-![](/images/marketplace-iot-app.png ":size=600")
+![IOT App](./images/marketplace-iot-app.png)
 
 This will install the IoT app for your organisation, but not to a device directly, just now. Follow to dialog to install it and once it is done, find the installation in the sidebar. Then click on the "devices" tab on top, and add the device you want to install the IoT app on. This is all you need to do get it installed on the device.
 
@@ -108,7 +111,9 @@ The installation can take a little time, but should be relatively quick (dependi
 omg dev modules [device-name]
 ```
 
-> Replace `[device-name]` with the name of the device you just deployed
+<InfoBox>
+  Replace `[device-name]` with the name of the device you just deployed
+</InfoBox>
 
 This should list all apps running on the device, including modules and IoT apps. If you haven't changed any code from the template it should still publish telemetry from an interval it is running.
 
@@ -120,7 +125,9 @@ running [app-name] 0.1.0
 
 ## Testing Dev Builds on Device
 
-!> This part does not work yet for IoT apps, but does for modules.
+<InfoBox type="warning">
+  This part does not work yet for IoT apps, but does for modules.
+</InfoBox>
 
 Once you've deployed an Iot App once to a device (this is a hard requirement) you can direct-deploy a new version to your device. You can do this easily using the following command
 
@@ -128,7 +135,10 @@ Once you've deployed an Iot App once to a device (this is a hard requirement) yo
 yarn deploy [device-name]
 ```
 
-> Replace `[device-name]` with the name of the device you want to direct-deploy a new version of the module.
+<InfoBox>
+  Replace `[device-name]` with the name of the device you want to direct-deploy
+  a new version of the module.
+</InfoBox>
 
 This will direct-deploy a new version of the module, bypassing the grid. Keep in mind this will not register a new version in the grid, and any changes pushed to the device will not be permanent as a redeploy from the grid will override any manual versions. However, this is a great way to test the module you're working on.
 
@@ -136,4 +146,4 @@ To make this process even smoother, check out [auto direct-deploy](/iot-developm
 
 ## Understand the yarn commands
 
-To understand what the different `yarn` commands do we've used, you can check `package.json` to see what the commands actually triggered. These commands are mostly a short and easy reference to the `omg` CLI, for which any more information you can find in the [CLI Reference](/cli/reference.md).
+To understand what the different `yarn` commands do we've used, you can check `package.json` to see what the commands actually triggered. These commands are mostly a short and easy reference to the `phy` CLI, for which any more information you can find in the [CLI Reference](/phygrid-cli/reference).
