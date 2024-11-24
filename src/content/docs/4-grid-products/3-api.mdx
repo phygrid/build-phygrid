@@ -1,0 +1,347 @@
+---
+title: "Grid Products API Reference"
+icon: "Plugs"
+---
+
+import { Terminal, Cloud, SquaresFour } from "@phosphor-icons/react"
+
+This is your complete guide to the Grid Products API, including endpoints, authentication, and how to configure your requests for seamless integration.
+
+## Postman Collection
+
+To make testing and configuration easier, we’ve prepared a Postman collection you can import directly into Postman.
+
+<InfoBox>
+  [**Download the Postman
+  Collection**](https://elements.getpostman.com/redirect?entityId=28975768-13915009-a9d3-4f9c-acde-b8dbbf7e2a12&entityType=collection)
+</InfoBox>
+
+After importing, you’ll need to adjust the following:
+
+- **URL Placeholders**: Replace `<tenant-id>`, `<environment>`, and `<space-id>` with your actual values.
+- **Data Residency**: Replace `<data-residency>` with one of the following: `eu`, `us`, `in`, `au`, or `uae`.
+- **Headers**: Set the `x-api-key` or `Authorization` header to your generated access token from the Grid Console.
+
+---
+
+## Authentication
+
+To use the Grid Products API, you'll need an access token:
+
+1. Go to the **<SquaresFour weight="fill" />Apps &rarr; <Terminal weight="fill" />Developer** tab in the Phygrid Console.
+2. Generate an access token.
+3. Add the token as an `x-api-key` in your request headers.
+
+---
+
+## API URLs
+
+The `{base-url}` for the Grid Products API depends on your **data residency region**. **Use the appropriate URL:**
+
+<table>
+  <thead>
+    <th>Region</th>
+    <th>URL</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>EU</td>
+      <td>`https://api.omborigrid.com/regions/eu/products`</td>
+    </tr>
+    <tr>
+      <td>US</td>
+      <td>`https://api.omborigrid.com/regions/us/products`</td>
+    </tr>
+    <tr>
+      <td>IN</td>
+      <td>`https://api.omborigrid.com/regions/in/products`</td>
+    </tr>
+    <tr>
+      <td>AU</td>
+      <td>`https://api.omborigrid.com/regions/au/products`</td>
+    </tr>
+    <tr>
+      <td>UAE</td>
+      <td>`https://api.omborigrid.com/regions/uae/products`</td>
+    </tr>
+  </tbody>
+</table>
+
+Replace `{tenant-id}` with your tenant ID and `{environment}` with the environment where your products data will live (e.g., `dev`, `staging`).
+
+## Endpoints Overview
+
+**Here’s a quick overview of available API endpoints:**
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Endpoint</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong>GET</strong>
+      </td>
+      <td>`/products`</td>
+      <td>Returns a list of products.</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>GET</strong>
+      </td>
+      <td>`/products/{id}`</td>
+      <td>Retrieves a specific product by ID.</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>GET</strong>
+      </td>
+      <td>`/products-barcode/{barcode}`</td>
+      <td>Retrieves a specific product by barcode.</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>GET</strong>
+      </td>
+      <td>`/search`</td>
+      <td>Searches products or product types by keyword.</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>POST</strong>
+      </td>
+      <td>`/products/push`</td>
+      <td>Pushes products into the database.</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>DELETE</strong>
+      </td>
+      <td>`/products`</td>
+      <td>Removes specified products by ID.</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>PATCH</strong>
+      </td>
+      <td>`/products`</td>
+      <td>Updates products in the database.</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>POST</strong>
+      </td>
+      <td>`/products-push`</td>
+      <td>Pushes products into a specific space.</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>PATCH</strong>
+      </td>
+      <td>`/variants`</td>
+      <td>Updates variant-level information.</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>GET</strong>
+      </td>
+      <td>`/product-types`</td>
+      <td>Returns a list of product types.</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>GET</strong>
+      </td>
+      <td>`/product-types/{id}`</td>
+      <td>Retrieves a specific product type by ID.</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>POST</strong>
+      </td>
+      <td>`/product-types`</td>
+      <td>Pushes product types into the database.</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>DELETE</strong>
+      </td>
+      <td>`/product-types`</td>
+      <td>Removes specified product types by ID.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Working with Products
+
+### Retrieve Products
+
+To fetch a list of products, use the `GET` method:
+
+```http
+GET {base-url}/{tenant-id}/{environment}/products
+```
+
+### Query Parameters
+
+Use the following parameters to refine your results:
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`search`</td>
+      <td>string</td>
+      <td>Search for products by keyword.</td>
+      <td>`Desks`</td>
+    </tr>
+    <tr>
+      <td>`limit`</td>
+      <td>number</td>
+      <td>Max number of results to return (default: 50).</td>
+      <td>`100`</td>
+    </tr>
+    <tr>
+      <td>`page`</td>
+      <td>number</td>
+      <td>Pagination (default: 1).</td>
+      <td>`1`</td>
+    </tr>
+    <tr>
+      <td>`select`</td>
+      <td>string</td>
+      <td>Specify which fields to return (comma-separated).</td>
+      <td>`productName, productPrice`</td>
+    </tr>
+    <tr>
+      <td>`filter`</td>
+      <td>object</td>
+      <td>Apply filters using a query string.</td>
+      <td>`{"gt": ["price", 10]}`</td>
+    </tr>
+    <tr>
+      <td>`sort`</td>
+      <td>string</td>
+      <td>Sort results (e.g., field asc or field desc).</td>
+      <td>`price asc`</td>
+    </tr>
+  </tbody>
+</table>
+
+### Push Products
+
+Use the POST method to add or update products in the database:
+
+```http
+POST {base-url}/{tenant-id}/{environment}/products-push
+```
+
+### Request Body
+
+The payload should include an array of GridProduct objects. The productGroupId field is required, while others are optional:
+
+```json
+{
+  "data": [
+    {
+      "productGroupId": "12345",
+      "productName": [
+        {
+          "isoLanguageId": "en-GB",
+          "productName": "Office Desk"
+        }
+      ],
+      "productPriceList": [
+        {
+          "isoCurrencyCode": "USD",
+          "listPrice": 200,
+          "priceListType": "Retail"
+        }
+      ]
+    }
+  ]
+}
+```
+
+<InfoBox>
+  Note: You can send only the fields you want to update. Existing values will
+  remain unchanged unless overwritten.
+</InfoBox>
+
+### Response
+
+The API returns a list of successful operations with product IDs:
+
+```json
+{
+  "success": [{ "productGroupId": "12345", "status": 200 }]
+}
+```
+
+## Delete Products
+
+To remove products from the database, use the DELETE method:
+
+```http
+DELETE {base-url}/{tenant-id}/{environment}/products
+```
+
+### Request Body
+
+```json
+{
+  "data": ["12345", "67890"]
+}
+```
+
+### Response
+
+```json
+{
+  "removed": [
+    { "productGroupId": "12345", "status": 200 },
+    { "productGroupId": "67890", "status": 200 }
+  ]
+}
+```
+
+## Product Types
+
+Product types categorize your products and help organize your database.
+
+### Retrieve Product Types
+
+```http
+GET {base-url}/{tenant-id}/{environment}/product-types
+Returns a list of product types associated with your tenant and environment.
+```
+
+### Push Product Types
+
+Add or update product types using the POST method:
+
+```http
+POST {base-url}/{tenant-id}/{environment}/product-types
+```
+
+### Request Body
+
+```json
+{
+  "data": [
+    { "id": "Furniture", "description": "All furniture items" },
+    { "id": "Tech", "description": "Technology products" }
+  ]
+}
+```

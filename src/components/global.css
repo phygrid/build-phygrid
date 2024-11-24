@@ -152,7 +152,8 @@ dl,
 dd,
 p,
 .gatsby-highlight,
-.gatsby-resp-image-wrapper {
+.gatsby-resp-image-wrapper,
+table {
   margin: 0;
   padding: 0;
   margin-bottom: var(--space-4);
