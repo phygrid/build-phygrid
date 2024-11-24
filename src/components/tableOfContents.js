@@ -49,7 +49,7 @@ const Aside = styled.aside`
   flex: 1 auto;
   padding-left: var(--space-6);
   position: sticky;
-  top: var(--space-6);
+  top: var(--space-3);
   align-self: flex-start;
   display: none;
 

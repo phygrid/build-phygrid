@@ -48,13 +48,14 @@ const DocTemplate = ({ data, children }) => {
     <Layout>
       <Seo title={seoTitle} />
       <Title>
-        {IconComponent && <IconComponent />} {title}
+        {title}
+        {/* {IconComponent && <IconComponent />} {title} */}
       </Title>
       <Container>
-        <TableOfContents items={tableOfContents} />
         <Article className="mdc">
           <MDXProvider components={components}>{children}</MDXProvider>
         </Article>
+        <TableOfContents items={tableOfContents} />
       </Container>
     </Layout>
   )
@@ -93,8 +94,8 @@ const Title = styled.h1`
 `
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: row-reverse;
+  display: grid;
+  grid-template-columns: 1fr auto;
   padding: 0 var(--space-4);
   margin: auto;
   max-width: 980px;
