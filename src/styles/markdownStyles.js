@@ -18,6 +18,8 @@ export const markdownStyles = css`
   }
 
   table {
+    border: 1px solid var(--color-border);
+    border-collapse: collapse;
     th,
     td {
       padding: var(--space-2);
@@ -35,5 +37,8 @@ export const markdownStyles = css`
         border-bottom: 1px solid var(--color-border);
       }
     }
+  }
+  .gatsby-highlight pre {
+    margin: 0;
   }
 `

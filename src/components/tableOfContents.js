@@ -47,7 +47,6 @@ const Title = styled.span`
 
 const Aside = styled.aside`
   flex: 1 100%;
-  max-width: 300px;
   padding-left: var(--space-6);
   position: sticky;
   top: var(--space-6);
@@ -76,6 +75,7 @@ const Aside = styled.aside`
         text-decoration: none;
         color: inherit;
         font-size: var(--font-xs);
+        white-space: nowrap;
 
         &:hover {
           color: var(--color-title);

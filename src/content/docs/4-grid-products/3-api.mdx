@@ -5,28 +5,28 @@ icon: "Plugs"
 
 import { Terminal, Cloud, SquaresFour } from "@phosphor-icons/react"
 
-This is your complete guide to the Grid Products API, including endpoints, authentication, and how to configure your requests for seamless integration.
+This is the API reference for integrating with Grid Products. It provides detailed information on endpoints, authentication, and examples for retrieving, updating, and managing your product data.
 
 ## Postman Collection
 
-To make testing and configuration easier, we’ve prepared a Postman collection you can import directly into Postman.
+For easy testing and configuration, you can import our ready-to-use Postman collection into Postman.
 
 <InfoBox>
   [**Download the Postman
   Collection**](https://elements.getpostman.com/redirect?entityId=28975768-13915009-a9d3-4f9c-acde-b8dbbf7e2a12&entityType=collection)
 </InfoBox>
 
-After importing, you’ll need to adjust the following:
+**Configuration Notes:**
 
-- **URL Placeholders**: Replace `<tenant-id>`, `<environment>`, and `<space-id>` with your actual values.
-- **Data Residency**: Replace `<data-residency>` with one of the following: `eu`, `us`, `in`, `au`, or `uae`.
-- **Headers**: Set the `x-api-key` or `Authorization` header to your generated access token from the Grid Console.
+1. **URL Placeholders**: Replace `<tenant-id>`, `<environment>`, and `<space-id>` with your actual values.
+2. **Data Residency**: Replace `<data-residency>` with one of the following: `eu`, `us`, `in`, `au`, or `uae`.
+3. **Headers**: Set the `x-api-key` or `Authorization` header to your generated access token from the Grid Console.
 
 ---
 
 ## Authentication
 
-To use the Grid Products API, you'll need an access token:
+To use the Grid Products API, every request requires an **access token**. Here's how to generate one:
 
 1. Go to the **<SquaresFour weight="fill" />Apps &rarr; <Terminal weight="fill" />Developer** tab in the Phygrid Console.
 2. Generate an access token.
@@ -34,9 +34,9 @@ To use the Grid Products API, you'll need an access token:
 
 ---
 
-## API URLs
+## URL Overview
 
-The `{base-url}` for the Grid Products API depends on your **data residency region**. **Use the appropriate URL:**
+The `{base-url}` for the Grid Products API varies based on your **data residency**. Use the correct region-specific URL from the table below:
 
 <table>
   <thead>
@@ -71,7 +71,7 @@ Replace `{tenant-id}` with your tenant ID and `{environment}` with the environme
 
 ## Endpoints Overview
 
-**Here’s a quick overview of available API endpoints:**
+**Here's a quick overview of available API endpoints:**
 
 <table>
   <thead>
@@ -178,17 +178,36 @@ Replace `{tenant-id}` with your tenant ID and `{environment}` with the environme
 
 ## Working with Products
 
-### Retrieve Products
+### Fetch Products
 
-To fetch a list of products, use the `GET` method:
+Retrieve products with a `GET` request:
 
 ```http
 GET {base-url}/{tenant-id}/{environment}/products
+POST {base-url}/{tenant-id}/{environment}/products
 ```
 
-### Query Parameters
+<InfoBox>
+  For large requests (>2k characters) we recommend performing the same call
+  using POST method instead to avoid URL-length limitations.
+</InfoBox>
 
-Use the following parameters to refine your results:
+#### Response
+
+```json
+{
+  list: Array<Partial<GridProduct>>,
+  count: number,
+  facets:  {  [propertyName]: FacetResults[] },
+  attributeFilters: { [key]: string[] }
+}
+```
+
+Reference: [GridProduct](#)
+
+#### Query Parameters
+
+Use the following parameters as GET properties in the URL to refine your results:
 
 <table>
   <thead>
@@ -239,109 +258,745 @@ Use the following parameters to refine your results:
   </tbody>
 </table>
 
-### Push Products
+### GET Product by ID
 
-Use the POST method to add or update products in the database:
+Retrieve a specific product by its ID:
 
 ```http
-POST {base-url}/{tenant-id}/{environment}/products-push
+GET {base-url}/{tenant-id}/{environment}/products/{productGroupId}
 ```
 
-### Request Body
+#### Response
 
-The payload should include an array of GridProduct objects. The productGroupId field is required, while others are optional:
+Returns `Partial<GridProduct>`
+
+#### Query Parameters
+
+To use query parameters, add them as GET properties to the URL.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productGroupId`</td>
+      <td>string</td>
+      <td>The ID of the Product</td>
+      <td>`100001`</td>
+    </tr>
+    <tr>
+      <td>`select`</td>
+      <td>string</td>
+      <td>List of selected fields to be returned (comma-separated)</td>
+      <td>`productGroupId, productName, productDescription`</td>
+    </tr>
+    <tr>
+      <td>`filter`</td>
+      <td>string</td>
+      <td>Query string to use for filtering results based on filterable fields (operators and string values should be enclosed in double quotes)</td>
+      <td>`{"gt": ["productPriceList/listPrice", 10]}`</td>
+    </tr>
+    <tr>
+      <td>`includeProductsByVariantsByGroupId`</td>
+      <td>boolean</td>
+      <td>Flag to merge in response the variants related info based on matching `variantsByGroupId` field</td>
+      <td>`false`</td>
+    </tr>
+  </tbody>
+</table>
+
+### GET Product By Barcode
+
+Retrieves a specific product by barcode ID. **Variants checked:**
+
+- globalTradeItemNumber
+- europeanArticleNumber
+- universalProductCode
+
+```http
+GET {base-url}/{tenant-id}/{environment}/products-barcode/{barcode}
+```
+
+#### Response
 
 ```json
 {
-  "data": [
-    {
-      "productGroupId": "12345",
-      "productName": [
-        {
-          "isoLanguageId": "en-GB",
-          "productName": "Office Desk"
-        }
-      ],
-      "productPriceList": [
-        {
-          "isoCurrencyCode": "USD",
-          "listPrice": 200,
-          "priceListType": "Retail"
-        }
-      ]
-    }
-  ]
+    productDetails: Partial<GridProduct>,
+    productId: string
 }
 ```
 
-<InfoBox>
-  Note: You can send only the fields you want to update. Existing values will
-  remain unchanged unless overwritten.
-</InfoBox>
+Reference: [GridProduct](#)
 
-### Response
+#### Query Parameters
 
-The API returns a list of successful operations with product IDs:
+To use query parameters, add them as GET properties to the URL.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`barcode`</td>
+      <td>string</td>
+      <td>Barcode ID</td>
+      <td>`0999999999993`</td>
+    </tr>
+    <tr>
+      <td>`select`</td>
+      <td>string</td>
+      <td>List of selected fields to be returned (comma-separated)</td>
+      <td>`productGroupId, productName, productDescription`</td>
+    </tr>
+    <tr>
+      <td>`filter`</td>
+      <td>string</td>
+      <td>Query string to use for filtering results based on filterable fields (operators and string values should be enclosed in double quotes)</td>
+      <td>`{"gt": ["productPriceList/listPrice", 10]}`</td>
+    </tr>
+    <tr>
+      <td>`includeProductsByVariantsByGroupId`</td>
+      <td>boolean</td>
+      <td>Flag to merge in response the variants related info based on matching `variantsByGroupId` field</td>
+      <td>`false`</td>
+    </tr>
+  </tbody>
+</table>
+
+### GET Search
+
+Searches products or product types by keyword.
+
+```http
+{base-url}/{tenant-id}/{environment}/search
+```
+
+#### Response
 
 ```json
 {
-  "success": [{ "productGroupId": "12345", "status": 200 }]
+  products: Array<Partial<GridProduct>>,
+  productTypes: Array<ProductType>
 }
 ```
 
-## Delete Products
+Reference: [GridProduct](#), [ProductType](#)
 
-To remove products from the database, use the DELETE method:
+#### Query Parameters
+
+To use query parameters, add them as GET properties to the URL.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`term`</td>
+      <td>string</td>
+      <td>Query to search for</td>
+      <td>`Desk`</td>
+    </tr>
+    <tr>
+      <td>`select`</td>
+      <td>string</td>
+      <td>List of selected fields to be returned (comma-separated)</td>
+      <td>`productGroupId, productName, productDescription`</td>
+    </tr>
+  </tbody>
+</table>
+
+### GET Product Recommendations by ID
+
+Retrieves a list of product recommendations taken from RelatedProductGroups
+
+```http
+GET {base-url}/{tenant-id}/{environment}/product-recommendations/{productGroupId}
+```
+
+#### Response
+
+```
+Array<Partial<GridProduct>>
+```
+
+#### Query Parameters
+
+To use query parameters, add them as GET properties to the URL.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productGroupId`</td>
+      <td>string</td>
+      <td>The ID of the Product</td>
+      <td>`100001`</td>
+    </tr>
+  </tbody>
+</table>
+
+### POST Push Products
+
+This API allows you to upload or merge products following the `GridProduct` format. The only required field is `productGroupId` , while other fields are optional.
+
+#### Body
+
+The body of the request should be an Array of [GridProducts](#) JSON format using the `content-type` header `application/json`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`data`</td>
+      <td>`<Partial<GridProduct>>`</td>
+      <td>An array of Partial`<GridProduct>`. This can be a list of products in full GridProduct format or Partial`<GridProduct>` to update specific product fields.</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Payload
+
+Please ensure that the `productGroupId` is always included in the payload.
+
+You have the flexibility to send either a single product field, multiple fields, or the entire product in your payload.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Expected</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productName`</td>
+      <td>`ProductName[]`</td>
+      <td>`replace`</td>
+      <td>The product name will be updated with the new value.</td>
+    </tr>
+    <tr>
+      <td>`productShortDescription`</td>
+      <td>`ProductShortDescription[]`</td>
+      <td>`replace`</td>
+      <td>Product short description will be updated with the new value.</td>
+    </tr>
+    <tr>
+      <td>`productInternalName`</td>
+      <td>`productInternalName[]`</td>
+      <td>`replace`</td>
+      <td>Product internal name will be updated with the new value.</td>
+    </tr>
+    <tr>
+      <td>`storageInstructions`</td>
+      <td>`ProductStorageInstructions[]`</td>
+      <td>`replace`</td>
+      <td>Product storage instructions will be updated with the new value.</td>
+    </tr>
+    <tr>
+      <td>`consumerStorageInstruction`</td>
+      <td>`ProductConsumerStorageInstruction[]`</td>
+      <td>`replace`</td>
+      <td>Product consumer storage instructions will be updated with the new value.</td>
+    </tr>
+    <tr>
+      <td>`productShippingInstruction`</td>
+      <td>`ProductShippingInstruction[]`</td>
+      <td>`replace`</td>
+      <td>Product shipping instructions will be updated with the new value.</td>
+    </tr>
+    <tr>
+      <td>`productType`</td>
+      <td>`Array<string>`</td>
+      <td>`replace`</td>
+      <td>Product type will be updated with the new value.</td>
+    </tr>
+    <tr>
+      <td>`productLabel`</td>
+      <td>`ProductLabel[]`</td>
+      <td>`replace`</td>
+      <td>Product label will be updated with the new value.</td>
+    </tr>
+    <tr>
+      <td>`productTags`</td>
+      <td>`ProductTags[]`</td>
+      <td>`replace`</td>
+      <td>Product tags will be updated with the new value.</td>
+    </tr>
+    <tr>
+      <td>`brand`</td>
+      <td>`ProductBrand[]`</td>
+      <td>`replace`</td>
+      <td>Product brand will be updated with the new value.</td>
+    </tr>
+    <tr>
+      <td>`productVendor`</td>
+      <td>`ProductVendor[]`</td>
+      <td>`replace`</td>
+      <td>Product vendor will be updated with the new value.</td>
+    </tr>
+    <tr>
+      <td>`productDescription`</td>
+      <td>`productDescription[]`</td>
+      <td>`replace`</td>
+      <td>Product description will be replaced with the new value.</td>
+    </tr>
+    <tr>
+      <td>`variants`</td>
+      <td>`Variant[]`</td>
+      <td>`merge`</td>
+      <td>It will merge and update product variants array based on productId and productGroupId.</td>
+    </tr>
+    <tr>
+      <td>`productFeature`</td>
+      <td>`ProductFeature[]`</td>
+      <td>`merge`</td>
+      <td>It will merge and update product features array based on productId.</td>
+    </tr>
+    <tr>
+      <td>`productPriceList`</td>
+      <td>`productPriceList[]`</td>
+      <td>`merge`</td>
+      <td>It will merge and update product prices array based on productId and spaceId.</td>
+    </tr>
+    <tr>
+      <td>`productStatus`</td>
+      <td>`ProductStatus[]`</td>
+      <td>`merge`</td>
+      <td>It will merge and update product status array based on spaceId.</td>
+    </tr>
+    <tr>
+      <td>`catalogPageLocationProduct`</td>
+      <td>`CatalogPageLocationProduct[]`</td>
+      <td>`merge`</td>
+      <td>It will merge and update product catalogue array based on productId and productGroupId.</td>
+    </tr>
+    <tr>
+      <td>`customProperties`</td>
+      <td>`CustomProperties[]`</td>
+      <td>`merge`</td>
+      <td>It will merge and update product custom properties array based on key and spaceId.</td>
+    </tr>
+    <tr>
+      <td>`productItemQuantity`</td>
+      <td>`ProductItemQuantity[]`</td>
+      <td>`merge`</td>
+      <td>It will merge and update product quantity array based on productId and spaceId.</td>
+    </tr>
+  </tbody>
+</table>
+
+We will provide two payload examples to illustrate both the replace and merge operations:
+
+1. When sending the `productName` and `productDescription` in the payload, both of these fields will undergo updates, with the existing values being replaced by the new ones.
+   ```bash
+     curl --location '{base-url}/{tenant-id}/{environment}/products-push' \
+   --header 'Content-Type: application/json' \
+   --data '{
+    "data": [
+            {
+                "productGroupId": "<product-group-id>",
+                "productName": [
+                    {
+                        "isoLanguageId": "en-GB",
+                        "productName": "<product-name>"
+                    },
+                    {
+                        "isoLanguageId": "en-US",
+                        "productName": "<product-name>"
+                    }
+                ],
+                "productDescription": [
+                    {
+                        "isoLanguageId": "en-GB",
+                        "productDescription": "<product-description>"
+                    },
+                    {
+                        "isoLanguageId": "en-US",
+                        "productDescription": "<product-description>    "
+                    }
+                ]
+            }
+    ]
+   }'
+   ```
+2. When including the `roductPriceList` and `productItemQuantity` in the payload, these fields will be subject to updates through a merge operation using the `productId` and `spaceId` as key parameters.
+
+   ```bash
+   curl --location '{base-url}/{tenant-id}/{environment}/products-push' \
+   --header 'Content-Type: application/json' \
+   --data '{
+    "data":[
+        {
+            "productGroupId": "xxxxxxx",
+            "productPriceList": [
+                {
+                  "isoLanguageId": "en-GB",
+                  "productId": "xxxxxxx",
+                  "isoCurrencyCode": "EUR",
+                  "listPrice": 1140,
+                  "priceListType": "Standard",
+                  "spaceId": "xxxxxxx"
+                },
+                {
+                  "isoLanguageId": "en-GB",
+                  "productId": "xxxxxxx",
+                  "isoCurrencyCode": "USD",
+                  "listPrice": 11401,
+                  "priceListType": "Standard",
+                  "spaceId": "xxxxxxx"
+                }
+            ],
+            "productItemQuantity": [
+                {
+                  "productId": "xxxxxxx",
+                  "productItemQuantity": 90,
+                  "spaceId": "xxxxxxx"
+                },
+                {
+                  "productId": "xxxxxxx",
+                  "productItemQuantity": 910,
+                  "spaceId": "xxxxxxx"
+                }
+            ]
+        }
+
+    ]
+   }'
+   ```
+
+The spaceIds array is not included in the request payload. Instead, it is automatically populated based on the values of `productPriceList`, `productStatus`, and `productItemQuantity`.
+
+Limitations: 100 products per batch
+
+### DELETE Space Products
+
+This API detaches products from space by sending an array of `productGroupId`. It will remove these products from the specified space and any relevant subfields in the `GridProduct` that are related to this space.
+
+#### Body
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`data`</td>
+      <td>`Array<string>`</td>
+      <td>An array of productGroupId</td>
+      <td>`['045xxx','046xxx',...]`</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Response
+
+Upon a successful request, the API will return a JSON response with status information for each product removed.
+
+```json
+{
+    "data": [
+        {
+            "productGroupId": "045xxx",
+            "status": 202
+        },
+        {
+            "productGroupId": "046xxx",
+            "status": 202
+        },
+        ....
+    ]
+}
+```
+
+### DELETE Products
+
+Removes products from the Grid Products database based on specified ID's
 
 ```http
 DELETE {base-url}/{tenant-id}/{environment}/products
 ```
 
-### Request Body
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`data`</td>
+      <td>`Array<string>`</td>
+      <td>List of product ID's to be removed from the database</td>
+      <td>`["1001", "1002"]`</td>
+    </tr>
+  </tbody>
+</table>
 
-```json
-{
-  "data": ["12345", "67890"]
-}
+### PATCH (Update) Products
+
+Updates products with the fields specified in the data object. Shallow-update is performed. Fields not passed in this call will remain the same. Fields containing Arrays or Objects will be completely overwritten.
+
+```http
+PATCH {base-url}/{tenant-id}/{environment}/products
 ```
 
-### Response
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`data`</td>
+      <td>`Array&lt;Partial&lt;GridProduct&gt;&gt;`</td>
+      <td>
+        List of products with fields in GridProduct format to update to the
+        Database
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-```json
-{
-  "removed": [
-    { "productGroupId": "12345", "status": 200 },
-    { "productGroupId": "67890", "status": 200 }
-  ]
-}
+**Limitations:** 100 records per batch
+
+### GET Product Variant
+
+Retrieves a specific variant by ID
+
+```http
+GET {base-url}/{tenant-id}/{environment}/variants/{productId}
 ```
+
+#### Response
+
+```
+Returns [VariantInfo](data-model)
+```
+
+#### Query Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productId`</td>
+      <td>`string`</td>
+      <td>The ID of the Product variant</td>
+      <td>`100001`</td>
+    </tr>
+  </tbody>
+</table>
+
+### PATCH (Update) Variants
+
+Updates variants with the fields specified in the data object without requiring the product's `productGroupId`. Shallow-update is performed. Fields not passed in this call stay the same. Fields containing Arrays or Objects (`productPriceList` and `productItemQuantity`) with the matching specified variant's `productId` and `spaceId` only will be upserted.
+
+```
+PATCH {base-url}/{tenant-id}/{environment}/variants
+```
+
+#### Query Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`data`</td>
+      <td>`Array&lt;Partial&lt;VariantUpdateFields&gt;&gt;`</td>
+      <td>
+        List of variants level information with fields in VariantUpdateFields
+        format to update to the Database
+      </td>
+    </tr>
+    <tr>
+      <td>`upsertSpaceIds`</td>
+      <td>`boolean`</td>
+      <td>
+        Flag to upsert spaceId values from the productItemQuantity and
+        productPriceList fields to the main product’s spaceIds field
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+Reference: `[VariantUpdateFields](data-model)`
 
 ## Product Types
 
-Product types categorize your products and help organize your database.
+### GET Product Types List
 
-### Retrieve Product Types
+Returns list of product types associated with the tenant id and environment
 
 ```http
 GET {base-url}/{tenant-id}/{environment}/product-types
-Returns a list of product types associated with your tenant and environment.
 ```
 
-### Push Product Types
+#### Response
 
-Add or update product types using the POST method:
-
-```http
-POST {base-url}/{tenant-id}/{environment}/product-types
+```
+Returns Array<ProductType>
 ```
 
-### Request Body
+#### Query Parameters
 
-```json
-{
-  "data": [
-    { "id": "Furniture", "description": "All furniture items" },
-    { "id": "Tech", "description": "Technology products" }
-  ]
-}
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`ids`</td>
+      <td>`string`</td>
+      <td>List of product types ids to be returned</td>
+      <td>`Furniture, Tech`</td>
+    </tr>
+  </tbody>
+</table>
+
+### GET Product Type Details
+
+Returns details of a specific product type
+
+```https
+GET {base-url}/{tenant-id}/{environment}/product-types/{productTypeId}
 ```
+
+#### Response
+
+```
+Returns [ProductType](data-model)
+```
+
+#### Query Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productTypeId`</td>
+      <td>`string`</td>
+      <td>Product type ID to be returned</td>
+      <td>`Furniture`</td>
+    </tr>
+  </tbody>
+</table>
+
+### POST Product Types
+
+Update or insert product types to database
+
+#### Response
+
+```
+Returns Array<[OperationResponse](https://docs.microsoft.com/en-us/javascript/api/@azure/cosmos/operationresponse?view=azure-node-latest)>
+```
+
+**Limitations:** 100 product types documents per batch
+
+Reference: [ProductType](data-model)
+
+### DELETE Product Types
+
+Removes product types from the Grid Products database based on specified ids
+
+```https
+DELETE {base-url}/{tenant-id}/{environment}/product-types
+```
+
+#### Response
+
+```
+Returns Array<{ id: string; status: number; }>
+```
+
+#### Query Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`data`</td>
+      <td>`Array<string>`</td>
+      <td>List of product type IDs to remove from Grid Products database</td>
+      <td>`["Furniture", "Tech"]`</td>
+    </tr>
+  </tbody>
+</table>
+
+Reference: [ProductType](data-model)
