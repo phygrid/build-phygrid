@@ -1,5 +1,6 @@
 ---
 title: "Building Your First Screen App"
+icon: "Devices"
 ---
 
 To build an app for your device connected to the Ombori system there are a few prerequisites. Make sure you have these installed before you start development.
@@ -31,7 +32,7 @@ After you created the application you can run it, this also tests your environme
 - Run `yarn start` to launch the project.
 - After a few seconds, a browser window should open up and display the template screen.
 
-![image](images/template-react-app.png ":size=400")
+![image](./images/template-react-app.png)
 
 As the app is a React app we won't go into details on how to use React, but we'll dive into how you can integrate this newly created app into your Ombori setup.
 
@@ -54,9 +55,11 @@ Open `package.json` and customize the package name. This should be in the format
 }
 ```
 
-?> It is recommended you use kebab-case for the naming of your app.
+<InfoBox>
+  It is recommended you use kebab-case for the naming of your app.
+</InfoBox>
 
-To find the org-slug you're part of, use the `omg org list` command on the CLI you can read more about in the [reference](cli/reference?id=list-organizations).
+To find the org-slug you're part of, use the `omg org list` command on the CLI you can read more about in the [reference](/phygrid-cli/reference#listorganizations).
 
 ### App and Developer name
 
