@@ -41,4 +41,9 @@ export const markdownStyles = css`
   .gatsby-highlight pre {
     margin: 0;
   }
+  /* .header-anchor.before {
+    &:after {
+      content: "#";
+    }
+  } */
 `
