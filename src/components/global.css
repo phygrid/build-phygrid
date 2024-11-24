@@ -11,9 +11,10 @@
   --color-black: #0d0d0d;
   --color-grey: #6a6a6a;
   --color-dark: #202020;
-  --color-border: var(--color-black);
+  --color-border: rgba(255, 255, 255, 0.08);
   --color-light-bg: rgba(255, 255, 255, 0.08);
   --color-hover-bg: rgba(255, 255, 255, 0.08);
+  --color-info: rgba(40, 88, 180, 1);
   --font-sans: eurostile, -apple-system, BlinkMacSystemFont, "Segoe UI",
     Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",

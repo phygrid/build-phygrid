@@ -16,4 +16,24 @@ export const markdownStyles = css`
   code {
     font-size: var(--font-xs) !important;
   }
+
+  table {
+    th,
+    td {
+      padding: var(--space-2);
+    }
+    thead {
+      th {
+        font-weight: normal;
+        text-align: left;
+        color: var(--color-title);
+        border-bottom: 1px solid var(--color-border);
+      }
+    }
+    tbody {
+      td {
+        border-bottom: 1px solid var(--color-border);
+      }
+    }
+  }
 `

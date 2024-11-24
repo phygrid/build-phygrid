@@ -1,0 +1,105 @@
+---
+title: "Integration Flow"
+icon: "Plugs"
+---
+
+import { Terminal, Cloud, SquaresFour } from "@phosphor-icons/react"
+
+To integrate with Grid Products, follow these steps to set everything up and start managing your data.
+
+## Prerequisites
+
+Before you begin, make sure you have access to the [Phygrid Console](https://console.phygrid.com) and the following information:
+
+1. **Tenant ID**  
+   Found in the URL of your tenant after `organisations/`:  
+   `https://console.omborigrid.com/organisations/{tenantId}`
+
+2. **Environment ID**  
+   Create this in the Grid Console under **<Terminal /> Operations &rarr; <Cloud /> Environments**. Examples might include `dev` or `staging`.
+
+3. **Access Token**  
+   Generate an access token in the **<SquaresFour />Apps &rarr; <Terminal />Developers** tab. You’ll need this for all API requests: [Products API](/grid-products/api?id=request-authentication), [Spaces API](/grid-products/spaces-api?id=request-authentication)
+
+---
+
+## Pushing Spaces
+
+Spaces allow you to scope your data to specific locations or stores.
+
+To create Spaces in the database, use the [Create Space endpoint](/grid-products/api?id=post-space). The `id` returned by this endpoint will be used later in `spaceIds` or `spaceId` fields when you format product data using the [GridProduct model](/grid-products/data-model?id=gridproduct).
+
+---
+
+## Pushing Product Types
+
+Product types (or categories) organize your products for use in features like the Endless Aisle app. To create product types, use the [Push Product Types endpoint](/grid-products/api?id=post-push-product-types). Once set up, you can reference these types in the `productType` field of your products.
+
+---
+
+## Pushing Products
+
+Now it’s time to push your products into the database. **You can do this in two ways:**
+
+### **Option 1: Integrate via Backend**
+
+Use our JavaScript NPM package to handle the integration directly in your backend. Follow the steps in the [Integration Setup](/grid-products/integration-flow?id=integration-setup) section to get started.
+
+### **Option 2: Use the API**
+
+For integrations from other systems, use our API and the [Push Products endpoint](/grid-products/api?id=post-push-products). You can also explore the API with our [Postman collection](https://www.postman.com/).
+
+<InfoBox>
+  **Tip:** After downloading the Postman collection, replace the `tenant-id` and
+  `environment` values in your requests. Don’t forget to set the `x-api-key`
+  header with your generated access token.
+</InfoBox>
+
+---
+
+## Integration Setup
+
+To integrate Grid Products into your applications, use the following NPM packages:
+
+1. **React Frontend:** `@ombori/grid-products-client-react`
+
+   Automatically handles parameters like `tenantId`, `environment`, and `dataResidency` for React applications.
+
+   Hosted on [NPM](https://www.npmjs.com/package/@ombori/grid-products-client-react). **Install with npm or yarn:**
+
+   ```bash
+   npm i @ombori/grid-products-client-react
+   yarn add @ombori/grid-products-client-react
+   ```
+
+2. **Backend or Other Frontends:** `@ombori/grid-products`
+
+   Suitable for both backend and non-React frontend applications.
+
+   Hosted on NPM. **Install with npm or yarn:**
+
+   ```bash
+   npm i @ombori/grid-products
+   yarn add @ombori/grid-products
+   ```
+
+   ### Integrating into a Backend
+
+   For backend integrations, use the GridProductServiceAdmin class to add, update, or remove products.
+
+   ```javascript
+   import { GridProductServiceAdmin } from "@ombori/grid-products"
+
+   const gridProductAdmin = new GridProductServiceAdmin({
+     tenantId: "your-tenant-id",
+     environment: "staging",
+     accessToken: "your-access-token",
+     dataResidency: "EU",
+   })
+
+   const idsToRemove = ["ID1", "ID2", "ID3"]
+
+   await gridProductAdmin.removeProducts(idsToRemove)
+   ```
+
+   Refer to the Push Products endpoint for details on API limitations and requirements.

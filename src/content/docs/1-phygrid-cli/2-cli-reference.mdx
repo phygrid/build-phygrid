@@ -182,12 +182,12 @@ phy app publish --file path/to/file.gridapp --overwrite
 
 ## Organisation
 
-This subsection is placed under the `phy org` CLI, and currently only has one function, to list the organizations you're part of.
+This subsection is placed under the `phy tenant` CLI, and currently only has one function, to list the organizations you're part of.
 
 ### List organizations
 
 ```bash
-phy org list
+phy tenant list
 ```
 
 This will return a list of organizations you're part of, plus the organization slug you need to use to configure modules and apps.
@@ -195,7 +195,7 @@ This will return a list of organizations you're part of, plus the organization s
 If you want to filter the list, there is an optional parameter you can pass along that will filter it for you.
 
 ```bash
-phy org list [search-string]
+phy tenant list [search-string]
 ```
 
 > Replace `[search-string]` with the parameter you want to search with. This will search in both the name and the slug.

@@ -10,6 +10,7 @@ import Seo from "../components/seo"
 import Layout from "../components/layout"
 import Accordion from "../components/accordion"
 import TableOfContents from "../components/tableOfContents"
+import InfoBox from "../components/info"
 
 import { markdownStyles } from "../styles/markdownStyles"
 import { breakpoints } from "../styles/breakpoints"
@@ -18,6 +19,7 @@ const components = {
   StaticImage, // Add StaticImage to MDX scope
   Accordion,
   PhosphorIcons,
+  InfoBox,
 }
 
 const DocTemplate = ({ data, children }) => {
