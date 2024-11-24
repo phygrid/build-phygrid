@@ -46,7 +46,7 @@ const Title = styled.span`
 `
 
 const Aside = styled.aside`
-  flex: 1 100%;
+  flex: 1 auto;
   padding-left: var(--space-6);
   position: sticky;
   top: var(--space-6);
