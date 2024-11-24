@@ -2,3 +2,201 @@
 title: "Node JS App Integration"
 icon: "FileJs"
 ---
+
+This page describes how you can integrate your NodeJS or Non-react JavaScript-based gridapps.
+
+#### Functions
+
+- [init](/grid-signals/nodejs-integration?id=init)
+
+#### States and Events
+
+- [Event Tracking](/grid-signals/tracking-events)
+
+## init
+
+Used to initialize the Grid Signals instance with the required [Init Parameters](/grid-signals/nodejs-integration?id=grid-signals-init-parameters).
+
+```js
+import GridSignals from '@ombori/grid-signals';
+
+...
+const gs = new GridSignals();
+await gs.init(params)
+...
+```
+
+#### Usage
+
+```js
+import GridSignals from '@ombori/grid-signals';
+
+...
+
+const gs = new GridSignals();
+await gs.init({
+  deviceId: 'XXXXXXXXXXXXXXXXXXXXXXXX',
+  installationId: 'XXXXXXXXXXXXXXXXXXXXXXXX',
+  spaceId: 'XXXXXXXXXXXXXXXXXXXXXXXX',
+  tenantId: 'XXXXXXXXXXXXXXXXXXXXXXXX',
+  appVersion: 'XXXXXXXXXXXXXXXXXXXXXXXX',
+  appId: 'XXXXXXXXXXXXXXXXXXXXXXXX',
+  environment: 'PROD',
+  dataResidency: 'EU',
+  country: 'SE',
+  installationVersion: 'XXXXXXXXXXXXXXXXXXXXXXXX',
+  accessId: 'XXXX',
+  accessToken: 'XXXX',
+});
+
+await gs.sendCustomEvent({
+  eventType: 'RECYCLE',
+  interaction: true,
+  str1: 'bottles', // unit
+  int1: 5, // quantity
+});
+
+...
+```
+
+## Grid Signals Init Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>tenantId</td>
+      <td>string</td>
+      <td>Tenant id in the Grid Console</td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>environment</td>
+      <td>string</td>
+      <td>Application environment</td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>dataResidency</td>
+      <td>string</td>
+      <td>The region where to store the data</td>
+      <td>yes</td>
+      <td>"EU", "UAE", "IN", "US", "AU"</td>
+    </tr>
+    <tr>
+      <td>country</td>
+      <td>string</td>
+      <td>Tenant base country (Abbrev.)</td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>spaceId</td>
+      <td>string</td>
+      <td>The id of the Space where the device or any entity is located</td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>appId</td>
+      <td>string</td>
+      <td>The id of the gridapp which is running on a device</td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>appVersion</td>
+      <td>string</td>
+      <td>
+        List of Product Type IDs applicable to this product as a reference from
+        ProductTypes Database
+      </td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>installationId</td>
+      <td>string</td>
+      <td>The id of the installation in Grid Console</td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>installationVersion</td>
+      <td>string</td>
+      <td>Build id of the installation</td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>deviceId</td>
+      <td>string</td>
+      <td>
+        Id of the device in the console. If deviceId is not passed, virtual
+        deviceId is created
+      </td>
+      <td>no</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clientUserAgent</td>
+      <td>string</td>
+      <td>Requestor user agent</td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>locationAccuracy</td>
+      <td>number</td>
+      <td>Geographic coordinates accuracy</td>
+      <td>no</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>latitude</td>
+      <td>number</td>
+      <td>Geographic latitude of the device or requestor</td>
+      <td>no</td>
+      <td>-90 to 90</td>
+    </tr>
+    <tr>
+      <td>longitude</td>
+      <td>number</td>
+      <td>Geographic longitude of the device or requestor</td>
+      <td>no</td>
+      <td>-180 to 180</td>
+    </tr>
+    <tr>
+      <td>accessId</td>
+      <td>string</td>
+      <td>
+        Credentials used when subscribing to session or space state or events
+      </td>
+      <td>no</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>accessToken</td>
+      <td>string</td>
+      <td>
+        Credentials used when subscribing to session or space state or events
+      </td>
+      <td>no</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+## Event Tracking
+
+See [Event Tracking](/grid-signals/tracking-events) page for more details.
