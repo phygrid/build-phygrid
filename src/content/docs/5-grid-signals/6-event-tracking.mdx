@@ -3,161 +3,1136 @@ title: "Event Tracking"
 icon: "Broadcast"
 ---
 
-This page describes how you can integrate your React-based App to Grid Signals.
+### Standard Events
 
-#### Functions
+Predefined functions and events that are common across different types of apps within the Grid. These standard functions exist so that the same events always have the same payload, so analytics data is consistent across different types of apps, which makes for easier reporting.
 
-- [useGridSignals](grid-signals/react-app-integration?id=useGridSignals)
-- [useGridSignalsWithExternalParams](grid-signals/react-app-integration?id=createsession)
-- [getInstance](/grid-signals/react-app-integration?id=getinstance)
-- [getInstanceProps](/grid-signals/react-app-integration?id=getinstanceprops)
-- [createSession](/grid-signals/react-app-integration?id=createsession)
+When tracking user identity, `identifyContact` and `sendContactMetadata` should be used.
 
-#### States and Events
+- [detectAge](/grid-signals/tracking-events?id=detectage)
+- [detectGender](/grid-signals/tracking-events?id=detectgender)
+- [detectMood](/grid-signals/tracking-events?id=detectmood)
+- [identifyContact](/grid-signals/tracking-events?id=identifycontact)
+- [sendCartAdd](/grid-signals/tracking-events?id=sendcartadd)
+- [sendCartClear](/grid-signals/tracking-events?id=sendcartclear)
+- [sendCartRemove](/grid-signals/tracking-events?id=sendcartremove)
+- [sendCartView](/grid-signals/tracking-events?id=sendcartview)
+- [sendCategoryView](/grid-signals/tracking-events?id=sendcategoryview)
+- [sendCheckout](/grid-signals/tracking-events?id=sendcheckout)
+- [sendContactMetadata](/grid-signals/tracking-events?id=sendcontactmetadata)
+- [sendContentView](/grid-signals/tracking-events?id=sendcontentview)
+- [sendFeedback](/grid-signals/tracking-events?id=sendfeedback)
+- [sendLookView](/grid-signals/tracking-events?id=sendlookview)
+- [sendProductView](/grid-signals/tracking-events?id=sendproductview)
+- [sendPurchase](/grid-signals/tracking-events?id=sendpurchase)
+- [sendRating](/grid-signals/tracking-events?id=sendrating)
+- [sendSearch](/grid-signals/tracking-events?id=sendsearch)
+- [sendSearchClear](/grid-signals/tracking-events?id=sendsearchclear)
 
-- [Event Tracking](grid-signals/tracking-events)
+### Custom Events
 
-## useGridSignals
+any events and parameters based on you needs
 
-Use this hook if your app is built from the `omg app create` template or is using `@ombori/ga-settings`.
+- [sendCustomEvent](/grid-signals/tracking-events?id=sendCustomEvent)
 
-This will initialize the Grid Signals instance using the application settings. Under the hood, it uses `@ombori/ga-settings` to automatically get the required Grid Signals parameters for initialization.
+Make sure you only invoke function events _after_ Grid Signals is initialized.
 
-You can only start invoking any other functions when Grid Signals is ready.
+## detectAge
 
-#### Usage
-
-```js
-import React from "react"
-import { useGridSignals, getInstance as gs } from "@ombori/grid-signals-react"
-const App = () => {
-  const isReady = useGridSignals()
-  if (!isReady) {
-    return <div>Initializing App</div>
-  }
-  return <MainPage />
-}
-```
-
-Ideally, you don't need to override the parameters when using this function. However, we provide the ability to override the [Grid Signals Init Parameters](grid-signals/react-app-integration?id=grid-signals-init-parameters) for flexibility.
-
-```js
-const isReady = useGridSignals({
-  environment: 'TEST_ENV',
-  ...<other valid parameters you want to override>,
-});
-```
-
-## useGridSignalsWithExternalParams
-
-Use this hook if your app is **not** using `@ombori/ga-settings`.
-
-This will initialize the Grid Signals instance with the required [Init Parameters](grid-signals/react-app-integration?id=grid-signals-init-parameters).
-
-#### Usage
-
-```js
-import React from "react"
-import { useGridSignalsWithExternalParams } from "@ombori/grid-signals-react"
-
-const App = () => {
-  const isReady = useGridSignalsWithExternalParams({
-    deviceId: "XXXXXXXXXXXXXXXXXXXXXXXX",
-    installationId: "XXXXXXXXXXXXXXXXXXXXXXXX",
-    spaceId: "XXXXXXXXXXXXXXXXXXXXXXXX",
-    tenantId: "XXXXXXXXXXXXXXXXXXXXXXXX",
-    appVersion: "XXXXXXXXXXXXXXXXXXXXXXXX",
-    appId: "XXXXXXXXXXXXXXXXXXXXXXXX",
-    environment: "PROD",
-    dataResidency: "EU",
-    country: "SE",
-    installationVersion: "XXXXXXXXXXXXXXXXXXXXXXXX",
-    accessId: "XXXX",
-    accessToken: "XXXX",
-  })
-
-  if (!isReady) {
-    return <div>Initializing App</div>
-  }
-
-  return <MainPage />
-}
-```
-
-## getInstanceProps
-
-This will return the instance object of the session. Ideally, you don't need to get the instance props. This is provided for flexibility.
-
-Usage
+### **React**
 
 ```js
 import { getInstance as gs } from '@ombori/grid-signals-react';
-
 ...
-  gs().getInstanceProps();
+gs().detectAge(params);
 ...
 ```
 
-#### Returns
+### **NodeJS or Javascript**
 
-These are the instance properties that are returned from the `getInstance()` method.
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.detectAge(params);
+...
+```
 
-| Key                 | Type   | Description                                                                                   |
-| ------------------- | ------ | --------------------------------------------------------------------------------------------- |
-| tenantId            | string | Tenant id in the Grid Console                                                                 |
-| sessionId           | string | Grid Session instance-id                                                                      |
-| environment         | string | Application environment                                                                       |
-| dataResidency       | string | The region where to store the data                                                            |
-| country             | string | Tenant base country (Abbrev.)                                                                 |
-| spaceId             | string | The id of the Space where the device or any entity is located                                 |
-| appId               | string | The id of the gridapp which is running on a device                                            |
-| appVersion          | string | List of Product Type IDs applicable to this product as a reference from ProductTypes Database |
-| installationId      | string | The id of the installation in Grid Console                                                    |
-| installationVersion | string | Build id of the installation                                                                  |
-| deviceId            | string | Id of the device in the console. If deviceId is not passed, virtual deviceId is created       |
-| clientId            | string | Client id of the requestor. clientId is same as deviceId for registered devices in console    |
-| clientCreated       | string | Date when the client id is created                                                            |
-| clientUserAgent     | string | Requestor user agent                                                                          |
-| locationAccuracy    | number | Geographic coordinates accuracy                                                               |
-| latitude            | number | Geographic latitude of the device or requestor                                                |
-| longitude           | number | Geographic longitude of the device or requestor                                               |
-| lastActivity        | string | Date string of the last invoked function                                                      |
+Information about the user, returned from computer vision, 3rd party services, or selected by a user in the UI
 
-## createSession
+> Note, this method will update the Contact Metadata but it will also log the values for analytics purposes.
+> If `CONTACT_METADATA` event is used directly, then the value is not logged for reports
 
-Starts a new session. You should call this method every time a new user starts interacting with the application.
+### Parameters
 
-Usage
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ageRange</td>
+      <td>number</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>interaction</td>
+      <td>boolean</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>targetAge</td>
+      <td>number</td>
+      <td>yes</td>
+    </tr>
+  </tbody>
+</table>
+
+## detectGender
+
+### **React**
 
 ```js
 import { getInstance as gs } from '@ombori/grid-signals-react';
-
 ...
-  gs().createSession();
+gs().detectGender(params);
 ...
 ```
 
-## Grid Signals Init Parameters
+### **NodeJS or Javascript**
 
-| Key                 | Type   | Description                                                                                   | Required | Options                       |
-| ------------------- | ------ | --------------------------------------------------------------------------------------------- | -------- | ----------------------------- |
-| tenantId            | string | Tenant id in the Grid Console                                                                 | yes      |                               |
-| environment         | string | Application environment                                                                       | yes      |                               |
-| dataResidency       | string | The region where to store the data                                                            | yes      | "EU", "UAE", "IN", "US", "AU" |
-| country             | string | Tenant base country (Abbrev.)                                                                 | yes      |                               |
-| spaceId             | string | The id of the Space where the device or any entity is located                                 | yes      |                               |
-| appId               | string | The id of the gridapp which is running on a device                                            | yes      |                               |
-| appVersion          | string | List of Product Type IDs applicable to this product as a reference from ProductTypes Database | yes      |                               |
-| installationId      | string | The id of the installation in Grid Console                                                    | yes      |                               |
-| installationVersion | string | Build id of the installation                                                                  | yes      |                               |
-| deviceId            | string | Id of the device in the console. If deviceId is not passed, virtual deviceId is created       | no       |                               |
-| clientUserAgent     | string | Requestor user agent                                                                          | yes      |                               |
-| locationAccuracy    | number | Geographic coordinates accuracy                                                               | no       |                               |
-| latitude            | number | Geographic latitude of the device or requestor                                                | no       | -90 to 90                     |
-| longitude           | number | Geographic longitude of the device or requestor                                               | no       | -180 to 180                   |
-| accessId            | string | Credentials used when subscribing to session or space state or events                         | no       |                               |
-| accessToken         | string | Credentials used when subscribing to session or space state or events                         | no       |                               |
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.detectGender(params);
+...
+```
 
-## Event Tracking
+Information about the user, returned from computer vision, 3rd party services, or selected by a user in the UI
 
-See [Event Tracking](grid-signals/tracking-events) page for more details.
+<InfoBox>
+  Note, this method will update the Contact Metadata but it will also log the
+  values for analytics purposes.
+</InfoBox>
+<InfoBox>
+  If `CONTACT_METADATA` event is used directly, then the value is not logged for
+  reports
+</InfoBox>
+
+### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>certainty</td>
+      <td>number</td>
+      <td>yes</td>
+      <td>The certainty of the mood, provided by computer vision</td>
+    </tr>
+    <tr>
+      <td>gender</td>
+      <td>string</td>
+      <td>yes</td>
+      <td>Any of the following: FEMALE, MALE</td>
+    </tr>
+    <tr>
+      <td>interaction</td>
+      <td>boolean</td>
+      <td>yes</td>
+      <td>
+        If the user provided this value or if it was detected from computer
+        vision
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## detectMood
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().detectMood(params);
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.detectMood(params);
+...
+```
+
+Information about the user, return from computer vision or selected by a user in the UI
+
+<InfoBox>
+  Note: this method will update the Contact Metadata but it will also log the
+  values for analytics purposes.
+</InfoBox>
+<InfoBox>
+  If `CONTACT_METADATA` event is used directly, then the value is not logged for
+  reports
+</InfoBox>
+
+### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>certainty</td>
+      <td>number</td>
+      <td>yes</td>
+      <td>The certainty of the mood, provided by computer vision</td>
+    </tr>
+    <tr>
+      <td>mood</td>
+      <td>string</td>
+      <td>yes</td>
+      <td>
+        Any of the following: ANGRY, DISGUST, FEAR, HAPPY, SAD, SURPRISE,
+        NEUTRAL
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## identifyContact
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().identifyContact(params);
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.identifyContact(params);
+...
+```
+
+Identifying the customer based on a known identifier
+
+### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>contactType</td>
+      <td>STRING</td>
+      <td>yes</td>
+      <td>Provide any of PHONE, EMAIL, and CLIENT_ID</td>
+    </tr>
+    <tr>
+      <td>contact</td>
+      <td>string</td>
+      <td>yes</td>
+      <td>Enter the value of contactType</td>
+    </tr>
+    <tr>
+      <td>interaction</td>
+      <td>boolean</td>
+      <td>yes</td>
+      <td>Whether the event was triggered by the user or not</td>
+    </tr>
+  </tbody>
+</table>
+
+## sendCartAdd
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().sendCartAdd(params);
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.sendCartAdd(params);
+...
+```
+
+Adding a product to the cart
+
+### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>productId</td>
+      <td>string</td>
+      <td>Product primary id used in PIM</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>quantity</td>
+      <td>number</td>
+      <td>Product quantity added into the cart</td>
+      <td>yes</td>
+    </tr>
+  </tbody>
+</table>
+
+## sendCartClear
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().sendCartClear();
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.sendCartClear();
+...
+```
+
+Clear the cart
+
+## sendCartRemove
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().sendCartRemove(params);
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.sendCartRemove(params);
+...
+```
+
+Remove a product from the cart
+
+### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>productId</code>
+      </td>
+      <td>string</td>
+      <td>Product primary id used in PIM</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>
+        <code>quantity</code>
+      </td>
+      <td>number</td>
+      <td>Product quantity added into the cart</td>
+      <td>yes</td>
+    </tr>
+  </tbody>
+</table>
+
+## sendCartView
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().sendCartView();
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.sendCartView();
+...
+```
+
+View the cart page
+
+## sendCategoryView
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().sendCategoryView(params);
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.sendCategoryView(params);
+...
+```
+
+Browse a category's page
+
+### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>categoryId</code>
+      </td>
+      <td>string</td>
+      <td>Category primary id used in PIM</td>
+      <td>yes</td>
+    </tr>
+  </tbody>
+</table>
+
+## sendCheckout
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().sendCheckout();
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.sendCheckout();
+...
+```
+
+Checkout step before payment
+
+## sendContactMetadata
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().sendContactMetadata(params);
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.sendContactMetadata(params);
+...
+```
+
+Identifying the customer based on a known identifier.
+
+### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>interaction</code>
+      </td>
+      <td>boolean</td>
+      <td>yes</td>
+      <td>Whether the event was triggered by the user or not</td>
+    </tr>
+    <tr>
+      <td>
+        <code>str1</code>
+      </td>
+      <td>string</td>
+      <td>yes</td>
+      <td>
+        Provide any of <code>PHONE</code>, <code>EMAIL</code>, and{" "}
+        <code>CLIENT_ID</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>str2</code>
+      </td>
+      <td>string</td>
+      <td>yes</td>
+      <td>
+        The value of the <code>str1</code> field
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## sendContentView
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().sendContactMetadata(params);
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.sendContactMetadata(params);
+...
+```
+
+View a generic piece of content, equivalent to a "pageview" in old school web analytics
+
+### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>localizedTitle</code>
+      </td>
+      <td>string</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>
+        <code>title</code>
+      </td>
+      <td>string</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>
+        <code>url</code>
+      </td>
+      <td>string</td>
+      <td>no</td>
+    </tr>
+  </tbody>
+</table>
+
+## sendFeedback
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().sendFeedback(params);
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.sendFeedback(params);
+...
+```
+
+Send user's feedback on the experience
+
+### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>feedback</code>
+      </td>
+      <td>string</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>
+        <code>rating</code>
+      </td>
+      <td>1 | 2 | 3 | 4 | 5</td>
+      <td>no</td>
+    </tr>
+  </tbody>
+</table>
+
+## sendLookView
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().sendLookView(params);
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.sendLookView(params);
+...
+```
+
+Viewing a specific fashion look, which is an array of products
+
+### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>lookId</code>
+      </td>
+      <td>string</td>
+      <td>yes</td>
+    </tr>
+  </tbody>
+</table>
+
+## sendProductView
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().sendProductView(params);
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.sendProductView(params);
+...
+```
+
+View a specific product page
+
+### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>productId</code>
+      </td>
+      <td>string</td>
+      <td>Product primary id used in PIM</td>
+      <td>yes</td>
+    </tr>
+  </tbody>
+</table>
+
+## sendPurchase
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().sendPurchase(params);
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.sendPurchase(params);
+...
+```
+
+Payment success
+
+### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>coupon</code>
+      </td>
+      <td>string</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>
+        <code>currencyCode</code>
+      </td>
+      <td>string</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>
+        <code>revenue</code>
+      </td>
+      <td>number</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>
+        <code>shipping</code>
+      </td>
+      <td>number</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>
+        <code>tax</code>
+      </td>
+      <td>number</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>
+        <code>transactionId</code>
+      </td>
+      <td>string</td>
+      <td>yes</td>
+    </tr>
+  </tbody>
+</table>
+
+## sendRating
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().sendRating(params);
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.sendRating(params);
+...
+```
+
+The user's rating of the experience
+
+### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>comment</code>
+      </td>
+      <td>string</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>
+        <code>interactionDelay</code>
+      </td>
+      <td>number</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>
+        <code>rating</code>
+      </td>
+      <td>1 | 2 | 3 | 4 | 5</td>
+      <td>yes</td>
+    </tr>
+  </tbody>
+</table>
+
+## sendSearch
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().sendSearch(params);
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.sendSearch(params);
+...
+```
+
+Searching a product, category, or anything in the app
+
+### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>searchQueryString</code>
+      </td>
+      <td>string</td>
+      <td>yes</td>
+    </tr>
+  </tbody>
+</table>
+
+## sendSearchClear
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().sendSearchClear();
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.sendSearchClear();
+...
+```
+
+Searching a product, category, or anything in the app
+
+## sendCustomEvent
+
+### **React**
+
+```js
+import { getInstance as gs } from '@ombori/grid-signals-react';
+...
+gs().sendCustomEvent(params);
+...
+```
+
+### **NodeJS or Javascript**
+
+```js
+import GridSignals from '@ombori/grid-signals';
+...
+const gs = new GridSignals();
+await gs.init(<init-params>); // Check NodeJS App Integration page for init params reference
+await gs.sendCustomEvent(params);
+...
+```
+
+Used for tracking custom events outside the standard session event methods. Any parameter can be sent, and you have the availabilty of 5 string and 5 number parameters.
+
+### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>eventType</code>
+      </td>
+      <td>string</td>
+      <td>Event type outside the standard event types (Example: TEST_EVENT)</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>
+        <code>interaction</code>
+      </td>
+      <td>boolean</td>
+      <td>If the event is triggered by a user</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>
+        <code>productId</code>
+      </td>
+      <td>string</td>
+      <td>Product id related to the event</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>
+        <code>categoryId</code>
+      </td>
+      <td>string</td>
+      <td>Category id related to the event</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>
+        <code>int1</code>
+      </td>
+      <td>number</td>
+      <td>Integer type field related to the event</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>
+        <code>int2</code>
+      </td>
+      <td>number</td>
+      <td>Integer type field related to the event</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>
+        <code>int3</code>
+      </td>
+      <td>number</td>
+      <td>Integer type field related to the event</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>
+        <code>int4</code>
+      </td>
+      <td>number</td>
+      <td>Integer type field related to the event</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>
+        <code>int5</code>
+      </td>
+      <td>number</td>
+      <td>Integer type field related to the event</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>
+        <code>str1</code>
+      </td>
+      <td>string</td>
+      <td>String type field related to the event</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>
+        <code>str2</code>
+      </td>
+      <td>string</td>
+      <td>String type field related to the event</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>
+        <code>str3</code>
+      </td>
+      <td>string</td>
+      <td>String type field related to the event</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>
+        <code>str4</code>
+      </td>
+      <td>string</td>
+      <td>String type field related to the event</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>
+        <code>str5</code>
+      </td>
+      <td>string</td>
+      <td>String type field related to the event</td>
+      <td>no</td>
+    </tr>
+  </tbody>
+</table>
