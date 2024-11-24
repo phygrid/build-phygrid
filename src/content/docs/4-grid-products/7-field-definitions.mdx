@@ -3,44 +3,718 @@ title: "Field Definitions"
 icon: "Textbox"
 ---
 
-# Communicate from your screen app
+This document contains the definition of all fields mentioned in the Grid Products data-model document.
 
-Communication from your screen app is the most important factor to get a dynamic app that integrates with connected IoT apps. Because without communication you're left with a fancy website on dedicated hardware.
+Nested structures are indicated by separate headers.
 
-## Send messages to another app
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productId`</td>
+      <td>Primary ID of the product</td>
+      <td>Yes</td>
+      <td>`product1`</td>
+    </tr>
+    <tr>
+      <td>`spaceIds`</td>
+      <td>List of spaceIds where product will be visible</td>
+      <td></td>
+      <td>`[<array of ombori generated spaceId>]`</td>
+    </tr>
+    <tr>
+      <td>`introductionDate`</td>
+      <td>Date when product is available/added</td>
+      <td></td>
+      <td>`2012-05-05`</td>
+    </tr>
+    <tr>
+      <td>`plannedAbandonmentDate`</td>
+      <td>Date when product is to be abandoned</td>
+      <td></td>
+      <td>`2030-05-05`</td>
+    </tr>
+    <tr>
+      <td>`shellLifeDays`</td>
+      <td></td>
+      <td></td>
+      <td>`30`</td>
+    </tr>
+    <tr>
+      <td>`productType`</td>
+      <td>List of Product Type IDs applicable to this product as a reference from ProductTypes Database</td>
+      <td></td>
+      <td>`["furniture", "outdoor"]`</td>
+    </tr>
+  </tbody>
+</table>
 
-First, let's have a look at sending messages from a screen app to the device it is running on. These messages can be received in other apps on the same device.
+## productName
 
-To send a message, you need to use the `usePublish` hook from the `@ombori/ga-messaging` package. An example.
+productName is a **required** property that contains an Array of Objects, one is required, which each has the following properties
 
-```javascript
-import { usePublish } from ‘@ombori/ga-messaging’;
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productName`</td>
+      <td>Translation value of the product name</td>
+      <td>Yes</td>
+      <td>`Shirt`</td>
+    </tr>
+    <tr>
+      <td>`isoLanguageId`</td>
+      <td>Iso Language ID in BCP-47 format</td>
+      <td>Yes</td>
+      <td>[ISOLanguageID](../data-models/)</td>
+    </tr>
+  </tbody>
+</table>
 
-const App = () => {
-    const publish = usePublish();
-    publish("event.name", {data: "data here"});
-}
-```
+## productDescription
 
-The entire payload will be sent.
+productDescription is a **required** property that contains an Array of Objects, one is required, which each has the following properties
 
-## Receiving Messages from a different app
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productDescription`</td>
+      <td>Translation value of the product name</td>
+      <td>Yes</td>
+      <td>`Brand New`</td>
+    </tr>
+    <tr>
+      <td>`isoLanguageId`</td>
+      <td>Iso Language ID in BCP-47 format</td>
+      <td>Yes</td>
+      <td>[ISOLanguageID](../data-models/)</td>
+    </tr>
+  </tbody>
+</table>
 
-When you want to receive messages sent by other apps (mainly IoT) on the same device, you need to use the `useSubscribe` hook from the `@ombori/ga-messaging` package. An example.
+## relatedProductGroups
 
-```javascript
-import { useSubscribe } from ‘@ombori/ga-messaging’;
-const App = () => {
-   useSubscribe('event.name', (data) => {
-     // data contains payload
-   }, [])
-}
-```
+relatedProductGroups is **not required**.
 
-The data sent will be present in the data variable.
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`relatedProductGroupId`</td>
+      <td>ID of the related product</td>
+      <td>Yes</td>
+      <td>`P1001`</td>
+    </tr>
+    <tr>
+      <td>`productRelationshipType`</td>
+      <td>Relationship of the related product to the product</td>
+      <td>Yes</td>
+      <td>`Recommended`</td>
+    </tr>
+  </tbody>
+</table>
 
-The hook `useSubscribe` is an extension to the built-in `useEffect` in React. To read more about the extendability and configuration of `useEffect` check the [React Documentation](https://reactjs.org/docs/hooks-reference.html#useeffect)
+## variants
 
-#### The Iot App's side
+variants is a **required** field.
 
-To learn how to send and receive messages from the IotT's end, check the [Communicate with your IoT App](/iot-development/communication.md) documentation
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productId`</td>
+      <td>Variant’s product ID</td>
+      <td>Yes</td>
+      <td>`P1001_01`</td>
+    </tr>
+    <tr>
+      <td>`productGroupId`</td>
+      <td>Product Group ID where variant belongs to</td>
+      <td>Yes</td>
+      <td>`P1001`</td>
+    </tr>
+    <tr>
+      <td>`globalTradeItemNumber`</td>
+      <td>Array of variant’s Global Trade Item Number</td>
+      <td></td>
+      <td>`[]`</td>
+    </tr>
+    <tr>
+      <td>`gtinName`</td>
+      <td>Array of variant’s Gtin Name</td>
+      <td></td>
+      <td>`[]`</td>
+    </tr>
+    <tr>
+      <td>`europeanArticleNumber`</td>
+      <td>Array of variant’s European Article Number</td>
+      <td></td>
+      <td>`[]`</td>
+    </tr>
+    <tr>
+      <td>`universalProductCode`</td>
+      <td>Array of variant’s Universal Product Code</td>
+      <td></td>
+      <td>`[]`</td>
+    </tr>
+    <tr>
+      <td>`periodStartDate`</td>
+      <td>Date when variant was added</td>
+      <td></td>
+      <td>`2021-01-01`</td>
+    </tr>
+    <tr>
+      <td>`periodEndDate`</td>
+      <td>Date when variant will end</td>
+      <td></td>
+      <td>`2024-03-04`</td>
+    </tr>
+    <tr>
+      <td>`productName`</td>
+      <td>
+        The Name of the product variant, using the productName structure as
+        above
+      </td>
+      <td></td>
+      <td>`productName`</td>
+    </tr>
+    <tr>
+      <td>`color`</td>
+      <td>Variant color</td>
+      <td></td>
+      <td>`Red`</td>
+    </tr>
+    <tr>
+      <td>`colorImageUrl`</td>
+      <td>Image to be used as variant picker on apps</td>
+      <td></td>
+      <td>`https://assets.example.com/images/image5.png`</td>
+    </tr>
+    <tr>
+      <td>`size`</td>
+      <td>Variant size</td>
+      <td></td>
+      <td>`M`</td>
+    </tr>
+    <tr>
+      <td>`style`</td>
+      <td>Variant style</td>
+      <td></td>
+      <td>`Summer`</td>
+    </tr>
+  </tbody>
+</table>
+
+## productStatus
+
+productStatus is a **required** field.
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productStatus`</td>
+      <td>Status value of the product</td>
+      <td>Yes</td>
+      <td>`ProductStatus`</td>
+    </tr>
+    <tr>
+      <td>`isoLanguageId`</td>
+      <td>Iso Language ID in BCP-47 format</td>
+      <td>Yes</td>
+      <td>`ISOLanguageID`</td>
+    </tr>
+    <tr>
+      <td>`spaceId`</td>
+      <td>Space where product status is applicable</td>
+      <td>Yes</td>
+      <td>`<ombori generated spaceId>`</td>
+    </tr>
+    <tr>
+      <td>`periodStartDate`</td>
+      <td>Status duration start</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>`periodEndDate`</td>
+      <td>Status duration end</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>`productStatusNote`</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+## productFeature
+
+productFeature is **not required**.
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productId`</td>
+      <td>Variant ID</td>
+      <td>Yes</td>
+      <td>`P1001_01`</td>
+    </tr>
+    <tr>
+      <td>`productFeatureType`</td>
+      <td>Key of the product feature</td>
+      <td>Yes</td>
+      <td>`color`</td>
+    </tr>
+    <tr>
+      <td>`productFeatureValue`</td>
+      <td>Translated value of the product feature</td>
+      <td>Yes</td>
+      <td>`Red`</td>
+    </tr>
+    <tr>
+      <td>`isoLanguageId`</td>
+      <td>Iso Language ID in BCP-47 format</td>
+      <td>Yes</td>
+      <td>`ISOLanguageID`</td>
+    </tr>
+  </tbody>
+</table>
+
+## productPriceList
+
+productPriceList is a **required** field.
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productId`</td>
+      <td>Variant ID</td>
+      <td>Yes</td>
+      <td>`P1001_01`</td>
+    </tr>
+    <tr>
+      <td>`priceListType`</td>
+      <td>Standard or Promotional</td>
+      <td>Yes</td>
+      <td>`Standard`</td>
+    </tr>
+    <tr>
+      <td>`spaceId`</td>
+      <td>Space where price list is applicable</td>
+      <td>Yes</td>
+      <td>`&lt;ombori generated spaceId&gt;`</td>
+    </tr>
+    <tr>
+      <td>`isoLanguageId`</td>
+      <td>Iso Language ID in BCP-47 format</td>
+      <td>Yes</td>
+      <td>`ISOLanguageID`</td>
+    </tr>
+    <tr>
+      <td>`isoCurrencyCode`</td>
+      <td>Iso Currency Code</td>
+      <td>Yes</td>
+      <td>`IsoCurrencyCode List`</td>
+    </tr>
+    <tr>
+      <td>`pricingUomId`</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>`periodStartTimestamp`</td>
+      <td>Price applicable start date</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>`periodEndTimestamp`</td>
+      <td>Price applicable end date</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>`suggestedRetailPrice`</td>
+      <td></td>
+      <td></td>
+      <td>`25.50`</td>
+    </tr>
+    <tr>
+      <td>`listPrice`</td>
+      <td></td>
+      <td>Yes</td>
+      <td>`20.00`</td>
+    </tr>
+  </tbody>
+</table>
+
+## catalogPageLocationProduct
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productId`</td>
+      <td>Variant ID</td>
+      <td>Yes</td>
+      <td>`P1001_01`</td>
+    </tr>
+    <tr>
+      <td>`productGroupId`</td>
+      <td>Parent ID</td>
+      <td>Yes</td>
+      <td>`P1001`</td>
+    </tr>
+    <tr>
+      <td>`catalogType`</td>
+      <td>Type of the image/media</td>
+      <td></td>
+      <td>`image/png`, `video/mp4`</td>
+    </tr>
+    <tr>
+      <td>`catalogPage`</td>
+      <td>Root URL where image/media is found</td>
+      <td></td>
+      <td>`https://assets.example.com`</td>
+    </tr>
+    <tr>
+      <td>`catalogPageLocation`</td>
+      <td>ID or route where image/media is found</td>
+      <td></td>
+      <td>`/images/image5.png`</td>
+    </tr>
+    <tr>
+      <td>`catalogPageLocationProduct`</td>
+      <td>Entire URL where image/media is found</td>
+      <td>Yes</td>
+      <td>`https://assets.example.com/images/image5.png`</td>
+    </tr>
+  </tbody>
+</table>
+
+## productLabel
+
+productLabel is **not a required property** that contains an Array of Objects, one is required, which each has the following properties.
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productLabel`</td>
+      <td>Translation value of the product label</td>
+      <td>Yes</td>
+      <td>`Online Exclusive`</td>
+    </tr>
+    <tr>
+      <td>`spaceId`</td>
+      <td>Space where product label is applicable</td>
+      <td>Yes</td>
+      <td>`&lt;ombori generated spaceId&gt;`</td>
+    </tr>
+    <tr>
+      <td>`isoLanguageId`</td>
+      <td>Iso Language ID in BCP-47 format</td>
+      <td>Yes</td>
+      <td>`ISOLanguageID`</td>
+    </tr>
+  </tbody>
+</table>
+
+## productTags
+
+productTags is **not a required property** that contains an Array of Objects, one is required, which each has the following properties. This field could help in the searchability of a product.
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productTags`</td>
+      <td>Array of translated strings of the tags</td>
+      <td>Yes</td>
+      <td>`["Home", "Outdoor"]`</td>
+    </tr>
+    <tr>
+      <td>`isoLanguageId`</td>
+      <td>Iso Language ID in BCP-47 format</td>
+      <td>Yes</td>
+      <td>`ISOLanguageID`</td>
+    </tr>
+  </tbody>
+</table>
+
+## productItemQuantity
+
+The inventory quantity
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productId`</td>
+      <td>Variant ID</td>
+      <td>Yes</td>
+      <td>`P1001_01`</td>
+    </tr>
+    <tr>
+      <td>`spaceId`</td>
+      <td>Space where quantity/inventory is applicable</td>
+      <td>Yes</td>
+      <td>`&lt;ombori generated spaceId&gt;`</td>
+    </tr>
+    <tr>
+      <td>`productItemQuantityStartDate`</td>
+      <td>Quantity start date</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>`productItemQuantityEndDate`</td>
+      <td>Quantity end date</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>`productItemQuantity`</td>
+      <td>Product quantity value</td>
+      <td>Yes</td>
+      <td>`15`</td>
+    </tr>
+  </tbody>
+</table>
+
+## productShortDescription
+
+productShortDescription is **not a required property** that contains an Array of Objects, one is required, which each has the following properties.
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productShortDescription`</td>
+      <td>Translation value of the short product description</td>
+      <td>Yes</td>
+      <td>`High Quality Shirt`</td>
+    </tr>
+    <tr>
+      <td>`isoLanguageId`</td>
+      <td>Iso Language ID in BCP-47 format</td>
+      <td>Yes</td>
+      <td>`ISOLanguageID`</td>
+    </tr>
+  </tbody>
+</table>
+
+## productInternalName
+
+productInternalName is **not a required property** that contains an Array of Objects, one is required, which each has the following properties.
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productInternalName`</td>
+      <td>Translation of the internal name value</td>
+      <td>Yes</td>
+      <td>`Shirt`</td>
+    </tr>
+    <tr>
+      <td>`isoLanguageId`</td>
+      <td>Iso Language ID in BCP-47 format</td>
+      <td>Yes</td>
+      <td>`ISOLanguageID`</td>
+    </tr>
+  </tbody>
+</table>
+
+## storageInstructions
+
+storageInstructions is **not a required property** that contains an Array of Objects, one is required, which each has the following properties.
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`storageInstructions`</td>
+      <td>Translation of the storage instructions</td>
+      <td>Yes</td>
+      <td>`Keep refrigerated`</td>
+    </tr>
+    <tr>
+      <td>`isoLanguageId`</td>
+      <td>Iso Language ID in BCP-47 format</td>
+      <td>Yes</td>
+      <td>`ISOLanguageID`</td>
+    </tr>
+  </tbody>
+</table>
+
+## consumerStorageInstruction
+
+consumerStorageInstruction is **not a required property** that contains an Array of Objects, one is required, which each has the following properties.
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`ConsumerStorageInstruction`</td>
+      <td>Translation of the storage instructions for the consumer</td>
+      <td>Yes</td>
+      <td>`Keep refrigerated`</td>
+    </tr>
+    <tr>
+      <td>`isoLanguageId`</td>
+      <td>Iso Language ID in BCP-47 format</td>
+      <td>Yes</td>
+      <td>`ISOLanguageID`</td>
+    </tr>
+  </tbody>
+</table>
+
+## productShippingInstruction
+
+productShippingInstruction is **not a required property** that contains an Array of Objects, one is required, which each has the following properties.
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`productShippingInstruction`</td>
+      <td>Translation of the shipping instructions</td>
+      <td>Yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>`isoLanguageId`</td>
+      <td>Iso Language ID in BCP-47 format</td>
+      <td>Yes</td>
+      <td>`ISOLanguageID`</td>
+    </tr>
+  </tbody>
+</table>
