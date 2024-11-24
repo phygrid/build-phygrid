@@ -8,12 +8,7 @@ import icon from "../images/icon-animated.png"
 
 const IndexPage = () => (
   <Layout>
-    <h1 style={{ margin: "auto" }}>The Digital Store Standard</h1>
-    <img
-      src={icon}
-      alt="Phygrid"
-      style={{ width: "80%", margin: "0 auto", opacity: ".25" }}
-    />
+    <img src={icon} alt="Phygrid" style={{ width: "80%", margin: "0 auto" }} />
   </Layout>
 )
 
