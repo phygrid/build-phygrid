@@ -7,15 +7,15 @@ This page describes how you can integrate your React-based App to Grid Signals.
 
 #### Functions
 
-- [useGridSignals](grid-signals/react-app-integration?id=useGridSignals)
-- [useGridSignalsWithExternalParams](grid-signals/react-app-integration?id=createsession)
-- [getInstance](/grid-signals/react-app-integration?id=getinstance)
-- [getInstanceProps](/grid-signals/react-app-integration?id=getinstanceprops)
-- [createSession](/grid-signals/react-app-integration?id=createsession)
+- [useGridSignals](/grid-signals/react-app-integration)
+- [useGridSignalsWithExternalParams](/grid-signals/react-app-integration)
+- [getInstance](/grid-signals/react-app-integration)
+- [getInstanceProps](/grid-signals/react-app-integration)
+- [createSession](/grid-signals/react-app-integration)
 
 #### States and Events
 
-- [Event Tracking](grid-signals/tracking-events)
+- [Event Tracking](/grid-signals/tracking-events)
 
 ## useGridSignals
 
@@ -39,7 +39,7 @@ const App = () => {
 }
 ```
 
-Ideally, you don't need to override the parameters when using this function. However, we provide the ability to override the [Grid Signals Init Parameters](grid-signals/react-app-integration?id=grid-signals-init-parameters) for flexibility.
+Ideally, you don't need to override the parameters when using this function. However, we provide the ability to override the [Grid Signals Init Parameters](/grid-signals/react-app-integration) for flexibility.
 
 ```js
 const isReady = useGridSignals({
@@ -52,7 +52,7 @@ const isReady = useGridSignals({
 
 Use this hook if your app is **not** using `@ombori/ga-settings`.
 
-This will initialize the Grid Signals instance with the required [Init Parameters](grid-signals/react-app-integration?id=grid-signals-init-parameters).
+This will initialize the Grid Signals instance with the required [Init Parameters](/grid-signals/react-app-integration).
 
 #### Usage
 
@@ -102,26 +102,116 @@ import { getInstance as gs } from '@ombori/grid-signals-react';
 
 These are the instance properties that are returned from the `getInstance()` method.
 
-| Key                 | Type   | Description                                                                                   |
-| ------------------- | ------ | --------------------------------------------------------------------------------------------- |
-| tenantId            | string | Tenant id in the Grid Console                                                                 |
-| sessionId           | string | Grid Session instance-id                                                                      |
-| environment         | string | Application environment                                                                       |
-| dataResidency       | string | The region where to store the data                                                            |
-| country             | string | Tenant base country (Abbrev.)                                                                 |
-| spaceId             | string | The id of the Space where the device or any entity is located                                 |
-| appId               | string | The id of the gridapp which is running on a device                                            |
-| appVersion          | string | List of Product Type IDs applicable to this product as a reference from ProductTypes Database |
-| installationId      | string | The id of the installation in Grid Console                                                    |
-| installationVersion | string | Build id of the installation                                                                  |
-| deviceId            | string | Id of the device in the console. If deviceId is not passed, virtual deviceId is created       |
-| clientId            | string | Client id of the requestor. clientId is same as deviceId for registered devices in console    |
-| clientCreated       | string | Date when the client id is created                                                            |
-| clientUserAgent     | string | Requestor user agent                                                                          |
-| locationAccuracy    | number | Geographic coordinates accuracy                                                               |
-| latitude            | number | Geographic latitude of the device or requestor                                                |
-| longitude           | number | Geographic longitude of the device or requestor                                               |
-| lastActivity        | string | Date string of the last invoked function                                                      |
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`tenantId`</td>
+      <td>string</td>
+      <td>Tenant id in the Grid Console</td>
+    </tr>
+    <tr>
+      <td>`sessionId`</td>
+      <td>string</td>
+      <td>Grid Session instance-id</td>
+    </tr>
+    <tr>
+      <td>`environment`</td>
+      <td>string</td>
+      <td>Application environment</td>
+    </tr>
+    <tr>
+      <td>`dataResidency`</td>
+      <td>string</td>
+      <td>The region where to store the data</td>
+    </tr>
+    <tr>
+      <td>`country`</td>
+      <td>string</td>
+      <td>Tenant base country (Abbrev.)</td>
+    </tr>
+    <tr>
+      <td>`spaceId`</td>
+      <td>string</td>
+      <td>The id of the Space where the device or any entity is located</td>
+    </tr>
+    <tr>
+      <td>`appId`</td>
+      <td>string</td>
+      <td>The id of the gridapp which is running on a device</td>
+    </tr>
+    <tr>
+      <td>`appVersion`</td>
+      <td>string</td>
+      <td>
+        List of Product Type IDs applicable to this product as a reference from
+        ProductTypes Database
+      </td>
+    </tr>
+    <tr>
+      <td>`installationId`</td>
+      <td>string</td>
+      <td>The id of the installation in Grid Console</td>
+    </tr>
+    <tr>
+      <td>`installationVersion`</td>
+      <td>string</td>
+      <td>Build id of the installation</td>
+    </tr>
+    <tr>
+      <td>`deviceId`</td>
+      <td>string</td>
+      <td>
+        Id of the device in the console. If deviceId is not passed, virtual
+        deviceId is created
+      </td>
+    </tr>
+    <tr>
+      <td>`clientId`</td>
+      <td>string</td>
+      <td>
+        Client id of the requestor. clientId is same as deviceId for registered
+        devices in console
+      </td>
+    </tr>
+    <tr>
+      <td>`clientCreated`</td>
+      <td>string</td>
+      <td>Date when the client id is created</td>
+    </tr>
+    <tr>
+      <td>`clientUserAgent`</td>
+      <td>string</td>
+      <td>Requestor user agent</td>
+    </tr>
+    <tr>
+      <td>`locationAccuracy`</td>
+      <td>number</td>
+      <td>Geographic coordinates accuracy</td>
+    </tr>
+    <tr>
+      <td>`latitude`</td>
+      <td>number</td>
+      <td>Geographic latitude of the device or requestor</td>
+    </tr>
+    <tr>
+      <td>`longitude`</td>
+      <td>number</td>
+      <td>Geographic longitude of the device or requestor</td>
+    </tr>
+    <tr>
+      <td>`lastActivity`</td>
+      <td>string</td>
+      <td>Date string of the last invoked function</td>
+    </tr>
+  </tbody>
+</table>
 
 ## createSession
 
@@ -139,25 +229,142 @@ import { getInstance as gs } from '@ombori/grid-signals-react';
 
 ## Grid Signals Init Parameters
 
-| Key                 | Type   | Description                                                                                   | Required | Options                       |
-| ------------------- | ------ | --------------------------------------------------------------------------------------------- | -------- | ----------------------------- |
-| tenantId            | string | Tenant id in the Grid Console                                                                 | yes      |                               |
-| environment         | string | Application environment                                                                       | yes      |                               |
-| dataResidency       | string | The region where to store the data                                                            | yes      | "EU", "UAE", "IN", "US", "AU" |
-| country             | string | Tenant base country (Abbrev.)                                                                 | yes      |                               |
-| spaceId             | string | The id of the Space where the device or any entity is located                                 | yes      |                               |
-| appId               | string | The id of the gridapp which is running on a device                                            | yes      |                               |
-| appVersion          | string | List of Product Type IDs applicable to this product as a reference from ProductTypes Database | yes      |                               |
-| installationId      | string | The id of the installation in Grid Console                                                    | yes      |                               |
-| installationVersion | string | Build id of the installation                                                                  | yes      |                               |
-| deviceId            | string | Id of the device in the console. If deviceId is not passed, virtual deviceId is created       | no       |                               |
-| clientUserAgent     | string | Requestor user agent                                                                          | yes      |                               |
-| locationAccuracy    | number | Geographic coordinates accuracy                                                               | no       |                               |
-| latitude            | number | Geographic latitude of the device or requestor                                                | no       | -90 to 90                     |
-| longitude           | number | Geographic longitude of the device or requestor                                               | no       | -180 to 180                   |
-| accessId            | string | Credentials used when subscribing to session or space state or events                         | no       |                               |
-| accessToken         | string | Credentials used when subscribing to session or space state or events                         | no       |                               |
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>tenantId</td>
+      <td>string</td>
+      <td>Tenant id in the Grid Console</td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>environment</td>
+      <td>string</td>
+      <td>Application environment</td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>dataResidency</td>
+      <td>string</td>
+      <td>The region where to store the data</td>
+      <td>yes</td>
+      <td>"EU", "UAE", "IN", "US", "AU"</td>
+    </tr>
+    <tr>
+      <td>country</td>
+      <td>string</td>
+      <td>Tenant base country (Abbrev.)</td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>spaceId</td>
+      <td>string</td>
+      <td>The id of the Space where the device or any entity is located</td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>appId</td>
+      <td>string</td>
+      <td>The id of the gridapp which is running on a device</td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>appVersion</td>
+      <td>string</td>
+      <td>
+        List of Product Type IDs applicable to this product as a reference from
+        ProductTypes Database
+      </td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>installationId</td>
+      <td>string</td>
+      <td>The id of the installation in Grid Console</td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>installationVersion</td>
+      <td>string</td>
+      <td>Build id of the installation</td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>deviceId</td>
+      <td>string</td>
+      <td>
+        Id of the device in the console. If deviceId is not passed, virtual
+        deviceId is created
+      </td>
+      <td>no</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clientUserAgent</td>
+      <td>string</td>
+      <td>Requestor user agent</td>
+      <td>yes</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>locationAccuracy</td>
+      <td>number</td>
+      <td>Geographic coordinates accuracy</td>
+      <td>no</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>latitude</td>
+      <td>number</td>
+      <td>Geographic latitude of the device or requestor</td>
+      <td>no</td>
+      <td>-90 to 90</td>
+    </tr>
+    <tr>
+      <td>longitude</td>
+      <td>number</td>
+      <td>Geographic longitude of the device or requestor</td>
+      <td>no</td>
+      <td>-180 to 180</td>
+    </tr>
+    <tr>
+      <td>accessId</td>
+      <td>string</td>
+      <td>
+        Credentials used when subscribing to session or space state or events
+      </td>
+      <td>no</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>accessToken</td>
+      <td>string</td>
+      <td>
+        Credentials used when subscribing to session or space state or events
+      </td>
+      <td>no</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 
 ## Event Tracking
 
-See [Event Tracking](grid-signals/tracking-events) page for more details.
+See [Event Tracking](/grid-signals/tracking-events) page for more details.
