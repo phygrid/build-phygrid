@@ -3,44 +3,114 @@ title: "Admin API Reference"
 icon: "Plugs"
 ---
 
-# Communicate from your screen app
+import { Terminal, Cloud, SquaresFour } from "@phosphor-icons/react"
 
-Communication from your screen app is the most important factor to get a dynamic app that integrates with connected IoT apps. Because without communication you're left with a fancy website on dedicated hardware.
+This is the API reference for get an overview about grid-products.
 
-## Send messages to another app
+## Postman Collection
 
-First, let's have a look at sending messages from a screen app to the device it is running on. These messages can be received in other apps on the same device.
+For easy configuration and testing, here's a Postman collection you can import into Postman.
 
-To send a message, you need to use the `usePublish` hook from the `@ombori/ga-messaging` package. An example.
+<InfoBox>
+  Download the [Postman
+  Collection](https://elements.getpostman.com/redirect?entityId=28975768-13915009-a9d3-4f9c-acde-b8dbbf7e2a12&entityType=collection)
+</InfoBox>
 
-```javascript
-import { usePublish } from ‘@ombori/ga-messaging’;
+**Configuration Notes:**
 
-const App = () => {
-    const publish = usePublish();
-    publish("event.name", {data: "data here"});
-}
+Before making API requests, update the following placeholders and headers to match your setup:
+
+1. **URL Placeholders:** Replace `<tenant-id>`, `<environment>`, and `<space-id>` with your specific tenant, environment, and space values.
+2. **Data Residency:** Replace `<data-residency>` with one of these options: `eu`, `us`, `in`, `au`, or `uae`.
+3. **Headers:** Please change the `<accessToken>` in the (Product) `x-api-key` or (Space) `Authorization` value with your generated access token in grid console.
+
+## Authentication
+
+To use the Grid Products API, every request requires an **access token**. Here's how to generate one:
+
+1. Go to the **<SquaresFour weight="fill" />Apps &rarr; <Terminal weight="fill" />Developer** tab in the Phygrid Console.
+2. Generate an **Access Token**.
+3. Add **Authorization** in the API request header, with the Bearer `<access token>` as value for the **Spaces** related endpoints below
+
+## URLs Overview
+
+Grid Admin API: [https://api.omborigrid.com/api](https://api.omborigrid.com/api)
+
+In every endpoint you will need to replace `{base-url}` with the URL specified above.
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Endpoint</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`GET`</td>
+      <td>`admin`</td>
+      <td>Returns an overview of the products in the space</td>
+    </tr>
+  </tbody>
+</table>
+
+## Space Overview
+
+### GET Space Overview
+
+Returns overview information of tenant's products int the space.
+
+```http
+GET {base-url}/admin/overview/{spaceId}
 ```
 
-The entire payload will be sent.
+#### Query Parameters
 
-## Receiving Messages from a different app
+To use query parameters, add them as GET properties to the URL.
 
-When you want to receive messages sent by other apps (mainly IoT) on the same device, you need to use the `useSubscribe` hook from the `@ombori/ga-messaging` package. An example.
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`organizationId`</td>
+      <td>`string`</td>
+      <td>The tenant id in grid console</td>
+      <td>`61cxxxxxxxxxxxxxxx`</td>
+    </tr>
+    <tr>
+      <td>`spaceId`</td>
+      <td>`string`</td>
+      <td>The space id in grid console</td>
+      <td>`612cxxxxxxxxxxxxxxx`</td>
+    </tr>
+  </tbody>
+</table>
 
-```javascript
-import { useSubscribe } from ‘@ombori/ga-messaging’;
-const App = () => {
-   useSubscribe('event.name', (data) => {
-     // data contains payload
-   }, [])
+#### Response
+
+```json
+{
+  "data": {
+    "productsCount": 123,
+    "variantsCount": 123,
+    "productsMissingPricesCount": 123,
+    "productsMissingQuantityCount": 123,
+    "productsMissingCatalogCount": 123,
+    "totalProductsQuantity": 123,
+    "productStatus": [
+      {
+        "status": "<status>",
+        "count": 123
+      }
+    ]
+  }
 }
 ```
-
-The data sent will be present in the data variable.
-
-The hook `useSubscribe` is an extension to the built-in `useEffect` in React. To read more about the extendability and configuration of `useEffect` check the [React Documentation](https://reactjs.org/docs/hooks-reference.html#useeffect)
-
-#### The Iot App's side
-
-To learn how to send and receive messages from the IotT's end, check the [Communicate with your IoT App](/iot-development/communication.md) documentation
