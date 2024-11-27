@@ -3,4 +3,303 @@ title: "Real-Time Reports"
 icon: "ChartPieSlice"
 ---
 
-Coming soon.
+The following endpoints are available in the API for real-time reports.
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Endpoint</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/installation-reports?id=get-real-time-sessions">
+          sessions
+        </a>
+      </td>
+      <td>Returns list of sessions in the past 24 hours</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/installation-reports?id=get-real-time-events">
+          events
+        </a>
+      </td>
+      <td>Returns list of events in the past 24 hours</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/installation-reports?id=get-real-time-latest-events">
+          latest-event
+        </a>
+      </td>
+      <td>Returns list of latest events</td>
+    </tr>
+  </tbody>
+</table>
+
+`{tenant-id}` is your tenant id in the grid console.
+
+## GET Real-time Sessions
+
+Returns list of sessions in the past 24 hours
+
+`GET {base-url}/v2/realtime/session/tenants/{tenant-id}`
+
+### Response
+
+```
+[
+  {
+    tenantId: string;
+    sessionId: string;
+    sessionCreated: Date;
+    environment: string;
+    dataResidency: string;
+    country: string;
+    spaceId: string;
+    appId: string;
+    appVersion?: string;
+    installationVersion?: string;
+    installationId: string;
+    deviceId?: string;
+    clientId: string;
+    ip: string;
+    locationAccuracy: number;
+    latitude: number;
+    longitude: number;
+    captureId: string;
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>installationId</td>
+      <td>string</td>
+      <td>Filter by installationId</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>spaceId</td>
+      <td>string</td>
+      <td>Filter by spaceId</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>deviceId</td>
+      <td>string</td>
+      <td>Filter by deviceId</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Real-time Events
+
+Returns list of events in the past 24 hours.
+
+`GET {base-url}/v2/realtime/event/tenants/{tenant-id}`
+
+### Response
+
+```
+[
+  {
+    tenantId: string;
+    eventTime: Date;
+    dataResidency: string;
+    sessionId: string;
+    clientId: string;
+    eventType: string;
+    interaction: boolean;
+    ip: string;
+    captureId: string;
+    productId?: string;
+    categoryId?: string;
+    int1?: number;
+    int2?: number;
+    int3?: number;
+    int4?: number;
+    int5?: number;
+    str1?: string;
+    str2?: string;
+    str3?: string;
+    str4?: string;
+    str5?: string;
+    stateful?: boolean;
+    public?: number;
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>installationId</td>
+      <td>string</td>
+      <td>Filter by installationId</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>spaceId</td>
+      <td>string</td>
+      <td>Filter by spaceId</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>deviceId</td>
+      <td>string</td>
+      <td>Filter by deviceId</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>eventType</td>
+      <td>string</td>
+      <td>Filter by event type</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>interactionType</td>
+      <td>string</td>
+      <td>
+        <code>"interactive"</code> | <code>"nonInteractive"</code> |{" "}
+        <code>"all"</code> - Default is <code>"all"</code>
+      </td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Real-time Latest Events
+
+Returns list of latest events based on distinct fields. It's designed for monitoring events through grid-signals.
+
+`GET {base-url}/v2/realtime/latest-event/tenants/{tenant-id}`
+
+### Response
+
+```
+[
+  {
+    tenantId: string;
+    installationId: string;
+    deviceId: string;
+    spaceId: string
+    eventTime: Date;
+    dataResidency: string;
+    sessionId: string;
+    clientId: string;
+    eventType: string;
+    interaction: boolean;
+    ip: string;
+    captureId: string;
+    productId?: string;
+    categoryId?: string;
+    int1?: number;
+    int2?: number;
+    int3?: number;
+    int4?: number;
+    int5?: number;
+    str1?: string;
+    str2?: string;
+    str3?: string;
+    str4?: string;
+    str5?: string;
+    stateful?: boolean;
+    public?: number;
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>distinctColumns</td>
+      <td>string</td>
+      <td>
+        <code>"str1"</code> | <code>"str2"</code> | <code>"str3"</code> |{" "}
+        <code>"str4"</code> | <code>"str5"</code> |<code>"int1"</code> |{" "}
+        <code>"int2"</code> | <code>"int3"</code> | <code>"int4"</code> |{" "}
+        <code>"int5"</code>
+      </td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>installationId</td>
+      <td>string</td>
+      <td>Filter by installationId</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>spaceId</td>
+      <td>string</td>
+      <td>Filter by spaceId</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>deviceId</td>
+      <td>string</td>
+      <td>Filter by deviceId</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>eventType</td>
+      <td>string</td>
+      <td>Filter by event type</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>interactionType</td>
+      <td>string</td>
+      <td>
+        <code>"interactive"</code> | <code>"nonInteractive"</code> |{" "}
+        <code>"all"</code> - Default is <code>"all"</code>
+      </td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
