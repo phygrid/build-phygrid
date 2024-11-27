@@ -3,4 +3,189 @@ title: "Data Export"
 icon: "Download"
 ---
 
-Coming soon.
+You can export a tenant's raw analytics data from the OmboriGrid Platform through the Data Export feature.
+
+There are two options:
+
+1. Export through the console. Go to your tenant in [console.omborigrid.com](console.omborigrid.com), and navigate to `Menu > Data export`.
+2. Export through API
+
+## Exporting through API
+
+- Below is the instruction on you can export a tenant's raw analytics data.
+
+### Request authentication
+
+- In [Grid Console](console.omborigrid.com), you need to generate an Access Token under the "Developer" tab.
+- Add `Authorization: Bearer <token>` in the request header, with the generated access token value.
+
+### Creating an export job
+
+#### Endpoint
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>URL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>POST</td>
+      <td>`https://api.omborigrid.com/api/analytics-export-job`</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Body
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`tenantId`</td>
+      <td>Tenant ID</td>
+    </tr>
+    <tr>
+      <td>`dataDateFrom`</td>
+      <td>Data date from in `YYYY-MM-DD` format</td>
+    </tr>
+    <tr>
+      <td>`dataDateTo`</td>
+      <td>Data date to in `YYYY-MM-DD` format</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Response
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`status`</td>
+      <td>[queued, processing, done]</td>
+    </tr>
+    <tr>
+      <td>`id`</td>
+      <td>Job ID</td>
+    </tr>
+    <tr>
+      <td>`tenantId`</td>
+      <td>Tenant ID</td>
+    </tr>
+    <tr>
+      <td>`jobExpiryDate`</td>
+      <td>Date when the job will be archived.</td>
+    </tr>
+    <tr>
+      <td>`dataDateFrom`</td>
+      <td>
+        Start date range of the data included in the exported parquet files
+      </td>
+    </tr>
+    <tr>
+      <td>`dataDateTo`</td>
+      <td>End date range of the data included in the exported parquet files</td>
+    </tr>
+    <tr>
+      <td>`createdAt`</td>
+      <td>Date when the job was created</td>
+    </tr>
+    <tr>
+      <td>`updatedAt`</td>
+      <td>Date when the job was updated</td>
+    </tr>
+    <tr>
+      <td>`filename`</td>
+      <td>The target filename of the export job output</td>
+    </tr>
+  </tbody>
+</table>
+
+### Getting an export job status
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>URL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GET</td>
+      <td>`https://api.omborigrid.com/api/analytics-export-job/<job-id>`</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Response
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`status`</td>
+      <td>[queued, processing, done]</td>
+    </tr>
+    <tr>
+      <td>`id`</td>
+      <td>Job ID</td>
+    </tr>
+    <tr>
+      <td>`tenantId`</td>
+      <td>Tenant ID</td>
+    </tr>
+    <tr>
+      <td>`jobExpiryDate`</td>
+      <td>Date when the job will be archived.</td>
+    </tr>
+    <tr>
+      <td>`dataDateFrom`</td>
+      <td>
+        Start date range of the data included in the exported parquet files
+      </td>
+    </tr>
+    <tr>
+      <td>`dataDateTo`</td>
+      <td>End date range of the data included in the exported parquet files</td>
+    </tr>
+    <tr>
+      <td>`createdAt`</td>
+      <td>Date when the job was created</td>
+    </tr>
+    <tr>
+      <td>`updatedAt`</td>
+      <td>Date when the job was updated</td>
+    </tr>
+    <tr>
+      <td>`filename`</td>
+      <td>The target filename of the export job output</td>
+    </tr>
+    <tr>
+      <td>`downloadUrl`</td>
+      <td>Export job output's download url</td>
+    </tr>
+    <tr>
+      <td>`fileSize`</td>
+      <td>Export job output's file size</td>
+    </tr>
+  </tbody>
+</table>
