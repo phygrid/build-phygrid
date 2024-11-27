@@ -3,4 +3,747 @@ title: "App Reports"
 icon: "ChartPieSlice"
 ---
 
-Coming soon.
+The following endpoints are available in the API for app reports.
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Endpoint</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/app-reports?id=get-app-events">events</a>
+      </td>
+      <td>Returns list of app events based on specified query parameters</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/app-reports?id=get-app-sessions">sessions</a>
+      </td>
+      <td>Returns list of app sessions based on specified query parameters</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/app-reports?id=get-app-nps">nps</a>
+      </td>
+      <td>Returns app nps data</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/app-reports?id=get-app-events-flow">
+          events flow
+        </a>
+      </td>
+      <td>Returns app events flow data</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/app-reports?id=get-app-products-events">
+          products events
+        </a>
+      </td>
+      <td>
+        Returns list of app products events based on specified query parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/app-reports?id=get-app-categories-events">
+          categories events
+        </a>
+      </td>
+      <td>
+        Returns list of app categories events based on specified query
+        parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/app-reports?id=get-app-purchases-events">
+          purchases events
+        </a>
+      </td>
+      <td>
+        Returns list of app purchases (transactions) events based on specified
+        query parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/app-reports?id=get-app-purchased-products-events">
+          purchased products events
+        </a>
+      </td>
+      <td>
+        Returns list of app purchased products events based on specified query
+        parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/app-reports?id=get-app-qr-codes-events">
+          qr codes events
+        </a>
+      </td>
+      <td>
+        Returns list of app qr codes events based on specified query parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/app-reports?id=get-app-media-events">
+          media events
+        </a>
+      </td>
+      <td>
+        Returns list of app media events based on specified query parameters
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+`{tenant-id}` is your tenant id in the grid console.
+
+`{app-id}` is your app id in the grid console.
+
+## GET App events
+
+Returns list of app events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/apps/{app-id}/events`
+
+### Response
+
+```
+[
+  {
+    "id": string,
+    "type": string,
+    "tenantId": string,
+    "appId": string,
+    "date": string,
+    "eventType": string,
+    "interaction": boolean,
+    "count": number,
+    "sessionCount": number,
+    "hour"?: number
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>interactionType</td>
+      <td>string</td>
+      <td>
+        Defines events interaction type. <br />
+        Possible values: <code>interactive, nonInteractive, all</code>. Default value:{" "}
+        <code>all</code>
+      </td>
+      <td>interactive</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>timespanType</td>
+      <td>string</td>
+      <td>
+        Defines events timespan type. <br />
+        Possible values: <code>day, hour</code>. Default value: <code>day</code>
+      </td>
+      <td>day</td>
+      <td>false</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET App sessions
+
+Returns list of app sessions based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/apps/{app-id}/sessions`
+
+### Response
+
+```
+[
+  {
+    "id": string,
+    "type": string,
+    "tenantId": string,
+    "sessionCount": number,
+    "date": string,
+    "appId": string,
+    "hour"?: number
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>interactionType</td>
+      <td>string</td>
+      <td>
+        Defines sessions interaction type. <br />
+        Possible values: `interactive, all`. Default value: `all`
+      </td>
+      <td>interactive</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>timespanType</td>
+      <td>string</td>
+      <td>
+        Defines sessions timespan type. <br />
+        Possible values: `day, hour`. Default value: `day`
+      </td>
+      <td>day</td>
+      <td>false</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET App nps
+
+Returns app nps data.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/apps/{app-id}/nps`
+
+### Response
+
+```
+{
+  "score": number,
+  "replyCount": number
+}
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET App events flow
+
+Returns app events flow data.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/apps/{app-id}/eventsFlow`
+
+### Response
+
+```
+[
+  {
+    "count": number,
+    "eventType": string,
+    "eventTypePrevious"?: string,
+    "eventOrder": number
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>eventsFlowDepth</td>
+      <td>number</td>
+      <td>
+        Defines events flow depth. Minimum value: `1`. Maximum value: `40`.
+        Default value: `15`
+      </td>
+      <td>15</td>
+      <td>false</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET App products events
+
+Returns list of app products events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/apps/{app-id}/products`
+
+### Response
+
+```
+[
+  {
+    "id": string,
+    "type": string,
+    "tenantId": string,
+    "date": string,
+    "eventType": string,
+    "interaction": boolean,
+    "productId": string,
+    "count": number,
+    "sessionCount": number,
+    "appId": string
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>interactionType</td>
+      <td>string</td>
+      <td>
+        Defines events interaction type. <br />
+        Possible values: `interactive, nonInteractive, all`. Default value: `all`
+      </td>
+      <td>interactive</td>
+      <td>false</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET App categories events
+
+Returns list of app categories events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/apps/{app-id}/categories`
+
+### Response
+
+```
+[
+  {
+    "id": string,
+    "type": string,
+    "tenantId": string,
+    "date": string,
+    "eventType": string,
+    "interaction": boolean,
+    "categoryId": string,
+    "count": number,
+    "sessionCount": number,
+    "appId": string
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET App purchases events
+
+Returns list of app purchases (transactions) events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/apps/{app-id}/purchases`
+
+### Response
+
+```
+[
+  {
+    id: string;
+    type: string;
+    tenantId: string;
+    date: string;
+    eventType: string;
+    eventTime: string;
+    interaction: boolean;
+    transactionId: string;
+    revenue: number;
+    currency: string;
+    count: number;
+    sessionCount: number;
+    appId: string;
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET App purchased products events
+
+Returns list of app purchased products events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/apps/{app-id}/purchased-products`
+
+### Response
+
+```
+[
+  {
+    id: string;
+    type: string;
+    tenantId: string;
+    date: string;
+    eventType: string;
+    interaction: boolean;
+    transactionId: string;
+    productId: string;
+    categoryId: string;
+    productName: string;
+    currency: string;
+    quantity: number;
+    price: number;
+    count: number;
+    sessionCount: number;
+    appId: string;
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET App qr codes events
+
+Returns list of app qr codes events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/apps/{app-id}/qr-codes`
+
+### Response
+
+```
+[
+  {
+    id: string;
+    type: string;
+    tenantId: string;
+    date: string;
+    eventType: string;
+    interaction: boolean;
+    qrCodeId: string;
+    qrCodeContent: string;
+    qrCodeEntryMethod: string;
+    qrCodeType: string;
+    count: number;
+    sessionCount: number;
+    appId: string;
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET App media events
+
+Returns list of app media events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/apps/{app-id}/media`
+
+### Response
+
+```
+[
+  {
+    id: string;
+    type: string;
+    tenantId: string;
+    date: string;
+    eventType: string;
+    interaction: boolean;
+    mediaId: string;
+    mediaType: string;
+    mediaName: string;
+    mediaTags: string[];
+    mediaDuration: number;
+    count: number;
+    sessionCount: number;
+    appId: string;
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
