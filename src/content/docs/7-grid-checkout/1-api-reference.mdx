@@ -3,72 +3,18 @@ title: "API Reference"
 icon: "Plugs"
 ---
 
-This is the API reference for Grid reports.
-
-## Postman Collection
-
-For easy configuration and testing, here's a Postman collection you can import into Postman.
-
-<InfoBox>
-  Download the [Postman
-  Collection](/grid-reports/grid-reports.postman-collection.json)
-</InfoBox>
-
-### Variables
-
-<table>
-  <thead>
-    <tr>
-      <th>Variable</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>`access-token`</td>
-      <td>
-        An access token that you can generate in Grid Console, under the
-        "Developer" tab.
-      </td>
-    </tr>
-    <tr>
-      <td>`base-url`</td>
-      <td>
-        Depends on the data residency you're working with. Check the "base-url"
-        table below.
-      </td>
-    </tr>
-    <tr>
-      <td>`tenant-id`</td>
-      <td>Your tenant id in the grid console.</td>
-    </tr>
-    <tr>
-      <td>`installation-id`</td>
-      <td>Your installation id in the grid console.</td>
-    </tr>
-    <tr>
-      <td>`space-id`</td>
-      <td>Your space id in the grid console.</td>
-    </tr>
-    <tr>
-      <td>`device-id`</td>
-      <td>Your device id in the grid console.</td>
-    </tr>
-    <tr>
-      <td>`app-id`</td>
-      <td>Your app id in the grid console.</td>
-    </tr>
-  </tbody>
-</table>
+This is the API reference for Grid Checkout API.
 
 ## Request authentication
 
 - In Grid Console, you need to generate an Access Token under the "Developer" tab.
-- Add `Authorization: Bearer <token>` in the request header, with the generated access token value.
+- Add `x-api-key` in the request header, with the generated access token value.
 
-## URL's overview
+## Base API URL overview
 
-The `{base-url}` of the Grid reports API depends on the data residency you're working with. Make sure you use the correct URL for the data residency you're working with.
+The `{baseUrl}` for the Grid Checkout API is determined by the data residency of your tenant.
+
+Regional Grid Checkout base API URLs:
 
 <table>
   <thead>
@@ -80,31 +26,147 @@ The `{base-url}` of the Grid reports API depends on the data residency you're wo
   <tbody>
     <tr>
       <td>EU</td>
-      <td>`https://api.omborigrid.com/regions/eu/reports`</td>
+      <td>`https://api.omborigrid.com/regions/eu/phycheckout`</td>
     </tr>
     <tr>
       <td>US</td>
-      <td>`https://api.omborigrid.com/regions/us/reports`</td>
-    </tr>
-    <tr>
-      <td>IN</td>
-      <td>`https://api.omborigrid.com/regions/in/reports`</td>
-    </tr>
-    <tr>
-      <td>AU</td>
-      <td>`https://api.omborigrid.com/regions/au/reports`</td>
+      <td>`https://api.omborigrid.com/regions/us/phycheckout`</td>
     </tr>
     <tr>
       <td>UAE</td>
-      <td>`https://api.omborigrid.com/regions/uae/reports`</td>
+      <td>`https://api.omborigrid.com/regions/uae/phycheckout`</td>
+    </tr>
+    <tr>
+      <td>IN</td>
+      <td>`https://api.omborigrid.com/regions/in/phycheckout`</td>
+    </tr>
+    <tr>
+      <td>AU</td>
+      <td>`https://api.omborigrid.com/regions/au/phycheckout`</td>
     </tr>
   </tbody>
 </table>
 
-The current API implements 5 dimensions for reports:
+- The standard base URL for most API operations is structured as follows: `https://api.omborigrid.com/regions/{dataResidency}/phycheckout/api/tenants/{tenantId}`
 
-- [Tenant reports](/grid-reports/tenant-reports)
-- [Installation reports](/grid-reports/installation-reports)
-- [Space reports](/grid-reports/space-reports)
-- [Device reports](/grid-reports/device-reports)
-- [App reports](/grid-reports/app-reports)
+- The `{tenantId}` parameter should be substituted with your specific tenant ID, which can be found in your Grid console.
+
+The following endpoints are available in the API:
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Endpoint</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-checkout/api?id=get-transaction-by-id">
+          transaction/{id}
+        </a>
+      </td>
+      <td>Retrieves specific transaction by ID</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-checkout/api?id=get-transactions">transactions</a>
+      </td>
+      <td>Returns list of transactions</td>
+    </tr>
+  </tbody>
+</table>
+
+### GET Transaction by ID
+
+Retrieves a specific transaction by ID
+
+`GET {baseUrl}/api/tenants/{tenantId}/transactions/{transactionId}`
+
+#### Response
+
+```
+{
+    data: Transaction
+}
+```
+
+Reference: [Transaction](/grid-checkout/data-model?id=TransactionResponse)
+
+#### Query Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>transactionId</td>
+      <td>string</td>
+      <td>The ID of the Transaction</td>
+      <td>`100001`</td>
+    </tr>
+  </tbody>
+</table>
+
+### GET Transactions
+
+> **GET {baseUrl}/api/tenants/{tenantId}/transactions**
+
+Retrieves a list of transactions based on specified query parameters.
+
+#### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>limit</td>
+      <td>number</td>
+      <td>
+        Maximum number of item count to retrieve <code>Default: 50</code>
+      </td>
+      <td>`100`</td>
+    </tr>
+    <tr>
+      <td>page</td>
+      <td>number</td>
+      <td>
+        Current pagination result <code>Default: 1</code>
+      </td>
+      <td>`1`</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Response
+
+```
+{
+    items: Array<Transaction>,
+    page: number,
+    totalPages: number,
+    totalItems: number,
+    limit: number,
+}
+```
+
+Reference: [Transaction](/grid-checkout/data-model?id=TransactionResponse)
