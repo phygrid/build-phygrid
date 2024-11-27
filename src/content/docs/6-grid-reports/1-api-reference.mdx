@@ -1,0 +1,110 @@
+---
+title: "API Reference"
+icon: "Plugs"
+---
+
+This is the API reference for Grid reports.
+
+## Postman Collection
+
+For easy configuration and testing, here's a Postman collection you can import into Postman.
+
+<InfoBox>
+  Download the [Postman
+  Collection](/grid-reports/grid-reports.postman-collection.json)
+</InfoBox>
+
+### Variables
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`access-token`</td>
+      <td>
+        An access token that you can generate in Grid Console, under the
+        "Developer" tab.
+      </td>
+    </tr>
+    <tr>
+      <td>`base-url`</td>
+      <td>
+        Depends on the data residency you're working with. Check the "base-url"
+        table below.
+      </td>
+    </tr>
+    <tr>
+      <td>`tenant-id`</td>
+      <td>Your tenant id in the grid console.</td>
+    </tr>
+    <tr>
+      <td>`installation-id`</td>
+      <td>Your installation id in the grid console.</td>
+    </tr>
+    <tr>
+      <td>`space-id`</td>
+      <td>Your space id in the grid console.</td>
+    </tr>
+    <tr>
+      <td>`device-id`</td>
+      <td>Your device id in the grid console.</td>
+    </tr>
+    <tr>
+      <td>`app-id`</td>
+      <td>Your app id in the grid console.</td>
+    </tr>
+  </tbody>
+</table>
+
+## Request authentication
+
+- In Grid Console, you need to generate an Access Token under the "Developer" tab.
+- Add `Authorization: Bearer <token>` in the request header, with the generated access token value.
+
+## URL's overview
+
+The `{base-url}` of the Grid reports API depends on the data residency you're working with. Make sure you use the correct URL for the data residency you're working with.
+
+<table>
+  <thead>
+    <tr>
+      <th>Region</th>
+      <th>URL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>EU</td>
+      <td>`https://api.omborigrid.com/regions/eu/reports`</td>
+    </tr>
+    <tr>
+      <td>US</td>
+      <td>`https://api.omborigrid.com/regions/us/reports`</td>
+    </tr>
+    <tr>
+      <td>IN</td>
+      <td>`https://api.omborigrid.com/regions/in/reports`</td>
+    </tr>
+    <tr>
+      <td>AU</td>
+      <td>`https://api.omborigrid.com/regions/au/reports`</td>
+    </tr>
+    <tr>
+      <td>UAE</td>
+      <td>`https://api.omborigrid.com/regions/uae/reports`</td>
+    </tr>
+  </tbody>
+</table>
+
+The current API implements 5 dimensions for reports:
+
+- [Tenant reports](/grid-reports/tenant-reports)
+- [Installation reports](/grid-reports/installation-reports)
+- [Space reports](/grid-reports/space-reports)
+- [Device reports](/grid-reports/device-reports)
+- [App reports](/grid-reports/app-reports)

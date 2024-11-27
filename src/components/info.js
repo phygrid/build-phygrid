@@ -26,7 +26,11 @@ function InfoBox({ type = "info", children }) {
 
 export default InfoBox
 
-const Content = styled.div``
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
 
 // Styled component
 const InfoWrapper = styled.div`
