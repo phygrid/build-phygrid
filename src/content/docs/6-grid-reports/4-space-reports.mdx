@@ -3,4 +3,752 @@ title: "Space Reports"
 icon: "ChartPieSlice"
 ---
 
-Coming soon.
+## Space reports
+
+The following endpoints are available in the API for space reports.
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Endpoint</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/space-reports?id=get-space-events">events</a>
+      </td>
+      <td>Returns list of space events based on specified query parameters</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/space-reports?id=get-space-sessions">sessions</a>
+      </td>
+      <td>
+        Returns list of space sessions based on specified query parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/space-reports?id=get-space-nps">nps</a>
+      </td>
+      <td>Returns space nps data</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/space-reports?id=get-space-events-flow">
+          events flow
+        </a>
+      </td>
+      <td>Returns space events flow data</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/space-reports?id=get-space-products-events">
+          products events
+        </a>
+      </td>
+      <td>
+        Returns list of space products events based on specified query
+        parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/space-reports?id=get-space-categories-events">
+          categories events
+        </a>
+      </td>
+      <td>
+        Returns list of space categories events based on specified query
+        parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/space-reports?id=get-space-purchases-events">
+          purchases events
+        </a>
+      </td>
+      <td>
+        Returns list of space purchases (transactions) events based on specified
+        query parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/space-reports?id=get-space-purchased-products-events">
+          purchased products events
+        </a>
+      </td>
+      <td>
+        Returns list of space purchased products events based on specified query
+        parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/space-reports?id=get-space-qr-codes-events">
+          qr codes events
+        </a>
+      </td>
+      <td>
+        Returns list of space qr codes events based on specified query
+        parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/space-reports?id=get-space-media-events">
+          media events
+        </a>
+      </td>
+      <td>
+        Returns list of space media events based on specified query parameters
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+`{tenant-id}` is your tenant id in the grid console.
+
+`{space-id}` is your space id in the grid console.
+
+## GET Space events
+
+Returns list of space events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/spaces/{space-id}/events`
+
+### Response
+
+```
+[
+  {
+    "id": string,
+    "type": string,
+    "tenantId": string,
+    "spaceId": string,
+    "date": string,
+    "eventType": string,
+    "interaction": boolean,
+    "count": number,
+    "sessionCount": number,
+    "hour"?: number
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>interactionType</td>
+      <td>string</td>
+      <td>
+        Defines events interaction type. <br />
+        Possible values: `interactive, nonInteractive, all`. Default value: `all`
+      </td>
+      <td>interactive</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>timespanType</td>
+      <td>string</td>
+      <td>
+        Defines events timespan type. <br />
+        Possible values: `day, hour`. Default value: `day`
+      </td>
+      <td>day</td>
+      <td>false</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Space sessions
+
+Returns list of space sessions based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/spaces/{space-id}/sessions`
+
+### Response
+
+```
+[
+  {
+    "id": string,
+    "type": string,
+    "tenantId": string,
+    "sessionCount": number,
+    "date": string,
+    "spaceId": string,
+    "hour"?: string
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>interactionType</td>
+      <td>string</td>
+      <td>
+        Defines sessions interaction type. <br />
+        Possible values: `interactive, all`. Default value: `all`
+      </td>
+      <td>interactive</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>timespanType</td>
+      <td>string</td>
+      <td>
+        Defines sessions timespan type. <br />
+        Possible values: `day, hour`. Default value: `day`
+      </td>
+      <td>day</td>
+      <td>false</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Space nps
+
+Returns space nps data.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/spaces/{space-id}/nps`
+
+### Response
+
+```
+{
+  "score": number,
+  "replyCount": number
+}
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Space events flow
+
+Returns space events flow data.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/spaces/{space-id}/eventsFlow`
+
+#### Response
+
+```
+[
+  {
+    "count": number,
+    "eventType": string,
+    "eventTypePrevious"?: string,
+    "eventOrder": number
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>eventsFlowDepth</td>
+      <td>number</td>
+      <td>
+        Defines events flow depth. Minimum value: `1`. Maximum value: `40`.
+        Default value: `15`
+      </td>
+      <td>15</td>
+      <td>false</td>
+    </tr>
+  </tbody>
+</table>
+
+### GET Space products events
+
+Returns list of space products events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/spaces/{space-id}/products`
+
+### Response
+
+```
+[
+  {
+    "id": string,
+    "type": string,
+    "tenantId": string,
+    "date": string,
+    "eventType": string,
+    "interaction": boolean,
+    "productId": string,
+    "count": number,
+    "sessionCount": number,
+    "spaceId": string
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>interactionType</td>
+      <td>string</td>
+      <td>
+        Defines events interaction type. <br />
+        Possible values: `interactive, nonInteractive, all`. Default value: `all`
+      </td>
+      <td>interactive</td>
+      <td>false</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Space categories events
+
+Returns list of space categories events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/spaces/{space-id}/categories`
+
+### Response
+
+```
+[
+  {
+    "id": string,
+    "type": string,
+    "tenantId": string,
+    "date": string,
+    "eventType": string,
+    "interaction": boolean,
+    "categoryId": string,
+    "count": number,
+    "sessionCount": number,
+    "spaceId": string
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Space purchases events
+
+Returns list of space purchases (transactions) events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/spaces/{space-id}/purchases`
+
+### Response
+
+```
+[
+  {
+    id: string;
+    type: string;
+    tenantId: string;
+    date: string;
+    eventType: string;
+    eventTime: string;
+    interaction: boolean;
+    transactionId: string;
+    revenue: number;
+    currency: string;
+    count: number;
+    sessionCount: number;
+    spaceId: string;
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Space purchased products events
+
+Returns list of space purchased products events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/spaces/{space-id}/purchased-products`
+
+### Response
+
+```
+[
+  {
+    id: string;
+    type: string;
+    tenantId: string;
+    date: string;
+    eventType: string;
+    interaction: boolean;
+    transactionId: string;
+    productId: string;
+    categoryId: string;
+    productName: string;
+    currency: string;
+    quantity: number;
+    price: number;
+    count: number;
+    sessionCount: number;
+    spaceId: string;
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Space qr codes events
+
+Returns list of space qr codes events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/spaces/{space-id}/qr-codes`
+
+### Response
+
+```
+[
+  {
+    id: string;
+    type: string;
+    tenantId: string;
+    date: string;
+    eventType: string;
+    interaction: boolean;
+    qrCodeId: string;
+    qrCodeContent: string;
+    qrCodeEntryMethod: string;
+    qrCodeType: string;
+    count: number;
+    sessionCount: number;
+    spaceId: string;
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Space media events
+
+Returns list of space media events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/spaces/{space-id}/media`
+
+### Response
+
+```
+[
+  {
+    id: string;
+    type: string;
+    tenantId: string;
+    date: string;
+    eventType: string;
+    interaction: boolean;
+    mediaId: string;
+    mediaType: string;
+    mediaName: string;
+    mediaTags: string[];
+    mediaDuration: number;
+    count: number;
+    sessionCount: number;
+    spaceId: string;
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>

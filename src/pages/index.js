@@ -69,7 +69,7 @@ const IndexPage = () => {
           return (
             <Section key={key}>
               <Link to={section.slug}>
-                {IconComponent && <IconComponent weight="fill" size={80} />}
+                {IconComponent && <IconComponent weight="thin" size={80} />}
                 {section.title}
               </Link>
             </Section>
@@ -118,7 +118,8 @@ const Section = styled.li`
     color: var(--color-text);
 
     &:hover {
-      color: var(--color-primary);
+      background: var(--color-primary);
+      color: var(--color-black);
     }
   }
 `
