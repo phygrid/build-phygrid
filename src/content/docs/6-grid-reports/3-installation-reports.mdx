@@ -3,4 +3,837 @@ title: "Installation Reports"
 icon: "ChartPieSlice"
 ---
 
-Coming soon.
+The following endpoints are available in the API for installation reports.
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Endpoint</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/installation-reports?id=get-installation-events">
+          events
+        </a>
+      </td>
+      <td>
+        Returns list of installation events based on specified query parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/installation-reports?id=get-installation-sessions">
+          sessions
+        </a>
+      </td>
+      <td>
+        Returns list of installation sessions based on specified query
+        parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/installation-reports?id=get-installation-nps">
+          nps
+        </a>
+      </td>
+      <td>Returns installation nps data</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/installation-reports?id=get-installation-events-flow">
+          events flow
+        </a>
+      </td>
+      <td>Returns installation events flow data</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/installation-reports?id=get-installation-products-events">
+          products events
+        </a>
+      </td>
+      <td>
+        Returns list of installation products events based on specified query
+        parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/installation-reports?id=get-installation-categories-events">
+          categories events
+        </a>
+      </td>
+      <td>
+        Returns list of installation categories events based on specified query
+        parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/installation-reports?id=get-installation-monitoring-events-history">
+          monitoring events
+        </a>
+      </td>
+      <td>
+        Returns list of grouped monitoring events based on specified query
+        parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/installation-reports?id=get-installation-purchases-events">
+          purchases events
+        </a>
+      </td>
+      <td>
+        Returns list of installation purchases (transactions) events based on
+        specified query parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/installation-reports?id=get-installation-purchased-products-events">
+          purchased products events
+        </a>
+      </td>
+      <td>
+        Returns list of installation purchased products events based on
+        specified query parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/installation-reports?id=get-installation-qr-codes-events">
+          qr codes events
+        </a>
+      </td>
+      <td>
+        Returns list of installation qr codes events based on specified query
+        parameters
+      </td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>
+        <a href="/grid-reports/installation-reports?id=get-installation-media-events">
+          media events
+        </a>
+      </td>
+      <td>
+        Returns list of installation media events based on specified query
+        parameters
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+`{tenant-id}` is your tenant id in the grid console.
+
+`{installation-id}` is your installation id in the grid console.
+
+## GET Installation events
+
+Returns list of installation events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/installations/{installation-id}/events`
+
+### Response
+
+```
+[
+  {
+    "id": string,
+    "type": string,
+    "tenantId": string,
+    "installationId": string,
+    "date": string,
+    "eventType": string,
+    "interaction": boolean,
+    "count": number,
+    "sessionCount": number,
+    "hour"?: number
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>interactionType</td>
+      <td>string</td>
+      <td>
+        Defines events interaction type. <br />
+        Possible values: `interactive, nonInteractive, all`. Default value: `all`
+      </td>
+      <td>interactive</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>timespanType</td>
+      <td>string</td>
+      <td>
+        Defines events timespan type. <br />
+        Possible values: `day, hour`. Default value: `day`
+      </td>
+      <td>day</td>
+      <td>false</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Installation sessions
+
+Returns list of installation sessions based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/installations/{installation-id}/sessions`
+
+### Response
+
+```
+[
+  {
+    "id": string,
+    "type": string,
+    "tenantId": string,
+    "sessionCount": number,
+    "date": string,
+    "installationId": string,
+    "hour"?: number
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>interactionType</td>
+      <td>string</td>
+      <td>
+        Defines sessions interaction type. <br />
+        Possible values: `interactive, all`. Default value: `all`
+      </td>
+      <td>interactive</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>timespanType</td>
+      <td>string</td>
+      <td>
+        Defines sessions timespan type. <br />
+        Possible values: `day, hour`. Default value: `day`
+      </td>
+      <td>day</td>
+      <td>false</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Installation nps
+
+Returns installation nps data.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/installations/{installation-id}/nps`
+
+### Response
+
+```
+{
+  "score": number,
+  "replyCount": number
+}
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Installation events flow
+
+Returns installation events flow data.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/installations/{installation-id}/eventsFlow`
+
+### Response
+
+```
+[
+  {
+    "count": number,
+    "eventType": string,
+    "eventTypePrevious"?: string,
+    "eventOrder": number
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>eventsFlowDepth</td>
+      <td>number</td>
+      <td>
+        Defines events flow depth. Minimum value: `1`. Maximum value: `40`.
+        Default value: `15`
+      </td>
+      <td>15</td>
+      <td>false</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Installation products events
+
+Returns list of installation products events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/installations/{installation-id}/products`
+
+### Response
+
+```
+[
+  {
+    "id": string,
+    "type": string,
+    "tenantId": string,
+    "date": string,
+    "eventType": string,
+    "interaction": boolean,
+    "productId": string,
+    "count": number,
+    "sessionCount": number,
+    "installationId": string
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>interactionType</td>
+      <td>string</td>
+      <td>
+        Defines events interaction type. <br />
+        Possible values: `interactive, nonInteractive, all`. Default value: `all`
+      </td>
+      <td>interactive</td>
+      <td>false</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Installation categories events
+
+Returns list of installation categories events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/installations/{installation-id}/categories`
+
+### Response
+
+```
+[
+  {
+    "id": string,
+    "type": string,
+    "tenantId": string,
+    "date": string,
+    "eventType": string,
+    "interaction": boolean,
+    "categoryId": string,
+    "count": number,
+    "sessionCount": number,
+    "installationId": string
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Installation monitoring events history
+
+Returns list of grouped monitoring events
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/installations/{installation-id}/monitoring`
+
+### Response
+
+```
+[
+  {
+    "id": string,
+    "eventType": string,
+    "spaceId": string,
+    "installationId": string,
+    "deviceId": string,
+    "str1": boolean,
+    "str2": string,
+    "history": Array<{
+      int1: number;
+      eventTime: string;
+    }>
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>eventType</td>
+      <td>string</td>
+      <td>Defines the monitoring event to fetch or show</td>
+      <td>MONITOR_XOVIS_SENSOR</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Installation purchases events
+
+Returns list of installation purchases (transactions) events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/installations/{installation-id}/purchases`
+
+### Response
+
+```
+[
+  {
+    id: string;
+    type: string;
+    tenantId: string;
+    date: string;
+    eventType: string;
+    eventTime: string;
+    interaction: boolean;
+    transactionId: string;
+    revenue: number;
+    currency: string;
+    count: number;
+    sessionCount: number;
+    installationId: string;
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Installation purchased products events
+
+Returns list of installation purchased products events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/installations/{installation-id}/purchased-products`
+
+### Response
+
+```
+[
+  {
+    id: string;
+    type: string;
+    tenantId: string;
+    date: string;
+    eventType: string;
+    interaction: boolean;
+    transactionId: string;
+    productId: string;
+    categoryId: string;
+    productName: string;
+    currency: string;
+    quantity: number;
+    price: number;
+    count: number;
+    sessionCount: number;
+    installationId: string;
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Installation qr codes events
+
+Returns list of installation qr codes events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/installations/{installation-id}/qr-codes`
+
+### Response
+
+```
+[
+  {
+    id: string;
+    type: string;
+    tenantId: string;
+    date: string;
+    eventType: string;
+    interaction: boolean;
+    qrCodeId: string;
+    qrCodeContent: string;
+    qrCodeEntryMethod: string;
+    qrCodeType: string;
+    count: number;
+    sessionCount: number;
+    installationId: string;
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+## GET Installation media events
+
+Returns list of installation media events based on specified query parameters.
+
+`GET {base-url}/v2/report/tenants/{tenant-id}/installations/{installation-id}/media`
+
+### Response
+
+```
+[
+  {
+    id: string;
+    type: string;
+    tenantId: string;
+    date: string;
+    eventType: string;
+    interaction: boolean;
+    mediaId: string;
+    mediaType: string;
+    mediaName: string;
+    mediaTags: string[];
+    mediaDuration: number;
+    count: number;
+    sessionCount: number;
+    installationId: string;
+  }
+]
+```
+
+### Query Parameters
+
+To use query parameters, add them as `GET` properties to the `URL`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Example</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateFrom</td>
+      <td>string</td>
+      <td>Defines the starting date</td>
+      <td>2022-12-26</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>dateTo</td>
+      <td>string</td>
+      <td>Defines the final date</td>
+      <td>2023-01-02</td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
