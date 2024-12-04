@@ -53,30 +53,32 @@ const Search = () => {
         onChange={handleSearch}
         placeholder="Search documentation..."
       />
-      <ResultsWrapper>
-        {sortedSections.map(section => (
-          <SectionWrapper key={section}>
-            <SectionTitle>{section}</SectionTitle>
-            <Results>
-              {groupedResults[section].map(result => {
-                const IconComponent =
-                  result.icon && PhosphorIcons[result.icon]
-                    ? PhosphorIcons[result.icon]
-                    : null
+      {results.length > 0 && (
+        <ResultsWrapper>
+          {sortedSections.map(section => (
+            <SectionWrapper key={section}>
+              <SectionTitle>{section}</SectionTitle>
+              <Results>
+                {groupedResults[section].map(result => {
+                  const IconComponent =
+                    result.icon && PhosphorIcons[result.icon]
+                      ? PhosphorIcons[result.icon]
+                      : null
 
-                return (
-                  <Result key={result.slug}>
-                    <Link to={result.slug}>
-                      {IconComponent && <IconComponent />}
-                      {result.title}
-                    </Link>
-                  </Result>
-                )
-              })}
-            </Results>
-          </SectionWrapper>
-        ))}
-      </ResultsWrapper>
+                  return (
+                    <Result key={result.slug}>
+                      <Link to={result.slug}>
+                        {IconComponent && <IconComponent />}
+                        {result.title}
+                      </Link>
+                    </Result>
+                  )
+                })}
+              </Results>
+            </SectionWrapper>
+          ))}
+        </ResultsWrapper>
+      )}
     </SearchWrapper>
   )
 }
@@ -84,28 +86,49 @@ const Search = () => {
 export default Search
 
 const SearchInput = styled.input`
-  all: reset;
+  min-width: 320px;
+  all: unset;
+  box-sizing: border-box;
+  background: var(--color-border);
+  padding: var(--space-2);
+  line-height: 1;
+  border-radius: var(--border-radius);
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0);
+
+  &:focus,
+  &:active {
+    color: var(--color-title);
+    border: 1px solid var(--color-title);
+  }
 `
 
 const ResultsWrapper = styled.div`
   position: absolute;
   background: var(--color-pageBg);
-  top: 100%;
-  left: 0;
+  top: calc(100% + 2px);
+  right: 0;
   min-width: 320px;
   max-width: 720px;
   margin: 0;
   padding: 0;
   border-radius: var(--border-radius);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 10px 10px rgba(0, 0, 0, 0.2);
 `
 
 const Result = styled.li`
   margin: 0;
-  padding: var(--space-2);
+  padding: 0;
   display: block;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  &:last-of-type {
-    border: 0;
+
+  a {
+    display: block;
+    padding: var(--space-2);
+    &:hover {
+      background: var(--color-border);
+      text-decoration: underline;
+    }
   }
 `
 
@@ -115,16 +138,29 @@ const Results = styled.ul`
   list-style: none;
 `
 
-const SearchWrapper = styled.div`
-  position: relative;
-  z-index: 4;
-`
+const SectionWrapper = styled.div`
+  display: block;
+  flex: 1 0 100%;
+  padding: var(--space-2) 0 var(--space-4);
+  border-top: 1px solid var(--color-border);
 
-const SectionWrapper = styled.div``
+  &:first-of-type {
+    border: 0;
+  }
+`
 
 const SectionTitle = styled.h3`
   margin: 0;
-  padding: var(--space-2);
+  padding: 0 var(--space-2);
   color: var(--color-title);
   font-size: 1rem;
+  border: 0;
+  line-height: 1;
+`
+
+const SearchWrapper = styled.div`
+  position: relative;
+  z-index: 4;
+  display: block;
+  margin: 0 var(--space-3) 0 auto;
 `
