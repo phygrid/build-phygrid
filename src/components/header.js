@@ -6,6 +6,7 @@ import { List } from "@phosphor-icons/react"
 
 import logo from "../images/logo.svg"
 import { breakpoints } from "../styles/breakpoints"
+import Search from "./search"
 
 import {
   primaryButtonStyles,
@@ -23,14 +24,15 @@ const Header = ({ siteTitle }) => {
       <Link to="/">
         <Logo src={logo} alt={siteTitle} />
       </Link>
+      <Search />
       <Nav open={openMenu}>
         <ul>
           <NavItem>
             <a href="https://build.phygrid.com">Build</a>
           </NavItem>
-          <NavItem>
+          {/* <NavItem>
             <Link to="/apis">APIs</Link>
-          </NavItem>
+          </NavItem> */}
           <NavItem>
             <a href="https://learn.phygrid.com">Learn</a>
           </NavItem>
