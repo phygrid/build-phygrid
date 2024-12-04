@@ -49,6 +49,24 @@ module.exports = {
         ],
       },
     },
+    {
+      resolve: `@gatsby-contrib/gatsby-plugin-elasticlunr-search`,
+      options: {
+        // Fields to index
+        fields: [`title`, `section`, `content`],
+        // How to resolve each field's value for a supported node type
+        resolvers: {
+          Mdx: {
+            title: node => node.fields.title, // Use the custom 'title' field from gatsby-node
+            section: node => node.fields.section, // Use the custom 'section' field from gatsby-node
+            content: node => node.rawBody, // Use rawBody for full content indexing
+            slug: node => node.fields.slug, // Use the custom 'slug' field from gatsby-node
+          },
+        },
+        // Optional filter to limit indexed nodes
+        filter: (node, getNode) => true, // Index all MDX nodes by default
+      },
+    },
     `gatsby-plugin-react-helmet`,
     `gatsby-plugin-sitemap`,
     {
