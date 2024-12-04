@@ -52,9 +52,16 @@ const Aside = styled.aside`
   top: var(--space-3);
   align-self: flex-start;
   display: none;
+  width: 100%;
+  max-width: 280px;
 
   @media (min-width: ${breakpoints.md}) {
     display: block;
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 
   ul {
@@ -71,11 +78,16 @@ const Aside = styled.aside`
     li {
       margin: 0;
 
+      > a {
+        margin-top: var(--space-2);
+      }
+
       a {
         text-decoration: none;
         color: inherit;
         font-size: var(--font-xs);
-        white-space: nowrap;
+        line-height: 1.2;
+        display: block;
 
         &:hover {
           color: var(--color-title);
