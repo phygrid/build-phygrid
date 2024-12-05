@@ -1,11 +1,11 @@
-import React, { useState } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { graphql, useStaticQuery } from "gatsby"
 import { Index } from "elasticlunr"
 import { Link } from "gatsby"
 import styled from "@emotion/styled"
 import * as PhosphorIcons from "@phosphor-icons/react"
 
-const Search = () => {
+const Search = ({ toggleSearch }) => {
   const data = useStaticQuery(graphql`
     query SearchIndexQuery {
       siteSearchIndex {
@@ -18,6 +18,30 @@ const Search = () => {
   const [results, setResults] = useState([])
 
   const index = Index.load(data.siteSearchIndex.index)
+
+  // Ref for the search input
+  const searchInputRef = useRef(null)
+
+  // Focus the search input and set up Escape key listener
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus()
+    }
+
+    const handleKeyDown = event => {
+      if (event.key === "Escape") {
+        toggleSearch() // Close the search modal
+      }
+    }
+
+    // Add event listener
+    window.addEventListener("keydown", handleKeyDown)
+
+    // Cleanup event listener on unmount
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [toggleSearch])
 
   const handleSearch = e => {
     const query = e.target.value
@@ -46,77 +70,55 @@ const Search = () => {
   const sortedSections = Object.keys(groupedResults).sort() // Sort sections alphabetically
 
   return (
-    <SearchWrapper>
-      <SearchInput
-        type="text"
-        value={query}
-        onChange={handleSearch}
-        placeholder="Search documentation..."
-      />
-      {results.length > 0 && (
-        <ResultsWrapper>
-          {sortedSections.map(section => (
-            <SectionWrapper key={section}>
-              <SectionTitle>{section}</SectionTitle>
-              <Results>
-                {groupedResults[section].map(result => {
-                  const IconComponent =
-                    result.icon && PhosphorIcons[result.icon]
-                      ? PhosphorIcons[result.icon]
-                      : null
+    <Modal>
+      <SearchWrapper>
+        <CloseModal onClick={toggleSearch}>
+          <PhosphorIcons.X />
+        </CloseModal>
+        <Label htmlFor="searchInput">Search the documentation</Label>
+        <SearchInput
+          id="searchInput"
+          name="searchInput"
+          type="text"
+          value={query}
+          onChange={handleSearch}
+          placeholder="What are you looking for?..."
+          ref={searchInputRef} // Attach the ref to the input element
+        />
+        {results.length > 0 && (
+          <ResultsWrapper>
+            {sortedSections.map(section => (
+              <SectionWrapper key={section}>
+                <SectionTitle>{section}</SectionTitle>
+                <Results>
+                  {groupedResults[section].map(result => {
+                    const IconComponent =
+                      result.icon && PhosphorIcons[result.icon]
+                        ? PhosphorIcons[result.icon]
+                        : null
 
-                  return (
-                    <Result key={result.slug}>
-                      <Link to={result.slug}>
-                        {IconComponent && <IconComponent />}
-                        {result.title}
-                      </Link>
-                    </Result>
-                  )
-                })}
-              </Results>
-            </SectionWrapper>
-          ))}
-        </ResultsWrapper>
-      )}
-    </SearchWrapper>
+                    return (
+                      <Result key={result.slug}>
+                        <Link to={result.slug}>
+                          {IconComponent && <IconComponent />}
+                          {result.title}
+                        </Link>
+                      </Result>
+                    )
+                  })}
+                </Results>
+              </SectionWrapper>
+            ))}
+          </ResultsWrapper>
+        )}
+      </SearchWrapper>
+    </Modal>
   )
 }
 
 export default Search
 
-const SearchInput = styled.input`
-  min-width: 320px;
-  all: unset;
-  box-sizing: border-box;
-  background: var(--color-border);
-  padding: var(--space-2);
-  line-height: 1;
-  border-radius: var(--border-radius);
-  white-space: nowrap;
-  border: 1px solid rgba(255, 255, 255, 0);
-
-  &:focus,
-  &:active {
-    color: var(--color-title);
-    border: 1px solid var(--color-title);
-  }
-`
-
-const ResultsWrapper = styled.div`
-  position: absolute;
-  background: var(--color-pageBg);
-  top: calc(100% + 2px);
-  right: 0;
-  min-width: 320px;
-  max-width: 720px;
-  margin: 0;
-  padding: 0;
-  border-radius: var(--border-radius);
-  border: 1px solid var(--color-border);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 10px 10px rgba(0, 0, 0, 0.2);
-`
-
+// Styled components
 const Result = styled.li`
   margin: 0;
   padding: 0;
@@ -158,9 +160,68 @@ const SectionTitle = styled.h3`
   line-height: 1;
 `
 
-const SearchWrapper = styled.div`
+const SearchInput = styled.input`
+  all: unset;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-2) 0;
+  line-height: 1;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+
+  &:focus,
+  &:active {
+    color: var(--color-title);
+    border-color: rgba(255, 255, 255, 1);
+  }
+`
+
+const ResultsWrapper = styled.div`
   position: relative;
-  z-index: 4;
+  background: var(--color-pageBg);
+  margin: var(--space-2) 0;
+  padding: 0;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 10px 10px rgba(0, 0, 0, 0.2);
+`
+
+const Label = styled.label`
+  font-size: var(--font-lg);
+  font-weight: 600;
+  padding: var(--space-2) 0 0 0;
+  display: block;
+`
+
+const SearchWrapper = styled.div`
+  display: block;
+  margin: auto;
+  max-width: 980px;
+`
+
+const CloseModal = styled.button`
+  all: unset;
+  display: flex;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  background: var(--color-border);
+`
+
+const Modal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100svw;
+  height: 100svh;
+  z-index: 20;
   display: block;
   margin: 0 var(--space-3) 0 auto;
+  backdrop-filter: blur(40px);
+  overflow: auto;
 `

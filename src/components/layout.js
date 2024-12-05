@@ -6,6 +6,7 @@
  */
 
 import * as React from "react"
+import { useState } from "react"
 import { useStaticQuery, graphql } from "gatsby"
 import styled from "@emotion/styled"
 
@@ -13,6 +14,7 @@ import { breakpoints } from "../styles/breakpoints"
 import Header from "./header"
 import Sidebar from "./sidebar"
 import "./global.css"
+import Search from "./search"
 
 const Layout = ({ children }) => {
   const data = useStaticQuery(graphql`
@@ -25,9 +27,18 @@ const Layout = ({ children }) => {
     }
   `)
 
+  const [showSearch, setShowSearch] = useState(false)
+
+  const toggleSearch = () => {
+    setShowSearch(prev => !prev)
+  }
+
   return (
     <Wrapper>
-      <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
+      <Header
+        siteTitle={data.site.siteMetadata?.title || `Title`}
+        toggleSearch={toggleSearch}
+      />
       <Container>
         <Sidebar />
         <Main>
@@ -40,6 +51,7 @@ const Layout = ({ children }) => {
           <a href="https://ombori.com">Ombori</a> company
         </p>
       </Footer>
+      {showSearch && <Search toggleSearch={toggleSearch} />}
     </Wrapper>
   )
 }

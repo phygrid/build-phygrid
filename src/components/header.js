@@ -2,18 +2,17 @@ import * as React from "react"
 import { useState } from "react"
 import { Link } from "gatsby"
 import styled from "@emotion/styled"
-import { List } from "@phosphor-icons/react"
+import { List, MagnifyingGlass } from "@phosphor-icons/react"
 
 import logo from "../images/logo.svg"
 import { breakpoints } from "../styles/breakpoints"
-import Search from "./search"
 
 import {
   primaryButtonStyles,
   secondaryButtonStyles,
 } from "../styles/buttonStyles"
 
-const Header = ({ siteTitle }) => {
+const Header = ({ siteTitle, toggleSearch }) => {
   const [openMenu, setOpenMenu] = useState(false)
   const toggleMenu = () => {
     setOpenMenu(prev => !prev)
@@ -24,9 +23,13 @@ const Header = ({ siteTitle }) => {
       <Link to="/">
         <Logo src={logo} alt={siteTitle} />
       </Link>
-      <Search />
       <Nav open={openMenu}>
         <ul>
+          <li onClick={toggleSearch}>
+            <ButtonSearch>
+              <MagnifyingGlass /> Search
+            </ButtonSearch>
+          </li>
           <NavItem>
             <a href="https://build.phygrid.com">Build</a>
           </NavItem>
@@ -53,6 +56,21 @@ const Header = ({ siteTitle }) => {
 }
 
 export default Header
+
+const ButtonSearch = styled.a`
+  all: unset;
+  ${secondaryButtonStyles}
+  color: var(--color-text);
+  font-weight: normal;
+  padding: var(--space-1) var(--space-4);
+  border-radius: var(--border-radius);
+  font-size: var(--font-md);
+  gap: 10px;
+  &:hover {
+    background: var(--color-primary);
+    color: var(--color-title);
+  }
+`
 
 const ButtonPrimary = styled.a`
   ${primaryButtonStyles}
