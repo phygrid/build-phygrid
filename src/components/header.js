@@ -44,11 +44,11 @@ const Header = ({ siteTitle, toggleSearch }) => {
               Login
             </ButtonPrimary>
           </li>
-          <li>
+          {/* <li>
             <MenuButton onClick={toggleMenu}>
               <List />
             </MenuButton>
-          </li>
+          </li> */}
         </ul>
       </Nav>
     </Container>
