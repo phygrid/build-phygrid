@@ -1,0 +1,14 @@
+---
+title: "Migrate Legacy Devices"
+icon: "CellTower"
+---
+
+Below are the steps required for updating legacy PhyOS or GridOS devices to the latest PhyHub release over the air using the Phygrid CLI.
+
+1. `phy dev shell <devicename> -l`
+2. `sudo su`
+3. `PHYOS=<phyos-version> FILE=phyupgrade-1.0.32.sh && curl -fsSL https://os.omborigrid.com/$FILE -o $FILE && chmod +x $FILE && ./$FILE $PHYOS`
+
+### Example Command:
+
+`PHYOS=4.1.93 FILE=phyupgrade-1.0.32.sh && curl -fsSL https://os.omborigrid.com/$FILE -o $FILE && chmod +x $FILE && ./$FILE $PHYOS`
