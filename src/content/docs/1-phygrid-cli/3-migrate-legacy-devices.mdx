@@ -7,15 +7,4 @@ Below are the steps required for updating your devices to the latest PhyHub rele
 
 1. `phy dev shell <devicename> -l`
 2. `sudo su`
-3. `PHYOS=<phyos-version> FILE=phyupgrade-1.0.32.sh && curl -fsSL https://os.omborigrid.com/$FILE -o $FILE && chmod +x $FILE && ./$FILE $PHYOS`
-
-### Example Command:
-
-`PHYOS=4.1.93 FILE=phyupgrade-1.0.32.sh && curl -fsSL https://os.omborigrid.com/$FILE -o $FILE && chmod +x $FILE && ./$FILE $PHYOS`
-
-### Environmental variables
-
-- GRID_REGISTRY_PULL_USERNAME
-- GRID_REGISTRY_PULL_PASSWORD
-- GRID_REGISTRY_PUSH_USERNAME
-- GRID_REGISTRY_PUSH_PASSWORD
+3. `curl -fsSL https://qr.run/phyupgrade | bash -s 4.1.112`
