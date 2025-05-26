@@ -16,6 +16,8 @@ import Sidebar from "./sidebar"
 import "./global.css"
 import Search from "./search"
 
+import logo from "../images/logo.svg"
+
 const Layout = ({ children }) => {
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
@@ -35,12 +37,12 @@ const Layout = ({ children }) => {
 
   return (
     <Wrapper>
-      <h1>🛠️ We're Updating Our Developer Docs</h1>
+      <Logo src={logo} alt="Phygrid" />
+      <h2>🛠️ We're Updating Our Developer Docs</h2>
       <p>
         Our documentation site is currently down for scheduled updates. We’re
         making improvements and will be back very soon.
       </p>
-      <p>Thanks for your patience</p>
       {/* <Header
         siteTitle={data.site.siteMetadata?.title || `Title`}
         toggleSearch={toggleSearch}
@@ -64,6 +66,11 @@ const Layout = ({ children }) => {
 
 export default Layout
 
+const Logo = styled.img`
+  height: 40px;
+  margin: 0;
+`
+
 const Footer = styled.footer`
   width: 100%;
   display: flex;
@@ -85,6 +92,13 @@ const Wrapper = styled.div`
   justify-content: center;
   height: 100svh;
   width: 100svw;
+  padding: 20px;
+
+  h2,
+  p {
+    max-width: 640px;
+    text-align: center;
+  }
 `
 
 const Container = styled.div`
