@@ -1,4 +1,8 @@
 steps:
+  - task: NodeTool@0
+    displayName: 'Install Node.js'
+    inputs:
+      versionSpec: '22.x'
   - task: DownloadBuildArtifacts@0
     inputs:
       pathtoPublish: '$(Build.ArtifactStagingDirectory)'
