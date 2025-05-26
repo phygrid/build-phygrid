@@ -35,7 +35,13 @@ const Layout = ({ children }) => {
 
   return (
     <Wrapper>
-      <Header
+      <h1>🛠️ We're Updating Our Developer Docs</h1>
+      <p>
+        Our documentation site is currently down for scheduled updates. We’re
+        making improvements and will be back very soon.
+      </p>
+      <p>Thanks for your patience</p>
+      {/* <Header
         siteTitle={data.site.siteMetadata?.title || `Title`}
         toggleSearch={toggleSearch}
       />
@@ -51,7 +57,7 @@ const Layout = ({ children }) => {
           <a href="https://ombori.com">Ombori</a> company
         </p>
       </Footer>
-      {showSearch && <Search toggleSearch={toggleSearch} />}
+      {showSearch && <Search toggleSearch={toggleSearch} />} */}
     </Wrapper>
   )
 }
@@ -70,7 +76,16 @@ const Footer = styled.footer`
   }
 `
 
-const Wrapper = styled.div``
+const Wrapper = styled.div`
+  /* Remove after update */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100svh;
+  width: 100svw;
+`
 
 const Container = styled.div`
   display: flex;
