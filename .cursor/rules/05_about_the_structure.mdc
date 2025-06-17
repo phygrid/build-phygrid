@@ -1,0 +1,27 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# About the structure
+
+## Why isn't this obvious?
+
+This structure is clear, and it works, but there is a reason why it's not so obvious, and that is the way the characteristics of each quadrant of the documentation overlap with those of its neighbours in the scheme.
+
+Each of the quadrants is similar to its two neighbours:
+
+- **Tutorials** and **how-to guides** are both concerned with describing practical steps  
+- **How-to guides** and **technical reference** are both what we need when we are at work, coding  
+- **Reference guides** and **explanation** are both concerned with theoretical knowledge  
+- **Tutorials** and **explanation** are both most useful when we are studying, rather than actually working
+
+## The tendency to collapse
+
+Given these overlaps, it's not surprising that the different kinds of documentation become confused and mixed in with each other. In fact, there is a natural gravitational pull of these distinct types of documentation to each other, and it is hard to resist. Its effect is to collapse the structure, and that is why so much documentation looks like this:
+
+## Adoption of the system
+
+Though it's rare to find clear examples of it used fully, a great deal of documentation recognises, in different ways, each of these four functions.
+
+In each case though, however minimal or even incomplete, the system is respected and the clear distinction between sections and their purposes will benefit the author and user right away, and help guide the expansion of the material as it develops in the future.

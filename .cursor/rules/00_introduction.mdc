@@ -1,0 +1,20 @@
+---
+description: "Dotfiles Compliance Rules"
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# Ensure Project Follows Standard Configurations
+
+1. **Code Style Consistency**
+   - Enforce `.editorconfig` settings (2 spaces, LF, UTF-8).
+   - No trailing whitespace or mixed line endings.
+
+2. **Linting & Formatting**
+   - ESLint rules must be followed across all TypeScript files.
+   - Prettier must auto-format code before commits.
+
+3. **Yarn-Only Policy**
+   - `package-lock.json` must not exist.
+   - All dependencies must be installed via Yarn.
