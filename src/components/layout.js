@@ -35,15 +35,24 @@ const Layout = ({ children }) => {
     setShowSearch(prev => !prev)
   }
 
+  // Show maintenance message in production build
+  if (process.env.NODE_ENV !== "development") {
+    return (
+      <Wrapper>
+        <Logo src={logo} alt="Phygrid" />
+        <h2>🛠️ We're Updating Our Developer Docs</h2>
+        <p>
+          Our documentation site is currently down for scheduled updates. We're
+          making improvements and will be back very soon.
+        </p>
+      </Wrapper>
+    )
+  }
+
+  // Show normal documentation site in production/other environments
   return (
-    <Wrapper>
-      <Logo src={logo} alt="Phygrid" />
-      <h2>🛠️ We're Updating Our Developer Docs</h2>
-      <p>
-        Our documentation site is currently down for scheduled updates. We’re
-        making improvements and will be back very soon.
-      </p>
-      {/* <Header
+    <>
+      <Header
         siteTitle={data.site.siteMetadata?.title || `Title`}
         toggleSearch={toggleSearch}
       />
@@ -59,8 +68,8 @@ const Layout = ({ children }) => {
           <a href="https://ombori.com">Ombori</a> company
         </p>
       </Footer>
-      {showSearch && <Search toggleSearch={toggleSearch} />} */}
-    </Wrapper>
+      {showSearch && <Search toggleSearch={toggleSearch} />}
+    </>
   )
 }
 

@@ -1,8 +1,7 @@
 import * as React from "react"
-import { useState } from "react"
 import { Link } from "gatsby"
 import styled from "@emotion/styled"
-import { List, MagnifyingGlass } from "@phosphor-icons/react"
+import { MagnifyingGlass } from "@phosphor-icons/react"
 
 import logo from "../images/logo.svg"
 import { breakpoints } from "../styles/breakpoints"
@@ -13,20 +12,15 @@ import {
 } from "../styles/buttonStyles"
 
 const Header = ({ siteTitle, toggleSearch }) => {
-  const [openMenu, setOpenMenu] = useState(false)
-  const toggleMenu = () => {
-    setOpenMenu(prev => !prev)
-  }
-
   return (
     <Container>
       <Link to="/">
         <Logo src={logo} alt={siteTitle} />
       </Link>
-      <Nav open={openMenu}>
+      <Nav>
         <ul>
-          <li onClick={toggleSearch}>
-            <ButtonSearch>
+          <li>
+            <ButtonSearch onClick={toggleSearch}>
               <MagnifyingGlass /> Search
             </ButtonSearch>
           </li>
@@ -57,7 +51,7 @@ const Header = ({ siteTitle, toggleSearch }) => {
 
 export default Header
 
-const ButtonSearch = styled.a`
+const ButtonSearch = styled.button`
   all: unset;
   ${secondaryButtonStyles}
   color: var(--color-text);
@@ -66,6 +60,7 @@ const ButtonSearch = styled.a`
   border-radius: var(--border-radius);
   font-size: var(--font-md);
   gap: 10px;
+  cursor: pointer;
   &:hover {
     background: var(--color-primary);
     color: var(--color-title);
@@ -124,13 +119,7 @@ const NavItem = styled.li`
   }
 `
 
-const MenuButton = styled.button`
-  ${secondaryButtonStyles}
-  color: var(--color-text);
-  @media (min-width: ${breakpoints.md}) {
-    display: none !important;
-  }
-`
+
 
 const Logo = styled.img`
   height: 40px;

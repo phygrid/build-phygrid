@@ -23,11 +23,9 @@ const components = {
 }
 
 const DocTemplate = ({ data, children }) => {
-  const { title, icon } = data.mdx.frontmatter
+  const { title } = data.mdx.frontmatter
   const { tableOfContents } = data.mdx
   const { slug } = data.mdx.fields
-
-  const IconComponent = icon && PhosphorIcons[icon] ? PhosphorIcons[icon] : null
 
   // Function to convert slug to title format, reversed for desired hierarchy
   const generateTitleFromSlug = slug => {
@@ -66,7 +64,6 @@ export const query = graphql`
     mdx(id: { eq: $id }) {
       frontmatter {
         title
-        icon
       }
       fields {
         slug

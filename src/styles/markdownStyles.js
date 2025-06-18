@@ -1,5 +1,4 @@
 import { css } from "@emotion/react"
-import { breakpoints } from "./breakpoints"
 
 export const markdownStyles = css`
   h3,

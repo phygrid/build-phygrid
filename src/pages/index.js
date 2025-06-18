@@ -32,7 +32,7 @@ const IndexPage = () => {
 
       nodes.forEach(node => {
         const { pathParts, slug } = node.fields
-        const { title = "Untitled", icon } = node.frontmatter
+        const { icon } = node.frontmatter
         const folderKey = pathParts[0] // Top-level folder key (e.g., "1-getting-started")
         const folderOrderMatch = folderKey.match(/^(\d+)-/)
         const folderOrder = folderOrderMatch

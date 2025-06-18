@@ -2,15 +2,12 @@ import React, { useState } from "react"
 import { graphql, useStaticQuery, Link } from "gatsby"
 import styled from "@emotion/styled"
 import Accordion from "./accordion"
-import { useLocation } from "@reach/router"
 import * as PhosphorIcons from "@phosphor-icons/react"
 
 import { breakpoints } from "../styles/breakpoints"
 import { navButtonStyles } from "../styles/buttonStyles"
 
 const Sidebar = () => {
-  const location = useLocation()
-
   const data = useStaticQuery(graphql`
     query {
       allMdx(sort: { fields: [fields___order], order: ASC }) {
@@ -93,9 +90,6 @@ const Sidebar = () => {
 
         {sortedFolders.map(key => {
           const section = sections[key]
-          const isDefaultOpen = section.children.some(child =>
-            location.pathname.includes(child.slug)
-          )
 
           return (
             <NavSection key={key}>
