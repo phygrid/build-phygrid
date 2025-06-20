@@ -682,47 +682,149 @@ cat <screen_twin_id>-device-<device_id>.json | jq '.properties.desired'
 - **Auto-restart Configuration:** Check that auto-restart settings are appropriate for your use case
 - **Build Information:** Verify that installationId, appName, and buildId are correctly set
 
-### **4️⃣ Troubleshoot Physcreen**
+### **🖥️ Troubleshoot Physcreen**
 
-If the device is displaying Phygrid logo (stuck at logo screen or stuck in a loop where it displays logo and black screen), run the following command to verify if the physcreen service is running
+---
+
+Physcreen is the display management service responsible for rendering Screen Apps on physical devices. This section helps you diagnose issues related to the Physcreen service, including startup problems, display rendering issues, and service stability problems that can affect screen app functionality.
+
+If the device is displaying the Phygrid logo (stuck at logo screen or stuck in a loop where it displays logo and black screen), run the following command to verify if the Physcreen service is running:
 
 ```shell
 systemctl status physcreen
 ```
 
-If the physcreen is running but still stuck at logo screen, run the following command to check logs if service is restarting or crashing:
+> **Expected output:** You should see the service status and recent activity:
+>
+> ```shell
+> ● physcreen.service - Phygrid Screen Service
+>      Loaded: loaded (/etc/systemd/system/physcreen.service; enabled; vendor preset: enabled)
+>      Active: active (running) since Mon 2025-01-15 10:30:00 UTC; 2h 15min ago
+>    Main PID: 1234 (physcreen)
+>       Tasks: 5 (limit: 4915)
+>      Memory: 45.2M
+>      CGroup: /system.slice/physcreen.service
+>              └─1234 /usr/bin/physcreen
+> ```
 
-```shell
-tail /var/log/physcreen-manager
-```
+**What to expect:**
 
-### **5️⃣ Troubleshoot Blank Screen**
+- **Active service** should show "active (running)" status with uptime
+- **Inactive service** will show "inactive (dead)" or "failed" status
+- **Service errors** may show restart attempts or failure messages
+- **Memory usage** should be reasonable for the display service
 
-If the app is stuck at white or black screen, you can troubleshoot by:
-
-- Confirming if the app started:
-
-```shell
-journalctl -u phydevice -o cat | awk '/startPhyScreen/'
-```
-
-- Inspect app logs to find potential issues, while the app is running (_Note: \-f flag for real time logs_):
+If the Physcreen service is running but still stuck at the logo screen, run the following command to check logs for service restarts or crashes:
 
 ```shell
 tail -f /var/log/physcreen-manager
 ```
 
-### **6️⃣ Troubleshoot Reported Screen Properties**
+> **Expected output:** You should see real time log entries from the Physcreen manager:
+>
+> ```shell
+> uploadScreenshot(): Upload block blob xxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx.jpg successfully xxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx
+> twinUpdated event received { ... }
+> ```
 
-To investigate the reported properties of screen app, run the following command
+**What to expect:**
+
+- **Successful startup** will show initialization messages and app loading confirmations
+- **Configuration errors** may show missing or invalid settings
+- **Display issues** may show HDMI connection problems or resolution conflicts
+- **App loading failures** may indicate URL accessibility or network connectivity issues
+- **Screenshot uploading failures** may indicate if the device was unable to upload screenshot
+- **Service crashes** will show error messages and restart attempts
+
+**Common Physcreen issues and solutions:**
+
+| Issue                        | Symptoms                      | Solution                                        |
+| ---------------------------- | ----------------------------- | ----------------------------------------------- |
+| **Service Not Starting**     | Service shows "failed" status | Check system resources and service dependencies |
+| **Display Not Initializing** | Stuck at logo screen          | Verify HDMI connections and display settings    |
+| **App Loading Failures**     | Blank screen after logo       | Check app settings                              |
+| **Configuration Errors**     | Service fails to start        | Verify screen twin configuration and settings   |
+
+### **📊 Troubleshoot Reported Screen Properties**
+
+---
+
+Reported screen properties provide real-time information about the current state and status of your Screen Apps. This section helps you monitor and debug the properties that your screen app reports back to PhyHub, including screenshots, app status, and other operational data that can be used for monitoring and troubleshooting.
+
+To investigate the reported properties of your screen app, run the following command:
 
 ```shell
 journalctl -u phydevice -o cat | awk '/setScreenInstanceReportedProperties/'
 ```
 
-### **7️⃣ Troubleshoot Signals**
+> **Expected output:** You should see property reporting activities with detailed data:
+>
+> ```shell
+> setScreenInstanceReportedProperties(): Reporting screen properties for twin ************************
+> setScreenInstanceReportedProperties(): Properties reported successfully {
+>   "twinId": "************************",
+>   "data": {
+>     "screenshot": "https://************************.blob.core.windows.net/screenshots/****************-****-****-****-************.jpg",
+>     "appStatus": "running",
+>     "lastUpdated": "2025-01-15T10:30:00.123Z",
+>     "displayInfo": {
+>       "resolution": "1920x1080",
+>       "orientation": "landscape"
+>     }
+>   }
+> }
+> ```
 
-To view the Client, Session and Event signals generated from screen apps, run the following commands
+**What to expect:**
+
+- **Property Reporting:** Confirm that your screen app is actively reporting properties to PhyHub
+- **Screenshot URLs:** Look for valid screenshot URLs that point to accessible blob storage
+- **App Status Updates:** Verify that app status is being reported correctly (running, stopped, error)
+- **Timing Information:** Check that properties are being updated at expected intervals
+- **Display Information:** Ensure display resolution and orientation are accurately reported
+- **Error Messages:** Identify any failed property reporting attempts or data validation issues
+- **Data Completeness:** Verify that all expected properties are being included in reports
+
+#### **Troubleshoot Screen App Events**
+
+Screen apps can generate various events that provide insights into user interactions, app performance, and operational status. To view the events generated by your screen application, including reported properties, twin messaging, and updates received by the app, run the following command:
+
+```shell
+journalctl -u phydevice -o cat | awk '/handleInstanceMessage/,/^\}/'
+```
+
+> **Expected output:** You should see detailed event logs showing events emitted or handled by the screen app:
+>
+> ```shell
+> SOCKET on(): Received twinUpdated event {
+>   deviceId: '****************-****-****-****-************',
+>   data: {
+>     data: {
+>       id: '************************',
+>       deviceId: '****************-****-****-****-************',
+>       tenantId: '************************',
+>       version: 1,
+>       status: 'Online',
+>       type: 'Screen',
+>       properties: [Object],
+>       descriptors: [Object]
+>     },
+>     twinId: '************************'
+>   }
+> }
+> ```
+
+**What to expect:**
+
+- **Event Reception:** Look for incoming events from PhyHub with complete data structures
+- **Event Processing:** Verify that events are being processed correctly by your screen application
+- **Data Completeness:** Ensure event payloads contain all expected fields and metadata
+- **Error Handling:** Identify any failed event processing or communication errors
+- **Screen-specific Events:** Check for display-related events and user interaction data
+
+#### **Troubleshoot Screen App Signals**
+
+To view the Client, Session, and Event signals generated from screen apps, run the following commands:
 
 ```shell
 journalctl -u phydevice -o cat | awk '/sendEventSignal/,/^\}/'
@@ -730,7 +832,40 @@ journalctl -u phydevice -o cat | awk '/sendSessionSignal/,/^\}/'
 journalctl -u phydevice -o cat | awk '/sendClientSignal/,/^\}/'
 ```
 
-Refer to the Signal Key Mapping table below.
+> **Expected output:** You should see signal generation activities from the screen app:
+>
+> ```shell
+> sendEventSignal(): sending Event Signal from device ****************-****-****-****-************ {
+>   deviceId: '****************-****-****-****-************',
+>   data: {
+>     g: 'UAE',
+>     b: '****************-****-****-****-************',
+>     t: '2025-01-15T10:30:00.123Z',
+>     s: 'SCREEN_APP_LOADED',
+>     u: true,
+>     h: '************************',
+>     c: '************************'
+>   }
+> }
+> ```
+
+**What to expect:**
+
+- **Signal Generation:** Verify that screen apps are generating appropriate signals for user interactions
+- **Signal Types:** Confirm that Client, Session, and Event signals are being sent as expected
+- **Data Accuracy:** Ensure signal payloads contain correct screen app context and user data
+- **Timing Patterns:** Check that signals are being sent at appropriate intervals during app usage
+- **Error Tracking:** Look for signals related to screen app errors or performance issues
+
+**Common screen app event and signal issues and solutions:**
+
+| Issue                         | Symptoms                           | Solution                                                |
+| ----------------------------- | ---------------------------------- | ------------------------------------------------------- |
+| **Events Not Received**       | No event logs, missing data        | Check network connectivity and PhyHub connection        |
+| **Event Processing Failures** | Error messages in logs             | Verify event handler implementation and data validation |
+| **Signal Generation Issues**  | Missing user interaction signals   | Check signal implementation in screen app code          |
+| **Property Reporting Issues** | Properties not updating in console | Check property reporting frequency and data format      |
+| **Display Event Problems**    | Missing display-related events     | Verify display event monitoring and reporting           |
 
 ### **8️⃣ Remote Debug via Chrome DevTools**
 
@@ -751,64 +886,6 @@ phy dev forward <device_name> http://localhost:1234
 6. Click **inspect** next to _Phygrid App_  
    _![][image3]_
 7. Use DevTools to debug live DOM, console, and network (_Note: Interactions reflect on both the device and your laptop_)
-
-### **9️⃣ Device Becomes Inaccessbile By Shell**
-
-If for any reason, device becomes inaccessible via phy dev shell \<device_name\> command, you can still extract the necessary logs:
-
-If the ssh was enable (by running physsh enable) on device and there is another phyhub device available under the same network
-
-5. Connect to available device via shell
-6. Run following command to connect to the device
-
-```shell
-ssh phygrid@<faulty_device_name>.local
-```
-
-7. Enter shell
-8. Now you should be able to access the device again and can troubleshoot the issue
-
-If the ssh was **not** enable on device or there is no other phyhub device in the same network
-
-10. Physically connect a keyboard to the device.
-11. Open shell
-12. Get the root access by running
-
-```shell
-sudo su
-```
-
-13. Run following command to export logs to logs_backup.txt
-
-```shell
-journalctl -u phydevice > logs_backup.txt
-```
-
-14. Create a temporary user by running
-
-```shell
-adduser <username>
-```
-
-15. Now grant ssh permission to the user by:
-    1. Running visudo
-    2. Add \<username\> ALL=(ALL:ALL) ALL below the line where it says root ALL=(ALL:ALL) ALL
-    3. Press esc key and type **:wq** and hit enter to save.
-16. Get the IP of the device by running following command
-
-```shell
-ifconfig
-```
-
-17. From another device, eg your laptop, run following to download the exported logs file
-
-```shell
-scp <username>@<ip>:/root/logs_backup.txt /path/to/local/destination
-```
-
-18. Now you should be able to access logs_backup.txt at /path/to/local/destination on your laptop
-
----
 
 #### **Advanced Diagnostics**
 
