@@ -867,36 +867,192 @@ journalctl -u phydevice -o cat | awk '/sendClientSignal/,/^\}/'
 | **Property Reporting Issues** | Properties not updating in console | Check property reporting frequency and data format      |
 | **Display Event Problems**    | Missing display-related events     | Verify display event monitoring and reporting           |
 
-### **8️⃣ Remote Debug via Chrome DevTools**
+### **🔧 Remote Debug via Chrome DevTools**
 
-1. Forward from laptop:
+---
+
+Remote debugging allows you to inspect and debug your Screen Apps in real-time using Chrome DevTools, even when the app is running on a physical device or VM. This powerful debugging method provides access to the DOM, console logs, network requests, and JavaScript execution, making it easier to identify and resolve issues in your screen applications.
+
+#### **Step 1: Set Up Port Forwarding**
+
+First, establish a port forwarding connection from your laptop to the device:
 
 ```shell
 phy dev forward <device_name> http://localhost:1234
 ```
 
-2. Copy port from new browser tab
+> **Expected output:** You should see confirmation of the port forwarding setup:
+>
+> ```shell
+> Forwarding http://localhost:1234 -> <device_name>:1234
+> Port forwarding established successfully
+> ```
 
-3. Open `chrome://inspect/#devices`
+**What to expect:**
 
-4. Enable _Discover network targets_ \> _Configure..._  
-   _![][image1]_
-5. Add `localhost:<port>`  
-   `![][image2]`
-6. Click **inspect** next to _Phygrid App_  
-   _![][image3]_
-7. Use DevTools to debug live DOM, console, and network (_Note: Interactions reflect on both the device and your laptop_)
+- **Successful forwarding** will show the local and remote port mapping
+- **Connection errors** may indicate network issues or device accessibility problems
+- **Port conflicts** may occur if the local port is already in use
 
-#### **Advanced Diagnostics**
+#### **Step 2: Access Chrome DevTools**
 
-For persistent connection issues, enable verbose logging:
+1. **Copy the port number** from the new browser tab that opens automatically
+2. **Open Chrome** and navigate to `chrome://inspect/#devices`
+3. **Enable network discovery** by clicking on "Discover network targets" > "Configure..."
+4. **Add the target** by entering `localhost:<port>` in the configuration dialog
+5. **Click "Inspect"** next to the "Phygrid App" entry that appears
 
-```shell
-journalctl -u phydevice -f -o cat
-```
+> **Expected output:** Chrome DevTools should open with access to your screen app
 
-This provides real-time connection monitoring to identify intermittent issues or connection patterns.
+**What to expect:**
+
+- **DevTools interface** should load with your screen app's DOM structure
+- **Console access** will show real-time JavaScript logs and errors
+- **Network monitoring** allows inspection of HTTP requests and responses
+- **Live debugging** enables setting breakpoints and stepping through code
+
+#### **Step 3: Debug Your Application**
+
+Once DevTools is connected, you can:
+
+- **Inspect DOM elements** to verify UI structure and styling
+- **Monitor console logs** to track application flow and identify errors
+- **Analyze network requests** to debug API calls and data loading issues
+- **Set breakpoints** in JavaScript code for step-by-step debugging
+- **Monitor performance** using the Performance tab for optimization
+
+> **Important Note:** All interactions in DevTools will reflect on both the device and your laptop simultaneously, allowing you to see real-time changes and debug issues as they occur.
+
+**Common remote debugging scenarios and solutions:**
+
+| Scenario                  | Symptoms                  | Solution                                              |
+| ------------------------- | ------------------------- | ----------------------------------------------------- |
+| **Port Forwarding Fails** | Connection refused errors | Check device connectivity and firewall settings       |
+| **DevTools Not Loading**  | Blank or error pages      | Verify port forwarding and Chrome configuration       |
+| **Console Not Updating**  | Missing or stale logs     | Refresh the DevTools connection or restart forwarding |
+| **Network Tab Empty**     | No request data visible   | Check if app is making HTTP requests and refresh      |
+| **Performance Issues**    | Slow DevTools response    | Close unnecessary tabs and optimize network settings  |
+
+### **🖥️ VNC Remote Access**
 
 ---
 
-✅ **Checkpoint:** You now have a complete reference to debug both Edge and Screen Apps efficiently using CLI, logs, and DevTools.
+VNC (Virtual Network Computing) provides direct visual access to the device's display, allowing you to see exactly what is being displayed on the screen and interact with the device as if you were physically present. This is particularly useful for debugging display issues, verifying app rendering, and troubleshooting user interface problems.
+
+You can access the device's screen content via VNC by running:
+
+```shell
+phy dev vnc <device_name>
+```
+
+> **Expected output:** VNC session should start and open a viewer window:
+>
+> ```shell
+> Starting VNC session...
+> Opening stream
+> Starting local VNC client pointing to 127.0.0.1:12558...
+> VNC connection established at 127.0.0.1:12558. Press Ctrl+C when done.
+> ```
+
+**What to expect:**
+
+- **VNC viewer window** should open showing the device's current display
+- **Real-time interaction** allows you to see and interact with the screen app
+- **Display verification** helps confirm that the app is rendering correctly
+- **Error visualization** shows exactly what users see when issues occur
+
+> **Note:** Make sure you have VNC Viewer installed on your system. If not installed, you will see an error message:
+
+```shell
+phy dev vnc <device_name>
+Error: VNC Viewer not found, please install from https://www.realvnc.com/en/connect/download/viewer/
+```
+
+## **🔧 Additional Troubleshooting**
+
+This section covers additional diagnostic procedures that can help resolve common device issues not directly related to app deployment or configuration.
+
+#### **Time Synchronization Issues**
+
+Sometimes devices can behave unexpectedly due to incorrect timezone or time synchronization settings. This can affect logging, authentication, and various system operations.
+
+You can verify the current timezone and time settings by running:
+
+```shell
+timedatectl status
+```
+
+> **Expected output:** You should see the current time and timezone information:
+>
+> ```shell
+>                Local time: Mon 2025-01-15 10:30:00 UTC
+>            Universal time: Mon 2025-01-15 10:30:00 UTC
+>                  RTC time: Mon 2025-01-15 10:30:00 UTC
+>                 Time zone: UTC (UTC, +0000)
+> System clock synchronized: yes
+>               NTP service: active
+>           RTC in local TZ: no
+> ```
+
+**What to expect:**
+
+- **Synchronized time** should show "System clock synchronized: yes"
+- **NTP service** should be active for automatic time updates
+- **Correct timezone** should match your deployment requirements
+- **Time drift** may indicate NTP configuration issues
+
+#### **Disk Space Monitoring**
+
+If you notice the device is lagging, throttled, or experiencing performance issues, it may be due to insufficient disk space. Low disk space can affect app deployment, logging, and overall system performance.
+
+You can check disk usage by running:
+
+```shell
+df -h
+```
+
+> **Expected output:** You should see disk usage information for all mounted filesystems:
+>
+> ```shell
+> Filesystem      Size  Used Avail Use% Mounted on
+> /dev/sda1        20G   15G  4.0G  79% /
+> tmpfs           3.2G     0  3.2G   0% /dev/shm
+> tmpfs           6.3G  1.2M  6.3G   1% /run
+> tmpfs           6.3G     0  6.3G   0% /sys/fs/cgroup
+> ```
+
+**What to expect:**
+
+- **Available space** should be sufficient for app operations (recommended >20% free)
+- **High usage** (>80%) may indicate the need for cleanup or storage expansion
+- **Critical levels** (<10% free) can cause system instability and app failures
+- **Temporary filesystems** (tmpfs) should show minimal usage
+
+✅ **Checkpoint:** You now have a comprehensive troubleshooting reference for both Edge and Screen Apps deployed on the Phygrid platform. This guide provides you with:
+
+**🔍 Diagnostic Capabilities:**
+
+- **Device connectivity troubleshooting** - Verify PhyHub connections, network reachability, and twin synchronization
+- **Container management debugging** - Monitor Docker container lifecycle, image pulling, and startup processes
+- **Application log analysis** - Access real-time logs for both Edge and Screen Apps to identify runtime issues
+- **Event and signal monitoring** - Track app events, property reporting, and signal transmission for analytics
+
+**🛠️ Advanced Debugging Tools:**
+
+- **Remote debugging with Chrome DevTools** - Inspect DOM, console logs, and network requests in real-time
+- **VNC remote access** - Visual inspection of screen app rendering and user interface issues
+- **System diagnostics** - Monitor disk space, time synchronization, and overall device health
+
+**📊 Monitoring and Verification:**
+
+- **Twin configuration validation** - Verify Edge and Screen twin settings and deployment configurations
+- **Property reporting analysis** - Monitor app status, screenshots, and operational data
+- **Performance monitoring** - Track resource usage, service health, and system stability
+
+**🚀 Recovery Procedures:**
+
+- **Alternative access methods** - SSH and physical access procedures when standard shell access fails
+- **Service recovery** - Restart and reconfigure services when they become unresponsive
+- **Data extraction** - Backup and export logs for offline analysis
+
+This troubleshooting guide empowers you to efficiently diagnose and resolve issues across the entire application lifecycle, from deployment to runtime monitoring, ensuring optimal performance and reliability of your Phygrid applications.
