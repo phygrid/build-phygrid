@@ -603,66 +603,11 @@ journalctl -u phydevice -o cat | awk '/reportEdgeTwinProperties()/,/^\}/'
 | **Property Reporting Issues** | Properties not updating in console | Check property reporting frequency and data format                                            |
 | **Event Timing Problems**     | Delayed or missing events          | Verify event generation logic and network latency                                             |
 
-## **🖥️ Debugging Screen Apps on Physical Devices**
+## **🖥️ Debugging Screen Apps **
 
 Use these steps to inspect and debug screen apps deployed to devices.
 
----
-
-### **1️⃣ Connect to the Device**
-
-```shell
-phy dev shell <device_name>
-```
-
-Once connected:
-
-- Press `Enter` to bring up the menu.
-
-- Select **Shell** from the list.
-
-- Switch to the root user:
-
-```shell
-sudo su
-```
-
----
-
-### **2️⃣ Troubleshoot Device Connection With PhyHub**
-
-To get the device provisioning details, you can use following commands
-
-```shell
-cat /data/settings/phyhub/region.json
-cat /data/settings/phyhub/deviceId.json
-cat /data/settings/phyhub/deviceSerial.json
-cat /data/settings/phyhub/osVersion.json
-cat /data/settings/phyhub/gridEnv.json
-cat /etc/physcreen.env  # Proxy settings
-```
-
-To check the Phyhub connection:
-
-```shell
-journalctl -u phydevice -o cat | grep -i "connectPhyHub"
-```
-
-If the phyhub connection is failing, check if the proxy is working. Run the following command to see Phyhub is reachable by device _(Note: replace \<region\> by your device's region from the command mentioned previously)_. If you do not get and packets back, it means the is a issue with your network or proxy configurations.
-
-```shell
-curl http://portal-<region>.omborigrid.com/
-```
-
-Check if the device received the twins from Phyhub
-
-```shell
-journalctl -u phydevice -o cat | grep  "initInstances"
-```
-
----
-
-### **3️⃣ Troubleshoot Screen Twin Settings**
+### **Troubleshoot Screen Twin Settings**
 
 To verify if the device received the screen app details, run the following command
 
