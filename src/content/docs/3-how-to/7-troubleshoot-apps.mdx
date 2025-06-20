@@ -658,7 +658,7 @@ journalctl -u phydevice -o cat | awk '/reportEdgeTwinProperties()/,/^\}/'
 
 ## **🖥️ Debugging Screen Apps **
 
-Use these steps to inspect and debug screen apps deployed to devices.
+Use these steps to inspect and debug screen apps deployed to devices. Screen Apps can encounter various issues such as not reflecting deployed changes, getting stuck on loading screens, displaying blank content, or failing to respond to user interactions. These problems often stem from configuration issues, service failures, or communication problems between the app and the Phygrid platform. The following troubleshooting procedures will help you identify the root cause and resolve these issues effectively.
 
 ### **⚙️ Troubleshoot Screen Twin Settings**
 
@@ -824,6 +824,7 @@ tail -f /var/log/physcreen-manager
 > - Display information not being reported
 > - Property reporting failures or timeouts
 > - Missing operational data in analytics
+> - Screen app events not being received or processed
 
 Reported screen properties provide real-time information about the current state and status of your Screen Apps. This section helps you monitor and debug the properties that your screen app reports back to PhyHub, including screenshots, app status, and other operational data that can be used for monitoring and troubleshooting.
 
@@ -863,12 +864,7 @@ journalctl -u phydevice -o cat | awk '/setScreenInstanceReportedProperties/'
 
 #### **Troubleshoot Screen App Events**
 
-> **When to use this guide:**
->
-> - Screen app events not being received or processed
-> - Twin messaging not working for screen apps
-> - Display-related events not being captured
-> - User interaction events missing from analytics
+Screen app events are crucial for monitoring user interactions, app state changes, and communication between the screen app and the Phygrid platform. This section helps you monitor and debug the various events that your screen app generates, receives, and processes. Understanding event flow, eg receiving and processing updates, handling screen settings change etc. is essential for diagnosing communication issues, tracking user behavior, and ensuring proper app functionality.
 
 ```shell
 journalctl -u phydevice -o cat | awk '/handleInstanceMessage/,/^\}/'
@@ -902,49 +898,6 @@ journalctl -u phydevice -o cat | awk '/handleInstanceMessage/,/^\}/'
 - **Data Completeness:** Ensure event payloads contain all expected fields and metadata
 - **Error Handling:** Identify any failed event processing or communication errors
 - **Screen-specific Events:** Check for display-related events and user interaction data
-
-#### **Troubleshoot Screen App Signals**
-
-> **When to use this guide:**
->
-> - User interaction signals not being generated
-> - Client, Session, or Event signals missing from analytics
-> - Screen app signal data incomplete or inaccurate
-> - Signal timing issues or delays
-> - Missing user behavior tracking data
-
-To view the Client, Session, and Event signals generated from screen apps, run the following commands:
-
-```shell
-journalctl -u phydevice -o cat | awk '/sendEventSignal/,/^\}/'
-journalctl -u phydevice -o cat | awk '/sendSessionSignal/,/^\}/'
-journalctl -u phydevice -o cat | awk '/sendClientSignal/,/^\}/'
-```
-
-> **Expected output:** You should see signal generation activities from the screen app:
->
-> ```shell
-> sendEventSignal(): sending Event Signal from device ****************-****-****-****-************ {
->   deviceId: '****************-****-****-****-************',
->   data: {
->     g: 'UAE',
->     b: '****************-****-****-****-************',
->     t: '2025-01-15T10:30:00.123Z',
->     s: 'SCREEN_APP_LOADED',
->     u: true,
->     h: '************************',
->     c: '************************'
->   }
-> }
-> ```
-
-**What to expect:**
-
-- **Signal Generation:** Verify that screen apps are generating appropriate signals for user interactions
-- **Signal Types:** Confirm that Client, Session, and Event signals are being sent as expected
-- **Data Accuracy:** Ensure signal payloads contain correct screen app context and user data
-- **Timing Patterns:** Check that signals are being sent at appropriate intervals during app usage
-- **Error Tracking:** Look for signals related to screen app errors or performance issues
 
 **Common screen app event and signal issues and solutions:**
 
