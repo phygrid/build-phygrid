@@ -44,6 +44,8 @@ Before diving into specific troubleshooting procedures, here are the most freque
 
 ### **🛜 Device Not Connecting to PhyHub**
 
+---
+
 Device connectivity issues are encountered when deploying Edge or Screen Apps. When a device cannot establish or maintain a connection with PhyHub, it prevents app deployment, configuration updates, and real-time monitoring. This section provides comprehensive diagnostic procedures to identify and resolve connectivity problems.
 
 #### **Step 1: Verify Device Network**
@@ -85,40 +87,36 @@ cat /data/settings/phyhub/gridEnv.json        # Environment
 
 #### **Step 3: Check PhyHub Connection Status**
 
-Monitor the connection attempts and status:
+Monitor the connection attempts and status by examining the device logs for PhyHub connection activity:
 
 ```shell
 journalctl -u phydevice -o cat | grep -i "connectPhyHub():"
 ```
 
 > **Expected output:** Look for successful connection messages or error patterns indicating connection failures.
-> When device establish connection with PhyHub successfully, you can expect logs similar to following
+> When a device successfully establishes connection with PhyHub, you can expect logs similar to the following:
 >
-> ````shell 2025-06-20T07:45:17.857Z [INFO] [phylogger-device-phyos]
-> connectPhyHub(): Connected to PhyHub 2025-06-20T07:45:17.863Z [INFO]
-> [phylogger-device-phyos] connectPhyHub(): Device connected with
-> details: { deviceId: 'xxxx-xxxx-xxxxx-xxxx-' }
-> 2025-06-20T07:45:17.863Z [INFO] [phylogger-device-phyos]
-> connectPhyHub(): Environment already provisioned with device
-> credentials, skipping configuration 2025-06-20T07:45:17.863Z [INFO]
-> [phylogger-device-phyos] connectPhyHub(): Caching twins from server
-> response... ```
-> ````
+> ```shell
+> 2025-06-20T07:45:17.857Z [INFO] [phylogger-device-phyos] connectPhyHub(): Connected to PhyHub
+> 2025-06-20T07:45:17.863Z [INFO] [phylogger-device-phyos] connectPhyHub(): Device connected with details: { deviceId: 'xxxx-xxxx-xxxxx-xxxx-' }
+> 2025-06-20T07:45:17.863Z [INFO] [phylogger-device-phyos] connectPhyHub(): Environment already provisioned with device credentials, skipping configuration
+> 2025-06-20T07:45:17.863Z [INFO] [phylogger-device-phyos] connectPhyHub(): Caching twins from server response...
+> ```
 
-If PhyHub connection is failing, verify network reachability.
+If PhyHub connection is failing, verify network reachability by testing connectivity to the PhyHub portal:
 
 ```shell
 curl http://portal-<region>.omborigrid.com/
 ```
 
-> **Note:** Replace <region> by your device's region (see step 2)
+> **Note:** Replace `<region>` with your device's region (see step 2 for how to find this information)
 
 **What to look for:**
 
-- Ensure device is able to connect to phyhub
-- Ensure device is able to cURL `http://portal-<region>.omborigrid.com/`
-- If no response is received, there's likely a network, ensure your network is not blocking `http://portal-<region>.omborigrid.com/`
-- Verify DNS resolution is working properly
+- **Connection Success:** Ensure the device is able to establish and maintain connection to PhyHub
+- **Portal Accessibility:** Ensure the device is able to successfully cURL `http://portal-<region>.omborigrid.com/`
+- **Network Blocking:** If no response is received from the portal, there's likely a network connectivity issue - ensure your network is not blocking access to `http://portal-<region>.omborigrid.com/`
+- **DNS Resolution:** Verify DNS resolution is working properly to resolve the portal domain name
 
 **Troubleshooting notes:**
 | Issue | Symptoms | Solution |
@@ -128,82 +126,114 @@ curl http://portal-<region>.omborigrid.com/
 | **DNS Resolution** | Cannot resolve portal URLs | Check DNS configuration and network settings |
 | **Certificate Issues** | SSL/TLS handshake failures | Verify system time and certificate validity |
 
-### **Verify Twin Synchronization**
+### **🔀 Verify Twin Synchronization**
 
-Ensure the device is receiving configuration updates from PhyHub:
+---
+
+Twin synchronization is a critical process that ensures your device receives the latest configuration updates from PhyHub. This step verifies that the device is properly downloading and processing twin configurations, which contain essential app deployment and configuration information.
+
+Ensure the device is receiving configuration updates from PhyHub by monitoring the twin initialization process:
 
 ```shell
 journalctl -u phydevice -o cat | grep  "initInstances"
 ```
 
-**What this tells you:**
+> **Expected output:**
+>
+> ```shell
+> 2025-06-20T07:45:17.945Z [INFO] [phylogger-device-phyos] initInstances(): Initializing 4 instance twins
+> 2025-06-20T07:45:17.945Z [INFO] [phylogger-device-phyos] initInstances(): Found 1 Edge twins to initialize: [
+> 2025-06-20T07:45:17.945Z [INFO] [phylogger-device-phyos] initInstances(): Processing twin 684bed3e1589237ea2cf9992 of type Screen
+> 2025-06-20T07:45:17.945Z [INFO] [phylogger-device-phyos] initInstances(): Starting Screen app for twin 684bed3e1589237ea2cf9992
+> ```
 
-- Whether the device is successfully receiving twin configurations
-- If synchronization is occurring at expected intervals
-- Any errors during the twin initialization process
+**What to look for:**
 
-### **Signal Transmission Issues**
+- **Successful Twin Reception:** Whether the device is successfully receiving twin configurations from PhyHub
+- **Initialization Errors:** Any errors during the twin initialization process that might prevent apps from starting
+- **Twin Processing:** Confirmation that the device is processing the correct number and types of twins (Edge, Screen, etc.)
 
-- **Symptoms:** Events not appearing in dashboard, analytics data missing
-- **Quick Check:** Verify signal generation and network connectivity
-- **Solution:** See [Troubleshoot Signals](#7-troubleshoot-signals) section
+### **📈 Signal Transmission Issues**
 
 ---
+
+The Phygrid platform utilizes three types of signals: **Client**, **Session**, and **Event** signals. These signals are essential for analytics, monitoring, and tracking user interactions with your applications. If your app is configured to send signals, there may be scenarios where the generated signals are not appearing in the analytics console.
+
+To ensure signals are being generated correctly, you can use the following commands to inspect whether signals are being generated and examine their payload contents.
+
+```shell
+journalctl -u phydevice -o cat | awk '/sendEventSignal/,/^\}/'
+journalctl -u phydevice -o cat | awk '/sendSessionSignal/,/^\}/'
+journalctl -u phydevice -o cat | awk '/sendClientSignal/,/^\}/'
+```
+
+> **Expected output:** You should be able to see output similar to the following example:
+>
+> ```shell
+> sendEventSignal(): sending Event Signal from device xxxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxx {
+>   deviceId: 'xxxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxx',
+>  data: {
+>     g: 'UAE',
+>     b: 'xxxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxx',
+>     t: '2025-06-20T07:47:29.348',
+>     s: 'MONITOR_CONTAINER_CRASH',
+>     u: false,
+>     h: 'xxxxxxxxxxxxxxxxxxxxxxx',
+>     ac: undefined,
+>     ad: 'xxxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxx',
+>     c: 'xxxxxxxxxxxxxxxxxxxxxxx'
+>   }
+> }
+> ```
+
+The Phygrid platform automatically shortens signal keys in the payload as a way of compressing payload size for efficient transmission. To decode these shortened keys and understand what each field represents, refer to the Signal Key Lookup Table provided below.
+| Actual Key | Short Key | | Actual Key | Short Key |
+| :------------------ | :-------- | --- | :------------------------- | :-------- |
+| captureId | a | | clientUserAgent | aj |
+| sessionId | b | | clientDeviceVendor | ak |
+| tenantId | c | | clientDeviceModel | al |
+| sessionCreated | d | | clientDeviceType | am |
+| ip | e | | clientOsName | an |
+| environment | f | | clientOsVersion | ao |
+| dataResidency | g | | clientBrowserName | ap |
+| spaceId | h | | clientBrowserVersion | aq |
+| appId | i | | clientBrowserMajor | ar |
+| appVersion | j | | clientBrowserEngine | as |
+| installationId | k | | clientBrowserEngineVersion | at |
+| installationVersion | l | | clientCpuArchitecture | au |
+| country | m | | clientScreenWidth | av |
+| locationAccuracy | n | | clientScreenHeight | aw |
+| latitude | o | | clientScreenColorDepth | ax |
+| longitude | p | | clientScreenPixelDepth | ay |
+| deviceId | q | | stateful | ba |
+| clientId | r | | public | bb |
+| eventType | s | | currency | bc |
+| eventTime | t | | revenue | bd |
+| interaction | u | | products | be |
+| productId | v | | transactionId | bf |
+| categoryId | w | | affiliation | bg |
+| int1 | x | | shipping | bh |
+| int2 | y | | tax | bi |
+| int3 | z | | coupon | bj |
+| int4 | aa | | str4 | af |
+| int5 | ab | | str5 | ag |
+| str1 | ac | | clientCreated | ah |
+| str2 | ad | | clientIp | ai |
+| str3 | ae | | | |
+
+**What to look for:**
+
+- **Signal Generation:** Verify that signals are being generated by your application and appearing in the device logs
+- **Signal Types:** Confirm that the correct signal types (Client, Session, Event) are being sent based on your application's requirements
+- **Payload Structure:** Check that signal payloads contain the expected data fields and are properly formatted
+- **Transmission Success:** Look for confirmation messages indicating successful signal transmission to the PhyHub
+- **Error Messages:** Identify any error messages or failed transmission attempts that might indicate connectivity or configuration issues
+- **Data Completeness:** Ensure all required signal data fields are present and contain valid values
+- **Timing Patterns:** Verify that signals are being sent at expected intervals and not being blocked or delayed
 
 ## **☁️ Debugging Edge Apps**
 
 Edge Apps run on physical devices and can encounter various issues during deployment and operation. This section provides comprehensive troubleshooting procedures to help you diagnose and resolve common problems. You'll learn how to verify device provisioning status, monitor container health, inspect signal events, and analyze application logs to identify and fix issues affecting your Edge App's performance.
-
----
-
-### **2️⃣ Troubleshoot Device Connection With PhyHub**
-
-Device connectivity issues are among the most common problems encountered when deploying Edge Apps. When a device cannot establish or maintain a connection with PhyHub, it prevents app deployment, configuration updates, and real-time monitoring. This section provides comprehensive diagnostic procedures to identify and resolve connectivity problems.
-
-#### **Step 2: Check PhyHub Connection Status**
-
-Monitor the connection attempts and status:
-
-```shell
-journalctl -u phydevice -o cat | grep -i "connectPhyHub"
-```
-
-**Expected output:** Look for successful connection messages or error patterns indicating connection failures.
-
-#### **Step 3: Test Network Connectivity**
-
-If PhyHub connection is failing, verify network reachability:
-
-```shell
-curl http://portal-<region>.omborigrid.com/
-```
-
-**Troubleshooting notes:**
-
-- Replace `<region>` with your device's region from Step 1
-- If no response is received, there's likely a network or proxy configuration issue
-- Check firewall settings and proxy configurations
-- Verify DNS resolution is working properly
-
-#### **Common Connection Issues and Solutions**
-
-| Issue                    | Symptoms                                   | Solution                                     |
-| ------------------------ | ------------------------------------------ | -------------------------------------------- |
-| **Network Timeout**      | Connection attempts timeout                | Check network stability and firewall rules   |
-| **Proxy Authentication** | 407/401 errors in logs                     | Verify proxy credentials and settings        |
-| **DNS Resolution**       | Cannot resolve portal URLs                 | Check DNS configuration and network settings |
-| **Certificate Issues**   | SSL/TLS handshake failures                 | Verify system time and certificate validity  |
-| **Rate Limiting**        | Connection refused after multiple attempts | Check for excessive connection attempts      |
-
-#### **Advanced Diagnostics**
-
-For persistent connection issues, enable verbose logging:
-
-```shell
-journalctl -u phydevice -f -o cat
-```
-
-This provides real-time connection monitoring to identify intermittent issues or connection patterns.
 
 ---
 
@@ -305,20 +335,6 @@ env | grep <ENV_VAR>
 ```shell
 curl http://localhost:<port>/health
 ```
-
----
-
-### **7️⃣ Troubleshoot Signals**
-
-To view the Client, Session and Event signals generated from screen apps, run the following commands
-
-```shell
-journalctl -u phydevice -o cat | awk '/sendEventSignal/,/^\}/'
-journalctl -u phydevice -o cat | awk '/sendSessionSignal/,/^\}/'
-journalctl -u phydevice -o cat | awk '/sendClientSignal/,/^\}/'
-```
-
-Refer to the Signal Key Lookup Table at the end for decoding short keys.
 
 ---
 
@@ -620,47 +636,15 @@ scp <username>@<ip>:/root/logs_backup.txt /path/to/local/destination
 
 ---
 
-## **📦 Signal Key Mapping Table**
+#### **Advanced Diagnostics**
 
-Use this table to decode compressed signal payloads.
+For persistent connection issues, enable verbose logging:
 
-| Actual Key          | Short Key |     | Actual Key                 | Short Key |
-| :------------------ | :-------- | --- | :------------------------- | :-------- |
-| captureId           | a         |     | clientUserAgent            | aj        |
-| sessionId           | b         |     | clientDeviceVendor         | ak        |
-| tenantId            | c         |     | clientDeviceModel          | al        |
-| sessionCreated      | d         |     | clientDeviceType           | am        |
-| ip                  | e         |     | clientOsName               | an        |
-| environment         | f         |     | clientOsVersion            | ao        |
-| dataResidency       | g         |     | clientBrowserName          | ap        |
-| spaceId             | h         |     | clientBrowserVersion       | aq        |
-| appId               | i         |     | clientBrowserMajor         | ar        |
-| appVersion          | j         |     | clientBrowserEngine        | as        |
-| installationId      | k         |     | clientBrowserEngineVersion | at        |
-| installationVersion | l         |     | clientCpuArchitecture      | au        |
-| country             | m         |     | clientScreenWidth          | av        |
-| locationAccuracy    | n         |     | clientScreenHeight         | aw        |
-| latitude            | o         |     | clientScreenColorDepth     | ax        |
-| longitude           | p         |     | clientScreenPixelDepth     | ay        |
-| deviceId            | q         |     | stateful                   | ba        |
-| clientId            | r         |     | public                     | bb        |
-| eventType           | s         |     | currency                   | bc        |
-| eventTime           | t         |     | revenue                    | bd        |
-| interaction         | u         |     | products                   | be        |
-| productId           | v         |     | transactionId              | bf        |
-| categoryId          | w         |     | affiliation                | bg        |
-| int1                | x         |     | shipping                   | bh        |
-| int2                | y         |     | tax                        | bi        |
-| int3                | z         |     | coupon                     | bj        |
-| int4                | aa        |     | str4                       | af        |
-| int5                | ab        |     | str5                       | ag        |
-| str1                | ac        |     | clientCreated              | ah        |
-| str2                | ad        |     | clientIp                   | ai        |
-| str3                | ae        |     |                            |           |
-|                     |           |     |                            |           |
-|                     |           |     |                            |           |
-|                     |           |     |                            |           |
-|                     |           |     |                            |           |
+```shell
+journalctl -u phydevice -f -o cat
+```
+
+This provides real-time connection monitoring to identify intermittent issues or connection patterns.
 
 ---
 
