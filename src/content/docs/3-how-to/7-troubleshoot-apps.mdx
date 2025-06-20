@@ -234,36 +234,113 @@ The Phygrid platform automatically shortens signal keys in the payload as a way 
 
 Edge Apps run on physical devices and can encounter various issues during deployment and operation. This section provides comprehensive troubleshooting procedures to help you diagnose and resolve common problems. You'll learn how to verify device provisioning status, monitor container health, inspect signal events, and analyze application logs to identify and fix issues affecting your Edge App's performance.
 
+### **Troubleshoot Edge Twin Settings**
+
 ---
 
-### **3️⃣ Troubleshoot Edge Twin Settings**
+Edge twin settings contain the configuration and deployment information for your Edge Apps. This section helps you verify that the device has properly received and cached the edge twin configurations from PhyHub, which is essential for successful app deployment and operation.
 
-To verify if the device received the edge app details, run the following command
+First, check if the edge twin was downloaded and cached on the device:
+
+```shell
+journalctl -u phydevice -o cat | awk '/Caching Edge twin/'
+```
+
+> **Expected output:** You should see confirmation messages indicating edge twins were cached:
+>
+> ```shell
+> cacheTwins(): Caching Edge twin xxxxxxxxxxxxxxxxxxxxxxx
+> cacheTwins(): Caching Edge twin xxxxxxxxxxxxxxxxxxxxxxx
+> ```
+
+To verify if the device received the edge app details correctly, run the following command:
 
 ```shell
 cd /data/settings/phyhub
 ls  # Look for twins-device-<device_id>.json
 ```
 
-Inspect manifest:
+Inspect the manifest to see all available twins:
 
 ```shell
 cat twins-device-<device_id>.json
 ```
 
-Check and verify desired properties of an edge twin by running the following. The \<edge_twin_id\> will be available from the previous command
+> **Expected output:** The manifest should show all twin types assigned to this device:
+>
+> ```json
+> {
+>   "Screen": ["xxxxxxxxxxxxxxxxxxxxxxx"],
+>   "Device": ["xxxxxxxxxxxxxxxxxxxxxxx"],
+>   "Edge": ["xxxxxxxxxxxxxxxxxxxxxxx"],
+>   "Peripheral": ["xxxxxxxxxxxxxxxxxxxxxxx"]
+> }
+> ```
+
+Check and verify the desired properties of an edge twin by running the following command. The `<edge_twin_id>` will be available from the previous command:
 
 ```shell
 cat <edge_twin_id>-device-<device_id>.json | jq '.properties.desired'
 ```
 
-Confirm if the edge twin was downloaded on device:
+> **Expected output:** The desired properties should contain complete deployment configuration:
+>
+> ```json
+> {
+>   "image": "xxxxxxxxxxx.xxxx/xxxxxxxxxxx:1.0.0",
+>   "createOptions": {
+>     "HostConfig": {
+>       "NetworkMode": "host",
+>       "RestartPolicy": {
+>         "Name": "always"
+>       },
+>       "Privileged": true,
+>       "Memory": 0,
+>       "CpuShares": 0,
+>       "DiskQuota": 0,
+>       "ReadonlyRootfs": false,
+>       "BlkioWeight": 0,
+>       "BlkioDeviceReadBps": [],
+>       "BlkioDeviceWriteBps": [],
+>       "Devices": [],
+>       "Binds": [],
+>       "ExtraHosts": []
+>     },
+>     "Env": [],
+>     "Cmd": null,
+>     "WorkingDir": "",
+>     "Volumes": null,
+>     "RegistryCredentials": {
+>       "xxxxxxxxxxx.xxxx": {
+>         "username": "xxxx",
+>         "password": "xxxx"
+>       }
+>     }
+>   },
+>   "credentials": {
+>     "address": "xxxxxxxxxxx.xxxx",
+>     "username": "xxxx",
+>     "password": "xxxx"
+>   },
+>   "installationId": "xxxxxxxxxxx",
+>   "appName": "xxxxxxxxxxx-1.0.0",
+>   "settings": {
+>     "name": "test"
+>   },
+>   "buildId": "xxxxxxxxxxx"
+> }
+> ```
 
-```shell
-journalctl -u phydevice -o cat | awk '/Caching Edge twin/'
-```
+**What to look for:**
 
----
+- **Twin Caching:** Verify that edge twins are being successfully cached on the device with confirmation messages
+- **Twin Presence:** Ensure the edge twin ID appears in the device manifest alongside other twin types
+- **Complete Configuration:** Check that the desired properties contain all required deployment information including image, credentials, and settings
+- **Registry Access:** Confirm that registry credentials are properly configured for pulling the container image
+- **Network Configuration:** Verify that the HostConfig settings match your application's networking requirements
+- **Resource Allocation:** Check that memory, CPU, and other resource limits are appropriately configured
+- **Environment Variables:** Ensure any required environment variables are properly defined in the Env array
+- **Volume Mounts:** Verify that necessary volume mounts and bindings are configured if your app requires persistent storage
 
 ### **4️⃣ Troubleshoot Docker Container**
 
