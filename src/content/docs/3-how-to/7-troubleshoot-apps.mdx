@@ -230,61 +230,94 @@ The Phygrid platform automatically shortens signal keys in the payload as a way 
 - **Error Messages:** Identify any error messages or failed transmission attempts that might indicate connectivity or configuration issues
 - **Data Completeness:** Ensure all required signal data fields are present and contain valid values
 
-### **Device becomes inaccessbile via shell**
+### **🔌 Device Becomes Inaccessible via Shell**
 
-If for any reason, device becomes inaccessible via phy dev shell \<device_name\> command, you can still extract the necessary logs:
+---
 
-If the ssh was enable (by running physsh enable) on device and there is another phyhub device available under the same network
+In some scenarios, a device may become inaccessible through the standard `phy dev shell <device_name>` command due to network issues, service failures, or configuration problems. This section provides alternative methods to access the device and extract essential logs for troubleshooting purposes.
 
-1. Connect to available device via shell
-2. Run following command to connect to the device
+If for any reason, a device becomes inaccessible via the `phy dev shell <device_name>` command or appears to be offline in console, you can still extract the necessary logs using alternative access methods.
+
+#### **Method 1: SSH Access via Network (Recommended)**
+
+If SSH was enabled on the device (by running `physsh enable`) and there is another PhyHub device available on the same network:
+
+1. **Connect to an available device** via shell using the standard method
+2. **Establish SSH connection** to the faulty device by running:
 
 ```shell
 ssh phygrid@<faulty_device_name>.local
 ```
 
-3. Enter shell
-4. Now you should be able to access the device again and can troubleshoot the issue
+3. **Enter the shell** when prompted
+4. **Begin troubleshooting** - you should now be able to access the device and perform diagnostic operations
 
-If the ssh was **not** enable on device or there is no other phyhub device in the same network
+> **Expected output:** Successful SSH connection should show the context menu on the faulty device
 
-1. Physically connect a keyboard to the device.
-2. Open shell
-3. Get the root access by running
+**What to expect:**
+
+- **Successful connection** will show the device prompt and allow normal shell access
+- **Connection timeouts** suggest network connectivity problems between devices or SSH connection is disabled on the faulty device
+- **Host key warnings** are normal for first-time connections and can be accepted
+
+#### **Method 2: Physical Access and Manual Recovery**
+
+If SSH was **not** enabled on the device or there is no other PhyHub device on the same network:
+
+1. **Physically connect a keyboard** to the device
+2. **Open a terminal/shell** on the device
+3. **Obtain root access** by running:
 
 ```shell
 sudo su
 ```
 
-4. Run following command to export logs to logs_backup.txt
+4. **Export logs for backup** by running:
 
 ```shell
 journalctl -u phydevice > logs_backup.txt
 ```
 
-5. Create a temporary user by running
+5. **Create a temporary user** for remote access:
 
 ```shell
 adduser <username>
 ```
 
-6. Now grant ssh permission to the user by:
-   1. Running visudo
-   2. Add \<username\> ALL=(ALL:ALL) ALL below the line where it says root ALL=(ALL:ALL) ALL
-   3. Press esc key and type **:wq** and hit enter to save.
-7. Get the IP of the device by running following command
+6. **Grant SSH permissions** to the temporary user:
+
+   1. Run `visudo` to edit sudoers file
+   2. Add `<username> ALL=(ALL:ALL) ALL` below the line where it says `root ALL=(ALL:ALL) ALL`
+   3. Press `Esc` key and type `:wq` and hit `Enter` to save
+
+7. **Get the device IP address** by running:
 
 ```shell
 ifconfig
 ```
 
-8. From another device, eg your laptop, run following to download the exported logs file
+8. **Download logs from another device** (e.g., your laptop) by running:
 
 ```shell
 scp <username>@<ip>:/root/logs_backup.txt /path/to/local/destination
 ```
 
-9. Now you should be able to access logs_backup.txt at /path/to/local/destination on your laptop
+9. **Access the backup logs** - you should now be able to access `logs_backup.txt` at `/path/to/local/destination` on your laptop
+
+> **Expected output:** The log export should complete without errors:
+>
+> ```shell
+> # journalctl -u phydevice > logs_backup.txt
+> # ls -la logs_backup.txt
+> -rw-r--r-- 1 root root 2048576 Jan 15 10:30 logs_backup.txt
+> ```
+
+**What to expect:**
+
+- **Successful log export** will create a file with substantial size containing device logs
+- **Permission errors** may occur if not running as root user
+- **Disk space issues** may prevent log export if device storage is full
+- **Network connectivity** should be verified before attempting SCP transfer
 
 ## **☁️ Debugging Edge Apps**
 
