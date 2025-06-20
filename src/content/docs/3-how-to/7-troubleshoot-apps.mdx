@@ -230,11 +230,67 @@ The Phygrid platform automatically shortens signal keys in the payload as a way 
 - **Error Messages:** Identify any error messages or failed transmission attempts that might indicate connectivity or configuration issues
 - **Data Completeness:** Ensure all required signal data fields are present and contain valid values
 
+### **Device becomes inaccessbile via shell**
+
+If for any reason, device becomes inaccessible via phy dev shell \<device_name\> command, you can still extract the necessary logs:
+
+If the ssh was enable (by running physsh enable) on device and there is another phyhub device available under the same network
+
+1. Connect to available device via shell
+2. Run following command to connect to the device
+
+```shell
+ssh phygrid@<faulty_device_name>.local
+```
+
+3. Enter shell
+4. Now you should be able to access the device again and can troubleshoot the issue
+
+If the ssh was **not** enable on device or there is no other phyhub device in the same network
+
+1. Physically connect a keyboard to the device.
+2. Open shell
+3. Get the root access by running
+
+```shell
+sudo su
+```
+
+4. Run following command to export logs to logs_backup.txt
+
+```shell
+journalctl -u phydevice > logs_backup.txt
+```
+
+5. Create a temporary user by running
+
+```shell
+adduser <username>
+```
+
+6. Now grant ssh permission to the user by:
+   1. Running visudo
+   2. Add \<username\> ALL=(ALL:ALL) ALL below the line where it says root ALL=(ALL:ALL) ALL
+   3. Press esc key and type **:wq** and hit enter to save.
+7. Get the IP of the device by running following command
+
+```shell
+ifconfig
+```
+
+8. From another device, eg your laptop, run following to download the exported logs file
+
+```shell
+scp <username>@<ip>:/root/logs_backup.txt /path/to/local/destination
+```
+
+9. Now you should be able to access logs_backup.txt at /path/to/local/destination on your laptop
+
 ## **☁️ Debugging Edge Apps**
 
-Edge Apps run on physical devices and can encounter various issues during deployment and operation. This section provides comprehensive troubleshooting procedures to help you diagnose and resolve common problems. You'll learn how to verify device provisioning status, monitor container health, inspect signal events, and analyze application logs to identify and fix issues affecting your Edge App's performance.
+Edge Apps runs on both physcial devices and VMs, and can sometimes encounter issues during deployment and operation. This section provides comprehensive troubleshooting procedures to help you diagnose and resolve common problems. You'll learn how to verify device provisioning status, monitor container health, inspect signal events, and analyze application logs to identify and fix issues affecting your Edge App's performance.
 
-### **Troubleshoot Edge Twin Settings**
+### **⚙️ Troubleshoot Edge Twin Settings**
 
 ---
 
@@ -342,27 +398,72 @@ cat <edge_twin_id>-device-<device_id>.json | jq '.properties.desired'
 - **Environment Variables:** Ensure any required environment variables are properly defined in the Env array
 - **Volume Mounts:** Verify that necessary volume mounts and bindings are configured if your app requires persistent storage
 
-### **4️⃣ Troubleshoot Docker Container**
+### **🐳 Troubleshoot Docker Container**
 
-Firstly check if the docker container status
+---
+
+Docker container management is a critical aspect of Edge App deployment. This section helps you diagnose issues related to container creation, image pulling, and container startup processes. Understanding the container lifecycle is essential for identifying where deployment failures occur.
+
+First, check the current status of all Docker containers on the device:
 
 ```shell
 docker ps -a
 ```
 
-If there is no container available, there could be an issue while the image was being pulled. To investigate this, run:
+> **Expected output:** You should see a list of all containers with their status:
+>
+> ```shell
+> CONTAINER ID   IMAGE                    COMMAND   CREATED         STATUS                     PORTS     NAMES
+> abc123def456   myapp:latest            "/app"    2 minutes ago    Up 2 minutes              0.0.0.0:8080->8080/tcp   myapp-container
+> def456ghi789   another-app:1.0.0       "/start"  5 minutes ago    Exited (1) 3 minutes ago             failed-container
+> ```
+
+**What to expect:**
+
+- **Running containers** should show "Up" status with uptime
+- **Stopped containers** will show "Exited" with exit codes
+- **Missing containers** indicate deployment or creation failures
+
+If no containers are available, there could be an issue during the image pulling process. To investigate this, run:
 
 ```shell
 journalctl -u phydevice -o cat | grep pullImage
 ```
 
-If the image was downloaded but container creation failed, run following to investigate the reason of container failure:
+> **Expected output:** Look for image pull attempts and results:
+>
+> ```shell
+> 2025-06-20T07:45:17.857Z [INFO] [phylogger-device-phyos] pullImage(): Pulling image myapp:latest
+> 2025-06-20T07:45:20.123Z [INFO] [phylogger-device-phyos] pullImage(): Successfully pulled image myapp:latest
+> ```
+
+**What to expect:**
+
+- **Successful pulls** will show completion messages
+- **Failed pulls** may show authentication errors, network issues, or invalid image names
+- **No output** indicates the image pull process hasn't been attempted
+
+If the image was downloaded but container creation failed, run the following to investigate the reason for container failure:
 
 ```shell
 journalctl -u phydevice -o cat | awk '/createContainer/,/^\}/'
 ```
 
-If the container was created successfully, but failed to start, use the following commands to investigate the issues:
+> **Expected output:** Container creation logs should show the creation process:
+>
+> ```shell
+> 2025-06-20T07:47:29.341Z [INFO] [phylogger-device-phyos] createContainer(): Twin object for xxxxxxxxxxxxxx: {
+> ... container details
+> }
+> ```
+
+**What to expect:**
+
+- **Successful creation** will show container ID and confirmation along with the container details
+- **Creation failures** may show configuration errors, resource constraints, or invalid options
+- **Partial logs** indicate interrupted creation process
+
+If the container was created successfully but failed to start, use the following commands to investigate the startup issues:
 
 ```shell
 journalctl -u phydevice -o cat | grep startContainer
@@ -370,123 +471,104 @@ journalctl -u phydevice -o cat | grep startContainer
 journalctl -u phydevice -o cat | grep startEdgeApp
 ```
 
----
+> **Expected output:** Container startup logs should show the launch process:
+>
+> ```shell
+> 2025-06-20T07:47:29.341Z [INFO] [phylogger-device-phyos] startContainer(): Attempting to create container for twin xxxxxxxxxxxxxxxxx with GPU support
+> 2025-06-20T07:47:29.351Z [INFO] [phylogger-device-phyos] startContainer(): Container created for twin xxxxxxxxxxxxxxxxx, preparing to start it
+> 2025-06-20T07:47:29.390Z [INFO] [phylogger-device-phyos] startContainer(): Started container for twin xxxxxxxxxxxxxxxxx
+> ```
 
-### **5️⃣ Troubleshoot Edge App On Device**
+**What to expect:**
 
-If the container exited unexpectedly, you can access the logs of your edge app by running following command.
+- **Successful startup** will show confirmation messages
+- **Startup failures** may show port conflicts, missing dependencies, or application errors
+- **Immediate exits** indicate application crashes or configuration issues
 
-```shell
-docker logs <container_name_or_id>
-```
+**Common container issues and solutions:**
 
-Look for:
+| Issue                          | Symptoms                                | Solution                                             |
+| ------------------------------ | --------------------------------------- | ---------------------------------------------------- |
+| **Image Pull Failure**         | Authentication errors, network timeouts | Verify registry credentials and network connectivity |
+| **Container Creation Failure** | Invalid configuration, resource limits  | Check createOptions in twin configuration            |
+| **Container Startup Failure**  | Port conflicts, missing volumes         | Verify port mappings and volume configurations       |
+| **Application Crashes**        | Immediate exits, error logs             | Check application logs and dependencies              |
 
-- Crashes
-
-- Stack traces
-
-- Missing dependencies
-
-- Invalid env vars
-
-If you want to execute commands directly inside your container for debugging purposes, you can use the following command:
-
-```shell
-docker exec -it <container_name_or_id> /bin/sh
-```
-
-After running the above command, you can continue debugging the app including:
-
-- Inspect files & mounts
-
-- Verify variables:
-
-```shell
-env | grep <ENV_VAR>
-```
-
-- Hit health endpoints (if available in your app):
-
-```shell
-curl http://localhost:<port>/health
-```
+### **📡 Troubleshoot Events**
 
 ---
 
-### **8️⃣ Troubleshoot Events**
+Event handling is a crucial component of Edge App communication with the Phygrid platform. This section helps you monitor and debug the various events that your Edge App generates, receives, and processes. Understanding event flow is essential for diagnosing communication issues between your application and the platform.
 
-You can also view the events generated by your edge application. To view the events (including reported properties, signals, updates received by the app etc) run the following command
+You can view the events generated by your Edge application, including reported properties, twin messaging, and updates received by the app. To view comprehensive event data, run the following command:
 
 ```shell
 journalctl -u phydevice -o cat | awk '/handleInstanceMessage/,/^\}/'
 ```
 
-If you want to investigate reported properties of your application specifically, run the following command:
+> **Expected output:** You should see detailed event logs showing events emitted or handled by the device:
+>
+> ```shell
+> SOCKET on(): Received twinUpdated event {
+>   deviceId: '****************-****-****-****-************',
+>   data: {
+>     data: {
+>       id: '************************',
+>       deviceId: '****************-****-****-****-************',
+>       tenantId: '************************',
+>       version: 1,
+>       status: 'Online',
+>       statusHistory: '{"s":0,"t":1750363250903},{"s":1,"t":1750363385770},{"s":0,"t":1750379306822},{"s":1,"t":1750379332938},{"s":0,"t":1750380472871},{"s":1,"t":1750380503265},{"s":0,"t":1750381506449},{"s":1,"t":1750381523500},{"s":0,"t":1750405502434},{"s":1,"t":1750405640914},',
+>       createdAt: '2025-06-13T10:14:41.725Z',
+>       updatedAt: '2025-06-20T11:26:37.532Z',
+>       lastStatusUpdatedAt: '2025-06-20T11:26:37.529Z',
+>       type: 'Peripheral',
+>       properties: [Object],
+>       descriptors: [Object]
+>     },
+>     twinId: '************************'
+>   }
+> }
+> ```
+
+**What to expect:**
+
+- **Event Reception:** Look for incoming events from PhyHub with complete data structures
+- **Event Processing:** Verify that events are being processed correctly by your application
+- **Data Completeness:** Ensure event payloads contain all expected fields and metadata
+- **Error Handling:** Identify any failed event processing or communication errors
+
+If you want to investigate the reported properties of your application specifically, run the following command:
 
 ```shell
 journalctl -u phydevice -o cat | awk '/reportEdgeTwinProperties()/,/^\}/'
 ```
 
----
+> **Expected output:** You should see property reporting activities from the device:
+>
+> ```shell
+> reportEdgeTwinProperties(): Reporting twin ************************ properties {
+> ... reported properties
+> }
+> reportEdgeTwinProperties(): Successfully reported properties for twin ************************
+> ```
 
-### **9️⃣ Device Becomes Inaccessbile By Shell**
+**What to expect:**
 
-If for any reason, device becomes inaccessible via phy dev shell \<device_name\> command, you can still extract the necessary logs:
+- **Property Reporting:** Confirm that your app is actively reporting properties to PhyHub
+- **Reporting Success:** Look for successful property transmission confirmations
+- **Property Updates:** Verify that property changes are being communicated in real-time
+- **Error Messages:** Identify any failed property reporting attempts
+- **Data Consistency:** Ensure reported properties match your application's current state
 
-If the ssh was enable (by running physsh enable) on device and there is another phyhub device available under the same network
+**Common event-related issues and solutions:**
 
-1. Connect to available device via shell
-2. Run following command to connect to the device
-
-```shell
-ssh phygrid@<faulty_device_name>.local
-```
-
-3. Enter shell
-4. Now you should be able to access the device again and can troubleshoot the issue
-
-If the ssh was **not** enable on device or there is no other phyhub device in the same network
-
-1. Physically connect a keyboard to the device.
-2. Open shell
-3. Get the root access by running
-
-```shell
-sudo su
-```
-
-4. Run following command to export logs to logs_backup.txt
-
-```shell
-journalctl -u phydevice > logs_backup.txt
-```
-
-5. Create a temporary user by running
-
-```shell
-adduser <username>
-```
-
-6. Now grant ssh permission to the user by:
-   1. Running visudo
-   2. Add \<username\> ALL=(ALL:ALL) ALL below the line where it says root ALL=(ALL:ALL) ALL
-   3. Press esc key and type **:wq** and hit enter to save.
-7. Get the IP of the device by running following command
-
-```shell
-ifconfig
-```
-
-8. From another device, eg your laptop, run following to download the exported logs file
-
-```shell
-scp <username>@<ip>:/root/logs_backup.txt /path/to/local/destination
-```
-
-9. Now you should be able to access logs_backup.txt at /path/to/local/destination on your laptop
-
----
+| Issue                         | Symptoms                           | Solution                                                                                      |
+| ----------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------- |
+| **Event Not Received**        | No event logs, missing data        | Check network connectivity, PhyHub connection or event emitted by twins based on the use case |
+| **Event Processing Failures** | Error messages in logs             | Verify event handler implementation and data validation                                       |
+| **Property Reporting Issues** | Properties not updating in console | Check property reporting frequency and data format                                            |
+| **Event Timing Problems**     | Delayed or missing events          | Verify event generation logic and network latency                                             |
 
 ## **🖥️ Debugging Screen Apps on Physical Devices**
 
