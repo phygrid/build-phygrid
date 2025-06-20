@@ -607,34 +607,80 @@ journalctl -u phydevice -o cat | awk '/reportEdgeTwinProperties()/,/^\}/'
 
 Use these steps to inspect and debug screen apps deployed to devices.
 
-### **Troubleshoot Screen Twin Settings**
+### **⚙️ Troubleshoot Screen Twin Settings**
 
-To verify if the device received the screen app details, run the following command
+---
+
+Screen twin settings contain the configuration and deployment information for your Screen Apps. This section helps you verify that the device has properly received and cached the screen twin configurations from PhyHub, which is essential for successful screen app deployment and operation.
+
+First, check if the screen twin was downloaded and cached on the device:
+
+```shell
+journalctl -u phydevice -o cat | awk '/Caching Screen twin/'
+```
+
+> **Expected output:** You should see confirmation messages indicating screen twins were cached:
+>
+> ```shell
+> cacheTwins(): Caching Screen twin ************************
+> ```
+
+To verify if the device received the screen app details correctly, run the following command:
 
 ```shell
 cd /data/settings/phyhub
 ls  # Look for twins-device-<device_id>.json
 ```
 
-Inspect manifest:
+Inspect the manifest to see all available twins:
 
 ```shell
 cat twins-device-<device_id>.json
 ```
 
-Check and verify desired properties of the screen twin by running the following. The \<screen_twin_id\> will be available from the previous command
+> **Expected output:** The manifest should show all twin types assigned to this device:
+>
+> ```json
+> {
+>   "Screen": ["************************"],
+>   "Device": ["************************"],
+>   "Edge": ["************************"],
+>   "Peripheral": ["************************"]
+> }
+> ```
+
+Check and verify the desired properties of a screen twin by running the following command. The `<screen_twin_id>` will be available from the previous command:
 
 ```shell
 cat <screen_twin_id>-device-<device_id>.json | jq '.properties.desired'
 ```
 
-Confirm if the screen twin was downloaded on device:
+> **Expected output:** The desired properties should contain complete screen app configuration:
+>
+> ```json
+> {
+>   "url": "https://screen.phygrid.com/************************/************************/************************/#browserId=****************-****-****-****-************&accessKey=****************-****-****-****-************&env=prod&spaceId=************************&deviceName=************************&instanceId=************************",
+>   "screenResolution": "default",
+>   "soundOutput": "hdmi1",
+>   "soundInput": "default",
+>   "scale": "1.0",
+>   "screenOrientation": "landscape",
+>   "enableDebug": false,
+>   "installationId": "************************",
+>   "buildId": "************************",
+>   "settings": { ... }
+> }
+> ```
 
-```shell
-journalctl -u phydevice -o cat | awk '/Caching Screen twin/'
-```
+**What to look for:**
 
----
+- **Twin Caching:** Verify that screen twins are being successfully cached on the device with confirmation messages
+- **Twin Presence:** Ensure the screen twin ID appears in the device manifest alongside other twin types
+- **Complete Configuration:** Check that the desired properties contain all required screen app information including appUrl, settings, and environment variables
+- **Display Settings:** Verify that display mode, and other screen-specific settings are properly configured
+- **Environment Variables:** Ensure any required environment variables are properly defined for the screen app
+- **Auto-restart Configuration:** Check that auto-restart settings are appropriate for your use case
+- **Build Information:** Verify that installationId, appName, and buildId are correctly set
 
 ### **4️⃣ Troubleshoot Physcreen**
 
@@ -649,8 +695,6 @@ If the physcreen is running but still stuck at logo screen, run the following co
 ```shell
 tail /var/log/physcreen-manager
 ```
-
----
 
 ### **5️⃣ Troubleshoot Blank Screen**
 
@@ -668,8 +712,6 @@ journalctl -u phydevice -o cat | awk '/startPhyScreen/'
 tail -f /var/log/physcreen-manager
 ```
 
----
-
 ### **6️⃣ Troubleshoot Reported Screen Properties**
 
 To investigate the reported properties of screen app, run the following command
@@ -677,8 +719,6 @@ To investigate the reported properties of screen app, run the following command
 ```shell
 journalctl -u phydevice -o cat | awk '/setScreenInstanceReportedProperties/'
 ```
-
----
 
 ### **7️⃣ Troubleshoot Signals**
 
@@ -691,8 +731,6 @@ journalctl -u phydevice -o cat | awk '/sendClientSignal/,/^\}/'
 ```
 
 Refer to the Signal Key Mapping table below.
-
----
 
 ### **8️⃣ Remote Debug via Chrome DevTools**
 
