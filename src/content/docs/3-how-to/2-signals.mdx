@@ -3,4 +3,1182 @@ title: "Signals"
 icon: "PaperPlaneTilt"
 ---
 
-Hello world
+This comprehensive guide explains how to implement and utilize signals in the Phygrid platform to collect data from interaction points, track user behavior, and monitor application performance. Signals provide real-time comprehensive analytics and monitoring capabilities.
+
+## **📊 Understanding Signals**
+
+Signals are the foundation of data collection, alerts and analytics in the Phygrid platform. They enable real-time insights into user interactions, application performance, and system health. The data collected through signals is processed by the Phygrid platform and presented in the console's analytics dashboards.
+
+### **Signal Types**
+
+The Phygrid platform supports three distinct types of signals, each serving specific purposes:
+
+#### **1. Client Signals**
+
+Client signals are automatically generated when a client connects to your application. These signals capture essential client information that helps identify and categorize user interactions.
+
+**When generated:** Automatically upon client connection
+**Data captured:**
+
+- Client IP address
+- User agent information
+- Device type and capabilities
+- Browser information
+- Geographic location (if available)
+
+**Example use cases:**
+
+- Track unique visitors and user sessions
+- Analyze device and browser distribution
+- Monitor geographic usage patterns
+- Identify potential security threats
+
+#### **2. Session Signals**
+
+Session signals track the lifecycle of application sessions, providing insights into application usage patterns and user engagement.
+
+**When generated:**
+
+- Application startup (session start)
+- Application shutdown (session end)
+- Session timeout or interruption
+
+**Data captured:**
+
+- Session duration
+- Application version
+- Installation details
+- Session start/end timestamps
+
+**Example use cases:**
+
+- Monitor application uptime and reliability
+- Track user session duration and engagement
+- Identify application crashes or unexpected shutdowns
+- Analyze usage patterns across different time periods
+
+#### **3. Event Signals**
+
+Event signals are the most versatile and commonly used signal type. They capture specific user interactions and application events, providing detailed insights into user behavior and application functionality.
+
+**When generated:** Manually triggered by your application code
+**Data captured:**
+
+- Event type and category
+- User interaction details
+- Product or content information
+- Transaction data
+- Custom parameters
+
+**Example use cases:**
+
+- Track user searches and navigation patterns
+- Monitor e-commerce transactions and conversions
+- Capture user feedback and ratings
+- Track application errors and performance issues
+- Monitor specific business processes
+
+## **🎯 Common Use Cases**
+
+Signals can be implemented across various scenarios to enhance your application's analytics and monitoring capabilities:
+
+### **E-commerce Applications**
+
+- **Product interactions:** Track product views, category browsing, and search behavior
+- **Shopping cart management:** Monitor cart additions, removals, and checkout processes
+- **Purchase tracking:** Capture transaction details, payment methods, and order status
+- **User feedback:** Collect ratings, reviews, and customer satisfaction data
+
+### **Content and Media Applications**
+
+- **Content consumption:** Track video views, article reads, and media playback
+- **User engagement:** Monitor time spent on content, interaction rates, and completion rates
+- **Search behavior:** Analyze search queries, result clicks, and search refinement patterns
+- **Content discovery:** Track recommendations, featured content views, and navigation paths
+
+### **IoT and Edge Applications**
+
+- **Device monitoring:** Track device status, performance metrics, and error conditions
+- **Sensor data:** Capture environmental readings, device telemetry, and operational data
+- **System events:** Monitor application crashes, service restarts, and system health
+- **User interactions:** Track physical button presses, touch interactions, and device usage
+
+### **Analytics and Business Intelligence**
+
+- **User behavior analysis:** Understand user journeys, preferences, and pain points
+- **Performance monitoring:** Track application response times, error rates, and resource usage
+- **A/B testing:** Measure the effectiveness of different features and configurations
+- **Business metrics:** Monitor KPIs, conversion rates, and operational efficiency
+
+## **🚀 Getting Started with Signals**
+
+The `@phygrid/hub-client` package provides a comprehensive API for initializing and utilizing signals in your applications. This section guides you through the setup process and demonstrates common implementation patterns.
+
+### **Installation and Setup**
+
+Install the required package in your application:
+
+```bash
+npm install @phygrid/hub-client
+# or
+yarn add @phygrid/hub-client
+```
+
+### **Initialization Process**
+
+Signals must be properly initialized before they can be used. The initialization process establishes the connection to Phygrid services and configures the signal transmission parameters.
+
+#### **Method Signature**
+
+```typescript
+public initializeSignals = async (initParams?: InitSignalPayload) =&gt Promise&lt;SignalsService&gt;
+```
+
+#### **Parameters**
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>initParams</td>
+      <td>
+        <code>InitSignalPayload</code>
+      </td>
+      <td>
+        Optional payload containing initialization data. If not provided, the
+        method fetches necessary data from the device and instance settings.
+      </td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+#### **InitSignalPayload Properties**
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>tenantId</td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        Unique identifier for the tenant/organization (24 alphanumeric
+        characters)
+      </td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>environment</td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        Deployment environment (e.g., "production", "development", "staging")
+      </td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>dataResidency</td>
+      <td>
+        <code>DataResidencyEnum</code>
+      </td>
+      <td>
+        Data residency region for compliance and performance (e.g., "EU", "US",
+        "APAC")
+      </td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>country</td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Country code where the application is deployed</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>appId</td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Unique identifier for the application</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>installationId</td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Unique identifier for the application installation instance</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>spaceId</td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        Identifier for the space/workspace where the application is deployed (24
+        alphanumeric characters)
+      </td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>deviceId</td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Unique identifier for the device running the application</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>appVersion</td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Version number of the application</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>installationVersion</td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Version of the installation package or deployment</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>accessToken</td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Authentication token for accessing Phygrid services</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>clientUserAgent</td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>User agent string of the client making the request</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>ip</td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>IP address of the client or device (IPv4 or IPv6 format)</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>sessionId</td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Existing session ID to reuse (max 36 characters)</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>createNewSessionAfterLastActivityMins</td>
+      <td>
+        <code>number</code>
+      </td>
+      <td>Minutes of inactivity before creating a new session</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>useValidCachedSessionOnInit</td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>Whether to use cached session on initialization</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+#### **Validation Requirements**
+
+The signals service includes built-in validation for certain parameters:
+
+- **tenantId**: Must be exactly 24 alphanumeric characters
+- **spaceId**: Must be exactly 24 alphanumeric characters
+- **clientId**: Must be 24-36 alphanumeric characters, hyphens, underscores, or equals signs
+- **ip**: Must be a valid IPv4 or IPv6 address format
+- **eventType**: Must be 5-60 characters, uppercase letters, numbers, and underscores only
+- **sessionId**: Maximum 36 characters
+- **str1-str5**: Maximum 200 characters each
+
+**Example validation errors:**
+
+```typescript
+// ❌ Invalid tenant ID format
+await signals.initialize({
+  tenantId: "invalid-tenant-id", // Must be 24 alphanumeric chars
+  // ... other required params
+})
+
+// ✅ Valid tenant ID format
+await signals.initialize({
+  tenantId: "507f1f77bcf86cd799439011", // 24 alphanumeric chars
+  // ... other required params
+})
+```
+
+#### **Initialization Examples**
+
+**Example 1: Automatic Initialization (Recommended)**
+
+When implementing signals within a screen app or edge app deployed on a Phygrid device, all required initialization parameters are automatically retrieved from the device configuration. No manual parameter passing is necessary.
+
+```typescript
+import { connectPhyClient } from "@phygrid/hub-client"
+
+const client = await connectPhyClient();
+const signals = await client.initializeSignals();
+signals.sendEvent(...);
+```
+
+**Example 2: Manual Initialization with Custom Parameters**
+
+For scenarios where signals are implemented in standalone scripts or applications running outside of the Phygrid device environment, manual parameter configuration is required to establish proper signal initialization.
+
+```typescript
+import { connectPhyClient } from '@phygrid/hub-client';
+
+const initParams = {
+  "deviceId": "device-12345",
+  "installationId": "install-67890",
+  "spaceId": "space-abcdef",
+  "tenantId": "tenant-xyz",
+  "appVersion": "1.0.0",
+  "appId": "com.example.app",
+  "environment": "production",
+  "dataResidency": "EU",
+  "country": "SE",
+  "installationVersion": "2.3.4",
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR...",
+  "clientUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+  "ip": "192.168.1.100"
+};
+
+const client = await connectPhyClient();
+const signals = await client.initializeSignals(initParams);
+signals.sendEvent(...);
+```
+
+**What to expect:**
+
+- **Successful initialization** will return a `SignalsService` instance ready for use
+- **Connection errors** may indicate network issues or invalid credentials
+- **Configuration errors** may suggest missing or invalid initialization parameters
+- **Timeout errors** may indicate network connectivity problems
+
+## **🔧 Available Methods**
+
+The `SignalsService` provides a comprehensive set of methods for different types of signal transmission. These methods are organized into logical categories based on their functionality and use cases.
+
+### **Instance Management**
+
+Methods for managing signal service instances and retrieving configuration information.
+
+#### **`getInstanceProps()`**
+
+Returns the current instance properties and configuration.
+
+**Returns:** `object` - Instance properties including device ID, tenant ID, and other configuration details
+
+**Example:**
+
+```typescript
+const instanceProps = signals.getInstanceProps()
+console.log("Current instance:", instanceProps)
+```
+
+### **Session Management**
+
+Methods for creating and managing application sessions, which are essential for tracking user engagement and application lifecycle.
+
+#### **`createSession(instanceParams?: Partial&lt;SignalInstance&gt;)`**
+
+Creates a new session and initializes the instance with the required parameters.
+
+**Parameters:**
+
+- `instanceParams`: `Partial&lt;SignalInstance&gt;` (optional) - Instance parameters to override before creating session
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when session is successfully created
+
+**Example:**
+
+```typescript
+await signals.createSession({
+  deviceId: "device-12345",
+  appVersion: "1.0.0",
+})
+console.log("New session created")
+```
+
+#### **`initialize(signalParams: InitSignalPayload)`**
+
+Initializes the SignalsService with the provided signal parameters.
+
+**Parameters:**
+
+- `signalParams`: `InitSignalPayload` - Configuration parameters for signal initialization
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when initialization is complete
+
+**Example:**
+
+```typescript
+await signals.initialize({
+  deviceId: "device-12345",
+  appVersion: "1.0.0",
+})
+```
+
+#### **`initializeEdgeApp(signalParams: InitSignalPayload | {} = {})`**
+
+Initializes the SignalsService specifically for edge applications with the given parameters.
+
+**Parameters:**
+
+- `signalParams`: `InitSignalPayload | {}` - Configuration parameters (defaults to empty object)
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when edge app initialization is complete
+
+**Example:**
+
+```typescript
+await signals.initializeEdgeApp({
+  deviceId: "edge-device-12345",
+  environment: "production",
+})
+```
+
+### **Application Tracking**
+
+Methods for monitoring application status and lifecycle events.
+
+#### **`sendAppOnline(message?: string)`**
+
+Tracks when the application comes online and becomes available for user interactions.
+
+**Parameters:**
+
+- `message`: `string` (optional) - Custom message describing the online event
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendAppOnline("Application started successfully")
+```
+
+#### **`sendAppOffline(message?: string)`**
+
+Tracks when the application goes offline or becomes unavailable.
+
+**Parameters:**
+
+- `message`: `string` (optional) - Custom message describing the offline event
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendAppOffline("Application shutting down")
+```
+
+### **Event Handling**
+
+Core methods for sending custom events and tracking user interactions.
+
+#### **`sendEvent(event: Event, expectResponse?: boolean)`**
+
+Sends a custom event to the server with optional response expectation.
+
+**Parameters:**
+
+- `event`: `Event` - Event object containing event details and data
+- `expectResponse`: `boolean` (optional) - Whether to expect a response (defaults to false)
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when event is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendEvent({
+  eventType: "USER_LOGIN",
+  data: {
+    userId: "user-12345",
+    loginMethod: "email",
+  },
+})
+```
+
+#### **`sendCustomEvent(event: TrackEvent)`**
+
+Sends a custom tracking event with predefined structure.
+
+**Parameters:**
+
+- `event`: `TrackEvent` - Custom event object with standardized tracking data
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when custom event is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendCustomEvent({
+  eventType: "BUTTON_CLICK",
+  productId: "prod-12345",
+  category: "electronics",
+})
+```
+
+### **Transaction Events**
+
+Methods specifically designed for e-commerce and transaction tracking.
+
+#### **`sendCheckout(checkout: CheckoutEvent, expectResponse?: boolean)`**
+
+Sends a checkout event with transaction details.
+
+**Parameters:**
+
+- `checkout`: `CheckoutEvent` - Checkout event object containing transaction data
+- `expectResponse`: `boolean` (optional) - Whether to expect a response
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when checkout event is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendCheckout({
+  transactionId: "txn-12345",
+  total: 99.99,
+  currency: "USD",
+  items: [{ productId: "prod-12345", quantity: 2, price: 49.99 }],
+})
+```
+
+#### **`sendPurchase(purchase: PurchaseEvent, expectResponse?: boolean)`**
+
+Sends a purchase completion event.
+
+**Parameters:**
+
+- `purchase`: `PurchaseEvent` - Purchase event object with transaction details
+- `expectResponse`: `boolean` (optional) - Whether to expect a response
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when purchase event is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendPurchase({
+  transactionId: "txn-12345",
+  total: 99.99,
+  currency: "USD",
+  paymentMethod: "credit_card",
+})
+```
+
+### **Session & Client Data**
+
+Methods for transmitting session and client information to the server.
+
+#### **`sendSession(session: Session, expectResponse?: boolean)`**
+
+Sends session data to the server for tracking and analytics.
+
+**Parameters:**
+
+- `session`: `Session` - Session object containing session details
+- `expectResponse`: `boolean` (optional) - Whether to expect a response
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when session data is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendSession({
+  sessionId: "session-12345",
+  startTime: new Date(),
+  duration: 3600000, // 1 hour in milliseconds
+})
+```
+
+#### **`sendClient(client: Client, expectResponse?: boolean)`**
+
+Sends client information to the server for user tracking and analytics.
+
+**Parameters:**
+
+- `client`: `Client` - Client object containing client details
+- `expectResponse`: `boolean` (optional) - Whether to expect a response
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when client data is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendClient({
+  clientId: "client-12345",
+  userAgent: "Mozilla/5.0...",
+  ip: "192.168.1.100",
+  deviceType: "desktop",
+})
+```
+
+### **Order Processing**
+
+Methods for tracking order lifecycle and processing status.
+
+#### **`sendProcessOrderStart()`**
+
+Tracks the start of an order processing workflow.
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendProcessOrderStart()
+```
+
+#### **`sendProcessOrderEnd()`**
+
+Tracks the completion of an order processing workflow.
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendProcessOrderEnd()
+```
+
+#### **`sendProcessOrderSuccess()`**
+
+Tracks a successful order processing completion.
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendProcessOrderSuccess()
+```
+
+#### **`sendProcessOrderFailed()`**
+
+Tracks a failed order processing attempt.
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendProcessOrderFailed()
+```
+
+#### **`sendOrderItem(params: { orderId: string; itemId: string; itemType: string })`**
+
+Tracks an individual item within an order.
+
+**Parameters:**
+
+- `params`: `object` - Order item parameters
+  - `orderId`: `string` - Unique identifier for the order
+  - `itemId`: `string` - Unique identifier for the item
+  - `itemType`: `string` - Type or category of the item
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when order item signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendOrderItem({
+  orderId: "order-12345",
+  itemId: "item-67890",
+  itemType: "electronics",
+})
+```
+
+#### **`sendProcessOrderItemDelivered(params: { orderId: string; itemId: string })`**
+
+Tracks successful delivery of an order item.
+
+**Parameters:**
+
+- `params`: `object` - Delivery parameters
+  - `orderId`: `string` - Unique identifier for the order
+  - `itemId`: `string` - Unique identifier for the delivered item
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when delivery signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendProcessOrderItemDelivered({
+  orderId: "order-12345",
+  itemId: "item-67890",
+})
+```
+
+#### **`sendProcessOrderItemFailed(params: { orderId: string; itemId: string })`**
+
+Tracks failed delivery of an order item.
+
+**Parameters:**
+
+- `params`: `object` - Failure parameters
+  - `orderId`: `string` - Unique identifier for the order
+  - `itemId`: `string` - Unique identifier for the failed item
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when failure signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendProcessOrderItemFailed({
+  orderId: "order-12345",
+  itemId: "item-67890",
+})
+```
+
+### **Authentication Events**
+
+Methods for tracking user authentication and security events.
+
+#### **`sendAuthenticationSuccess()`**
+
+Tracks a successful user authentication event.
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when authentication success signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendAuthenticationSuccess()
+```
+
+#### **`sendAuthenticationFailed()`**
+
+Tracks a failed user authentication attempt.
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when authentication failure signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendAuthenticationFailed()
+```
+
+### **Barcode & Media Events**
+
+Methods for tracking hardware interactions and media consumption.
+
+#### **`sendScanBarcode(params: { barcode: string })`**
+
+Tracks a barcode scan event from connected hardware.
+
+**Parameters:**
+
+- `params`: `object` - Barcode scan parameters
+  - `barcode`: `string` - The scanned barcode value
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when barcode scan signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendScanBarcode({
+  barcode: "1234567890123",
+})
+```
+
+#### **`sendMediaFinished(params: { id: string; type: string; name: string; duration: number; tags?: string[] })`**
+
+Tracks when media content has finished playing or been consumed.
+
+**Parameters:**
+
+- `params`: `object` - Media parameters
+  - `id`: `string` - Unique identifier for the media content
+  - `type`: `string` - Type of media content (e.g., "video", "audio", "image")
+  - `name`: `string` - Name or title of the media content
+  - `duration`: `number` - Duration of the media content in milliseconds
+  - `tags`: `string[]` (optional) - Array of tags associated with the media content
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when media finished signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendMediaFinished({
+  id: "video-12345",
+  type: "video",
+  name: "Product Demo",
+  duration: 120000, // 2 minutes in milliseconds
+  tags: ["demo", "product", "tutorial"],
+})
+```
+
+### **Product & Cart Events**
+
+Methods specifically designed for e-commerce product and shopping cart tracking.
+
+#### **`sendCategoryView(params: { categoryId: string })`**
+
+Tracks when a user views a product category.
+
+**Parameters:**
+
+- `params`: `object` - Category view parameters
+  - `categoryId`: `string` - Unique identifier for the category
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when category view signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendCategoryView({
+  categoryId: "cat-12345",
+})
+```
+
+#### **`sendProductView(params: { productId: string })`**
+
+Tracks when a user views a specific product.
+
+**Parameters:**
+
+- `params`: `object` - Product view parameters
+  - `productId`: `string` - Unique identifier for the product
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when product view signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendProductView({
+  productId: "prod-12345",
+})
+```
+
+#### **`sendCartAdd(params: { productId: string; quantity: number })`**
+
+Tracks when a product is added to the shopping cart.
+
+**Parameters:**
+
+- `params`: `object` - Cart addition parameters
+  - `productId`: `string` - Unique identifier for the product
+  - `quantity`: `number` - Quantity of the product added
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when cart add signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendCartAdd({
+  productId: "prod-12345",
+  quantity: 2,
+})
+```
+
+#### **`sendCartView()`**
+
+Tracks when a user views their shopping cart.
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when cart view signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendCartView()
+```
+
+#### **`sendCartRemove(params: { productId: string; quantity: number })`**
+
+Tracks when a product is removed from the shopping cart.
+
+**Parameters:**
+
+- `params`: `object` - Cart removal parameters
+  - `productId`: `string` - Unique identifier for the product
+  - `quantity`: `number` - Quantity of the product removed
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when cart remove signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendCartRemove({
+  productId: "prod-12345",
+  quantity: 1,
+})
+```
+
+#### **`sendCartClear()`**
+
+Tracks when the shopping cart is completely cleared.
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when cart clear signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendCartClear()
+```
+
+### **Search & Feedback**
+
+Methods for tracking user search behavior and feedback collection.
+
+#### **`sendSearch(params: { searchQueryString: string })`**
+
+Tracks when a user performs a search operation.
+
+**Parameters:**
+
+- `params`: `object` - Search parameters
+  - `searchQueryString`: `string` - The search query entered by the user
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when search signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendSearch({
+  searchQueryString: "smartphone",
+})
+```
+
+#### **`sendSearchClear()`**
+
+Tracks when a user clears their search query.
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when search clear signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendSearchClear()
+```
+
+#### **`sendRating(params: { rating: 1 | 2 | 3 | 4 | 5; interactionDelay?: number; comment?: string })`**
+
+Tracks user ratings of products, services, or experiences.
+
+**Parameters:**
+
+- `params`: `object` - Rating parameters
+  - `rating`: `1 | 2 | 3 | 4 | 5` - Rating value (1-5 scale)
+  - `interactionDelay`: `number` (optional) - Delay in milliseconds before rating was given
+  - `comment`: `string` (optional) - Additional comment or review text
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when rating signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendRating({
+  rating: 5,
+  interactionDelay: 5000, // 5 seconds
+  comment: "Excellent product!",
+})
+```
+
+#### **`sendFeedback(params: { feedback: string; rating?: 1 | 2 | 3 | 4 | 5 })`**
+
+Tracks user feedback and comments.
+
+**Parameters:**
+
+- `params`: `object` - Feedback parameters
+  - `feedback`: `string` - The feedback message from the user
+  - `rating`: `1 | 2 | 3 | 4 | 5` (optional) - Optional rating value (1-5 scale)
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when feedback signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendFeedback({
+  feedback: "App crashes when clicking the submit button",
+  rating: 2,
+})
+```
+
+#### **`sendQrScan()`**
+
+Tracks when a QR code is scanned.
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when QR scan signal is successfully sent
+
+**Example:**
+
+```typescript
+await signals.sendQrScan()
+```
+
+### **State Management**
+
+Methods for managing application state and configuration.
+
+#### **`setState(params: { key: string; value: string | number; expiryDuration: number })`**
+
+Sets a state key, value, and expiry duration for the current session.
+
+**Parameters:**
+
+- `params`: `object` - State parameters
+  - `key`: `string` - State key identifier
+  - `value`: `string | number` - State value to store
+  - `expiryDuration`: `number` - Expiry duration in milliseconds
+
+**Returns:** `Promise&lt;void&gt;` - Resolves when state is successfully set
+
+**Example:**
+
+```typescript
+await signals.setState({
+  key: "user_preferences",
+  value: { theme: "dark", language: "en" },
+  expiryDuration: 3600000, // 1 hour in milliseconds
+})
+```
+
+## **📈 Best Practices**
+
+Implementing signals effectively requires careful planning and adherence to best practices. Follow these guidelines to ensure optimal performance and data quality.
+
+### **Signal Design Principles**
+
+1. **Relevance:** Only send signals for events that provide meaningful insights
+2. **Consistency:** Use consistent naming conventions and data structures
+3. **Efficiency:** Avoid sending excessive or redundant signals
+4. **Privacy:** Ensure compliance with data protection regulations
+5. **Reliability:** Implement proper error handling and retry mechanisms
+
+### **Performance Optimization**
+
+1. **Batch processing:** Group related signals when possible
+2. **Asynchronous transmission:** Use non-blocking signal transmission
+3. **Rate limiting:** Implement appropriate rate limiting to prevent overload
+4. **Data compression:** Minimize payload size for efficient transmission
+5. **Connection pooling:** Reuse connections when possible
+
+### **Error Handling**
+
+1. **Graceful degradation:** Continue application operation even if signal transmission fails
+2. **Retry logic:** Implement exponential backoff for failed transmissions
+3. **Logging:** Maintain detailed logs for debugging signal issues
+4. **Monitoring:** Set up alerts for signal transmission failures
+5. **Fallback mechanisms:** Provide alternative data collection methods when needed
+
+### **Data Quality**
+
+1. **Validation:** Validate signal data before transmission
+2. **Completeness:** Ensure all required fields are populated
+3. **Accuracy:** Verify data accuracy and consistency
+4. **Timeliness:** Send signals as close to the event occurrence as possible
+5. **Context:** Include relevant context information with each signal
+
+## **🔍 Troubleshooting**
+
+Common issues and solutions for signal implementation and transmission.
+
+### **Connection Issues**
+
+**Symptoms:** Signals not being transmitted, timeout errors
+**Solutions:**
+
+- Verify network connectivity to Phygrid services
+- Check authentication credentials and permissions
+- Ensure proper initialization sequence
+- Review firewall and proxy configurations
+
+### **Data Transmission Problems**
+
+**Symptoms:** Incomplete or missing signal data
+**Solutions:**
+
+- Validate signal payload structure and required fields
+- Check for data type mismatches and encoding issues
+- Verify signal service initialization parameters
+- Review application error logs for transmission failures
+
+### **Performance Issues**
+
+**Symptoms:** Slow signal transmission, application lag
+**Solutions:**
+
+- Implement signal batching and rate limiting
+- Optimize payload size and data compression
+- Use asynchronous signal transmission
+- Monitor system resources and network bandwidth
+
+### **Analytics Dashboard Issues**
+
+**Symptoms:** Signals not appearing in console analytics
+**Solutions:**
+
+- Verify signal format and data structure
+- Check signal service configuration and permissions
+- Review data processing pipeline and filters
+- Contact support for dashboard-specific issues
+
+## ✅ **Checkpoint:**
+
+You now have a comprehensive understanding of signals in the Phygrid platform. This guide provides you with:
+
+**📊 Signal Fundamentals:**
+
+- **Complete signal type overview** - Client, Session, and Event signals with detailed explanations
+- **Use case scenarios** - Real-world applications across different industries and use cases
+- **Implementation patterns** - Best practices for signal design and transmission
+
+**🚀 Implementation Guide:**
+
+- **Step-by-step setup** - From installation to initialization and usage
+- **Comprehensive API reference** - All available methods with parameters and examples
+- **Code examples** - Practical implementations for common scenarios
+
+**🔧 Advanced Features:**
+
+- **State management** - Techniques for managing application state and configuration
+- **Error handling** - Robust error handling and recovery mechanisms
+- **Performance optimization** - Strategies for efficient signal transmission
+
+**📈 Analytics and Monitoring:**
+
+- **Data quality assurance** - Guidelines for ensuring accurate and reliable signal data
+- **Troubleshooting procedures** - Common issues and their solutions
+- **Best practices** - Industry-standard approaches for signal implementation
+
+This signals guide empowers you to implement comprehensive analytics and monitoring capabilities in your Phygrid applications, enabling data-driven insights and improved user experiences.
