@@ -114,13 +114,18 @@ journalctl -u phydevice -o cat | grep -i "connectPhyHub():"
 > When a device successfully establishes connection with PhyHub, you can expect logs similar to the following:
 >
 > ```shell
-> 2025-06-20T07:45:17.857Z [INFO] [phylogger-device-phyos] connectPhyHub(): Connected to PhyHub
-> 2025-06-20T07:45:17.863Z [INFO] [phylogger-device-phyos] connectPhyHub(): Device connected with details: { deviceId: 'xxxx-xxxx-xxxxx-xxxx-' }
-> 2025-06-20T07:45:17.863Z [INFO] [phylogger-device-phyos] connectPhyHub(): Environment already provisioned with device credentials, skipping configuration
-> 2025-06-20T07:45:17.863Z [INFO] [phylogger-device-phyos] connectPhyHub(): Caching twins from server response...
+> 2025-06-20T07:45:17.857Z [INFO] [phylogger-device-phyos] connectPhyHub(): Connected to
+> PhyHub
+> 2025-06-20T07:45:17.863Z [INFO] [phylogger-device-phyos] connectPhyHub(): Device
+> connected with details: { deviceId: 'xxxx-xxxx-xxxxx-xxxx-' }
+> 2025-06-20T07:45:17.863Z [INFO] [phylogger-device-phyos] connectPhyHub(): Environment
+> already provisioned with device credentials, skipping configuration
+> 2025-06-20T07:45:17.863Z [INFO] [phylogger-device-phyos] connectPhyHub(): Caching
+> twins from server response...
 > ```
 
-If PhyHub connection is failing, verify network reachability by testing connectivity to the PhyHub portal:
+If PhyHub connection is failing, verify network reachability by testing connectivity to
+the PhyHub portal:
 
 ```shell
 curl http://portal-<region>.omborigrid.com/
@@ -202,10 +207,14 @@ journalctl -u phydevice -o cat | grep  "initInstances"
 > **Expected output:**
 >
 > ```shell
-> 2025-06-20T07:45:17.945Z [INFO] [phylogger-device-phyos] initInstances(): Initializing 4 instance twins
-> 2025-06-20T07:45:17.945Z [INFO] [phylogger-device-phyos] initInstances(): Found 1 Edge twins to initialize: [
-> 2025-06-20T07:45:17.945Z [INFO] [phylogger-device-phyos] initInstances(): Processing twin 684bed3e1589237ea2cf9992 of type Screen
-> 2025-06-20T07:45:17.945Z [INFO] [phylogger-device-phyos] initInstances(): Starting Screen app for twin 684bed3e1589237ea2cf9992
+> 2025-06-20T07:45:17.945Z [INFO] [phylogger-device-phyos] initInstances(): Initializing 4
+> instance twins
+> 2025-06-20T07:45:17.945Z [INFO] [phylogger-device-phyos] initInstances(): Found 1 Edge
+> twins to initialize: [
+> 2025-06-20T07:45:17.945Z [INFO] [phylogger-device-phyos] initInstances(): Processing twin
+> 684bed3e1589237ea2cf9992 of type Screen
+> 2025-06-20T07:45:17.945Z [INFO] [phylogger-device-phyos] initInstances(): Starting Screen
+> app for twin 684bed3e1589237ea2cf9992
 > ```
 
 **What to look for:**
@@ -702,9 +711,12 @@ docker ps -a
 > **Expected output:** You should see a list of all containers with their status:
 >
 > ```shell
-> CONTAINER ID   IMAGE                    COMMAND   CREATED         STATUS                     PORTS     NAMES
-> abc123def456   myapp:latest            "/app"    2 minutes ago    Up 2 minutes              0.0.0.0:8080->8080/tcp   myapp-container
-> def456ghi789   another-app:1.0.0       "/start"  5 minutes ago    Exited (1) 3 minutes ago             failed-container
+> CONTAINER ID   IMAGE                    COMMAND   CREATED         STATUS
+> PORTS     NAMES
+> abc123def456   myapp:latest            "/app"    2 minutes ago    Up 2 minutes
+> 0.0.0.0:8080->8080/tcp   myapp-container
+> def456ghi789   another-app:1.0.0       "/start"  5 minutes ago    Exited (1) 3 minutes ago
+> failed-container
 > ```
 
 **What to expect:**
@@ -722,8 +734,10 @@ journalctl -u phydevice -o cat | grep pullImage
 > **Expected output:** Look for image pull attempts and results:
 >
 > ```shell
-> 2025-06-20T07:45:17.857Z [INFO] [phylogger-device-phyos] pullImage(): Pulling image myapp:latest
-> 2025-06-20T07:45:20.123Z [INFO] [phylogger-device-phyos] pullImage(): Successfully pulled image myapp:latest
+> 2025-06-20T07:45:17.857Z [INFO] [phylogger-device-phyos] pullImage(): Pulling image
+> myapp:latest
+> 2025-06-20T07:45:20.123Z [INFO] [phylogger-device-phyos] pullImage(): Successfully
+> pulled image myapp:latest
 > ```
 
 **What to expect:**
@@ -741,7 +755,8 @@ journalctl -u phydevice -o cat | awk '/createContainer/,/^\}/'
 > **Expected output:** Container creation logs should show the creation process:
 >
 > ```shell
-> 2025-06-20T07:47:29.341Z [INFO] [phylogger-device-phyos] createContainer(): Twin object for xxxxxxxxxxxxxx: {
+> 2025-06-20T07:47:29.341Z [INFO] [phylogger-device-phyos] createContainer(): Twin object
+> for xxxxxxxxxxxxxx: {
 > ... container details
 > }
 > ```
@@ -763,9 +778,12 @@ journalctl -u phydevice -o cat | grep startEdgeApp
 > **Expected output:** Container startup logs should show the launch process:
 >
 > ```shell
-> 2025-06-20T07:47:29.341Z [INFO] [phylogger-device-phyos] startContainer(): Attempting to create container for twin xxxxxxxxxxxxxxxxx with GPU support
-> 2025-06-20T07:47:29.351Z [INFO] [phylogger-device-phyos] startContainer(): Container created for twin xxxxxxxxxxxxxxxxx, preparing to start it
-> 2025-06-20T07:47:29.390Z [INFO] [phylogger-device-phyos] startContainer(): Started container for twin xxxxxxxxxxxxxxxxx
+> 2025-06-20T07:47:29.341Z [INFO] [phylogger-device-phyos] startContainer(): Attempting to
+> create container for twin xxxxxxxxxxxxxxxxx with GPU support
+> 2025-06-20T07:47:29.351Z [INFO] [phylogger-device-phyos] startContainer(): Container
+> created for twin xxxxxxxxxxxxxxxxx, preparing to start it
+> 2025-06-20T07:47:29.390Z [INFO] [phylogger-device-phyos] startContainer(): Started
+> container for twin xxxxxxxxxxxxxxxxx
 > ```
 
 **What to expect:**
@@ -848,7 +866,10 @@ journalctl -u phydevice -o cat | awk '/handleInstanceMessage/,/^\}/'
 >       tenantId: '************************',
 >       version: 1,
 >       status: 'Online',
->       statusHistory: '{"s":0,"t":1750363250903},{"s":1,"t":1750363385770},{"s":0,"t":1750379306822},{"s":1,"t":1750379332938},{"s":0,"t":1750380472871},{"s":1,"t":1750380503265},{"s":0,"t":1750381506449},{"s":1,"t":1750381523500},{"s":0,"t":1750405502434},{"s":1,"t":1750405640914},',
+>       statusHistory: '{"s":0,"t":1750363250903},{"s":1,"t":1750363385770},
+> {"s":0,"t":1750379306822},{"s":1,"t":1750379332938},{"s":0,"t":1750380472871},{
+>    "s":1,"t":1750380503265},{"s":0,"t":1750381506449},{"s":1,"t":1750381523500},
+>    {"s":0,"t":1750405502434},{"s":1,"t":1750405640914},',
 >       createdAt: '2025-06-13T10:14:41.725Z',
 >       updatedAt: '2025-06-20T11:26:37.532Z',
 >       lastStatusUpdatedAt: '2025-06-20T11:26:37.529Z',
@@ -880,7 +901,7 @@ journalctl -u phydevice -o cat | awk '/reportEdgeTwinProperties()/,/^\}/'
 > reportEdgeTwinProperties(): Reporting twin ************************ properties {
 > ... reported properties
 > }
-> reportEdgeTwinProperties(): Successfully reported properties for twin ************************
+> reportEdgeTwinProperties(): Successfully reported properties for twin *******************
 > ```
 
 **What to expect:**
@@ -936,7 +957,7 @@ journalctl -u phydevice -o cat | awk '/reportEdgeTwinProperties()/,/^\}/'
   </tbody>
 </table>
 
-## **🖥️ Debugging Screen Apps **
+## **🖥️ Debugging Screen Apps**
 
 Use these steps to inspect and debug screen apps deployed to devices. Screen Apps can encounter various issues such as not reflecting deployed changes, getting stuck on loading screens, displaying blank content, or failing to respond to user interactions. These problems often stem from configuration issues, service failures, or communication problems between the app and the Phygrid platform. The following troubleshooting procedures will help you identify the root cause and resolve these issues effectively.
 
@@ -999,7 +1020,10 @@ cat <screen_twin_id>-device-<device_id>.json | jq '.properties.desired'
 >
 > ```json
 > {
->   "url": "https://screen.phygrid.com/************************/************************/************************/#browserId=****************-****-****-****-************&accessKey=****************-****-****-****-************&env=prod&spaceId=************************&deviceName=************************&instanceId=************************",
+>   "url": "https://screen.phygrid.com/************************/**********************
+> **/************************/#browserId=****************-****-****-****-**********
+> **&accessKey=****************-****-****-****-************&env=prod&spaceId=************
+> ************&deviceName=************************&instanceId=************************",
 >   "screenResolution": "default",
 >   "soundOutput": "hdmi1",
 >   "soundInput": "default",
@@ -1071,7 +1095,8 @@ tail -f /var/log/physcreen-manager
 > **Expected output:** You should see real time log entries from the Physcreen manager:
 >
 > ```shell
-> uploadScreenshot(): Upload block blob xxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx.jpg successfully xxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx
+> uploadScreenshot(): Upload block blob xxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx.jpg
+> successfully xxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx
 > twinUpdated event received { ... }
 > ```
 
@@ -1154,7 +1179,8 @@ journalctl -u phydevice -o cat | awk '/setScreenInstanceReportedProperties/'
 > setScreenInstanceReportedProperties(): Properties reported successfully {
 >   "twinId": "************************",
 >   "data": {
->     "screenshot": "https://************************.blob.core.windows.net/screenshots/****************-****-****-****-************.jpg",
+>     "screenshot": "https://************************.blob.core.windows.net/screenshots/**
+> **************-****-****-****-************.jpg",
 >     "appStatus": "running",
 >     "lastUpdated": "2025-01-15T10:30:00.123Z",
 >     "displayInfo": {
