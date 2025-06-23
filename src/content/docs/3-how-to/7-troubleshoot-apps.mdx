@@ -80,11 +80,20 @@ ping google.com
 Gather essential device information to understand the current configuration:
 
 ```shell
-cat /data/settings/phyhub/region.json         # Region
-cat /data/settings/phyhub/deviceId.json       # Device ID
-cat /data/settings/phyhub/deviceSerial.json   # Device Serial
-cat /data/settings/phyhub/osVersion.json      # OS Version
-cat /data/settings/phyhub/gridEnv.json        # Environment
+# Region
+cat /data/settings/phyhub/region.json
+
+# Device ID
+cat /data/settings/phyhub/deviceId.json
+
+# Device Serial
+cat /data/settings/phyhub/deviceSerial.json
+
+# OS Version
+cat /data/settings/phyhub/osVersion.json
+
+# Environment
+cat /data/settings/phyhub/gridEnv.json
 ```
 
 **What to look for:**
@@ -127,12 +136,48 @@ curl http://portal-<region>.omborigrid.com/
 - **DNS Resolution:** Verify DNS resolution is working properly to resolve the portal domain name
 
 **Troubleshooting notes:**
-| Issue | Symptoms | Solution |
-| ------------------------ | ------------------------------------------ | -------------------------------------------- |
-| **Network Timeout** | Connection attempts timeout | Check network stability |
-| **Proxy Authentication** | 407/401 errors in logs | Verify proxy (if using custom proxy on device) and Network settings |
-| **DNS Resolution** | Cannot resolve portal URLs | Check DNS configuration and network settings |
-| **Certificate Issues** | SSL/TLS handshake failures | Verify system time and certificate validity |
+
+<table>
+  <thead>
+    <tr>
+      <th>Issue</th>
+      <th>Symptoms</th>
+      <th>Solution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong>Network Timeout</strong>
+      </td>
+      <td>Connection attempts timeout</td>
+      <td>Check network stability</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Proxy Authentication</strong>
+      </td>
+      <td>407/401 errors in logs</td>
+      <td>
+        Verify proxy (if using custom proxy on device) and Network settings
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <strong>DNS Resolution</strong>
+      </td>
+      <td>Cannot resolve portal URLs</td>
+      <td>Check DNS configuration and network settings</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Certificate Issues</strong>
+      </td>
+      <td>SSL/TLS handshake failures</td>
+      <td>Verify system time and certificate validity</td>
+    </tr>
+  </tbody>
+</table>
 
 ### **🔀 Verify Twin Synchronization**
 
@@ -196,7 +241,7 @@ journalctl -u phydevice -o cat | awk '/sendClientSignal/,/^\}/'
 > ```shell
 > sendEventSignal(): sending Event Signal from device xxxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxx {
 >   deviceId: 'xxxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxx',
->  data: {
+>   data: {
 >     g: 'UAE',
 >     b: 'xxxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxx',
 >     t: '2025-06-20T07:47:29.348',
@@ -211,39 +256,205 @@ journalctl -u phydevice -o cat | awk '/sendClientSignal/,/^\}/'
 > ```
 
 The Phygrid platform automatically shortens signal keys in the payload as a way of compressing payload size for efficient transmission. To decode these shortened keys and understand what each field represents, refer to the Signal Key Lookup Table provided below.
-| Actual Key | Short Key | | Actual Key | Short Key |
-| :------------------ | :-------- | --- | :------------------------- | :-------- |
-| captureId | a | | clientUserAgent | aj |
-| sessionId | b | | clientDeviceVendor | ak |
-| tenantId | c | | clientDeviceModel | al |
-| sessionCreated | d | | clientDeviceType | am |
-| ip | e | | clientOsName | an |
-| environment | f | | clientOsVersion | ao |
-| dataResidency | g | | clientBrowserName | ap |
-| spaceId | h | | clientBrowserVersion | aq |
-| appId | i | | clientBrowserMajor | ar |
-| appVersion | j | | clientBrowserEngine | as |
-| installationId | k | | clientBrowserEngineVersion | at |
-| installationVersion | l | | clientCpuArchitecture | au |
-| country | m | | clientScreenWidth | av |
-| locationAccuracy | n | | clientScreenHeight | aw |
-| latitude | o | | clientScreenColorDepth | ax |
-| longitude | p | | clientScreenPixelDepth | ay |
-| deviceId | q | | stateful | ba |
-| clientId | r | | public | bb |
-| eventType | s | | currency | bc |
-| eventTime | t | | revenue | bd |
-| interaction | u | | products | be |
-| productId | v | | transactionId | bf |
-| categoryId | w | | affiliation | bg |
-| int1 | x | | shipping | bh |
-| int2 | y | | tax | bi |
-| int3 | z | | coupon | bj |
-| int4 | aa | | str4 | af |
-| int5 | ab | | str5 | ag |
-| str1 | ac | | clientCreated | ah |
-| str2 | ad | | clientIp | ai |
-| str3 | ae | | | |
+
+<table>
+  <thead>
+    <tr>
+      <th>Actual Key</th>
+      <th>Short Key</th>
+      <th>Actual Key</th>
+      <th>Short Key</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>captureId</td>
+      <td>a</td>
+      <td>clientUserAgent</td>
+      <td>aj</td>
+    </tr>
+    <tr>
+      <td>sessionId</td>
+      <td>b</td>
+      <td>clientDeviceVendor</td>
+      <td>ak</td>
+    </tr>
+    <tr>
+      <td>tenantId</td>
+      <td>c</td>
+      <td>clientDeviceModel</td>
+      <td>al</td>
+    </tr>
+    <tr>
+      <td>sessionCreated</td>
+      <td>d</td>
+      <td>clientDeviceType</td>
+      <td>am</td>
+    </tr>
+    <tr>
+      <td>ip</td>
+      <td>e</td>
+      <td>clientOsName</td>
+      <td>an</td>
+    </tr>
+    <tr>
+      <td>environment</td>
+      <td>f</td>
+      <td>clientOsVersion</td>
+      <td>ao</td>
+    </tr>
+    <tr>
+      <td>dataResidency</td>
+      <td>g</td>
+      <td>clientBrowserName</td>
+      <td>ap</td>
+    </tr>
+    <tr>
+      <td>spaceId</td>
+      <td>h</td>
+      <td>clientBrowserVersion</td>
+      <td>aq</td>
+    </tr>
+    <tr>
+      <td>appId</td>
+      <td>i</td>
+      <td>clientBrowserMajor</td>
+      <td>ar</td>
+    </tr>
+    <tr>
+      <td>appVersion</td>
+      <td>j</td>
+      <td>clientBrowserEngine</td>
+      <td>as</td>
+    </tr>
+    <tr>
+      <td>installationId</td>
+      <td>k</td>
+      <td>clientBrowserEngineVersion</td>
+      <td>at</td>
+    </tr>
+    <tr>
+      <td>installationVersion</td>
+      <td>l</td>
+      <td>clientCpuArchitecture</td>
+      <td>au</td>
+    </tr>
+    <tr>
+      <td>country</td>
+      <td>m</td>
+      <td>clientScreenWidth</td>
+      <td>av</td>
+    </tr>
+    <tr>
+      <td>locationAccuracy</td>
+      <td>n</td>
+      <td>clientScreenHeight</td>
+      <td>aw</td>
+    </tr>
+    <tr>
+      <td>latitude</td>
+      <td>o</td>
+      <td>clientScreenColorDepth</td>
+      <td>ax</td>
+    </tr>
+    <tr>
+      <td>longitude</td>
+      <td>p</td>
+      <td>clientScreenPixelDepth</td>
+      <td>ay</td>
+    </tr>
+    <tr>
+      <td>deviceId</td>
+      <td>q</td>
+      <td>stateful</td>
+      <td>ba</td>
+    </tr>
+    <tr>
+      <td>clientId</td>
+      <td>r</td>
+      <td>public</td>
+      <td>bb</td>
+    </tr>
+    <tr>
+      <td>eventType</td>
+      <td>s</td>
+      <td>currency</td>
+      <td>bc</td>
+    </tr>
+    <tr>
+      <td>eventTime</td>
+      <td>t</td>
+      <td>revenue</td>
+      <td>bd</td>
+    </tr>
+    <tr>
+      <td>interaction</td>
+      <td>u</td>
+      <td>products</td>
+      <td>be</td>
+    </tr>
+    <tr>
+      <td>productId</td>
+      <td>v</td>
+      <td>transactionId</td>
+      <td>bf</td>
+    </tr>
+    <tr>
+      <td>categoryId</td>
+      <td>w</td>
+      <td>affiliation</td>
+      <td>bg</td>
+    </tr>
+    <tr>
+      <td>int1</td>
+      <td>x</td>
+      <td>shipping</td>
+      <td>bh</td>
+    </tr>
+    <tr>
+      <td>int2</td>
+      <td>y</td>
+      <td>tax</td>
+      <td>bi</td>
+    </tr>
+    <tr>
+      <td>int3</td>
+      <td>z</td>
+      <td>coupon</td>
+      <td>bj</td>
+    </tr>
+    <tr>
+      <td>int4</td>
+      <td>aa</td>
+      <td>str4</td>
+      <td>af</td>
+    </tr>
+    <tr>
+      <td>int5</td>
+      <td>ab</td>
+      <td>str5</td>
+      <td>ag</td>
+    </tr>
+    <tr>
+      <td>str1</td>
+      <td>ac</td>
+      <td>clientCreated</td>
+      <td>ah</td>
+    </tr>
+    <tr>
+      <td>str2</td>
+      <td>ad</td>
+      <td>clientIp</td>
+      <td>ai</td>
+    </tr>
+    <tr>
+      <td>str3</td>
+      <td>ae</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 
 **What to look for:**
 
@@ -565,12 +776,45 @@ journalctl -u phydevice -o cat | grep startEdgeApp
 
 **Common container issues and solutions:**
 
-| Issue                          | Symptoms                                | Solution                                             |
-| ------------------------------ | --------------------------------------- | ---------------------------------------------------- |
-| **Image Pull Failure**         | Authentication errors, network timeouts | Verify registry credentials and network connectivity |
-| **Container Creation Failure** | Invalid configuration, resource limits  | Check createOptions in twin configuration            |
-| **Container Startup Failure**  | Port conflicts, missing volumes         | Verify port mappings and volume configurations       |
-| **Application Crashes**        | Immediate exits, error logs             | Check application logs and dependencies              |
+<table>
+  <thead>
+    <tr>
+      <th>Issue</th>
+      <th>Symptoms</th>
+      <th>Solution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong>Image Pull Failure</strong>
+      </td>
+      <td>Authentication errors, network timeouts</td>
+      <td>Verify registry credentials and network connectivity</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Container Creation Failure</strong>
+      </td>
+      <td>Invalid configuration, resource limits</td>
+      <td>Check createOptions in twin configuration</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Container Startup Failure</strong>
+      </td>
+      <td>Port conflicts, missing volumes</td>
+      <td>Verify port mappings and volume configurations</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Application Crashes</strong>
+      </td>
+      <td>Immediate exits, error logs</td>
+      <td>Check application logs and dependencies</td>
+    </tr>
+  </tbody>
+</table>
 
 ### **📡 Troubleshoot Events**
 
@@ -649,12 +893,48 @@ journalctl -u phydevice -o cat | awk '/reportEdgeTwinProperties()/,/^\}/'
 
 **Common event-related issues and solutions:**
 
-| Issue                         | Symptoms                           | Solution                                                                                      |
-| ----------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------- |
-| **Event Not Received**        | No event logs, missing data        | Check network connectivity, PhyHub connection or event emitted by twins based on the use case |
-| **Event Processing Failures** | Error messages in logs             | Verify event handler implementation and data validation                                       |
-| **Property Reporting Issues** | Properties not updating in console | Check property reporting frequency and data format                                            |
-| **Event Timing Problems**     | Delayed or missing events          | Verify event generation logic and network latency                                             |
+<table>
+  <thead>
+    <tr>
+      <th>Issue</th>
+      <th>Symptoms</th>
+      <th>Solution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong>Event Not Received</strong>
+      </td>
+      <td>No event logs, missing data</td>
+      <td>
+        Check network connectivity, PhyHub connection or event emitted by twins
+        based on the use case
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Event Processing Failures</strong>
+      </td>
+      <td>Error messages in logs</td>
+      <td>Verify event handler implementation and data validation</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Property Reporting Issues</strong>
+      </td>
+      <td>Properties not updating in console</td>
+      <td>Check property reporting frequency and data format</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Event Timing Problems</strong>
+      </td>
+      <td>Delayed or missing events</td>
+      <td>Verify event generation logic and network latency</td>
+    </tr>
+  </tbody>
+</table>
 
 ## **🖥️ Debugging Screen Apps **
 
@@ -806,12 +1086,45 @@ tail -f /var/log/physcreen-manager
 
 **Common Physcreen issues and solutions:**
 
-| Issue                        | Symptoms                      | Solution                                        |
-| ---------------------------- | ----------------------------- | ----------------------------------------------- |
-| **Service Not Starting**     | Service shows "failed" status | Check system resources and service dependencies |
-| **Display Not Initializing** | Stuck at logo screen          | Verify HDMI connections and display settings    |
-| **App Loading Failures**     | Blank screen after logo       | Check app settings                              |
-| **Configuration Errors**     | Service fails to start        | Verify screen twin configuration and settings   |
+<table>
+  <thead>
+    <tr>
+      <th>Issue</th>
+      <th>Symptoms</th>
+      <th>Solution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong>Service Not Starting</strong>
+      </td>
+      <td>Service shows "failed" status</td>
+      <td>Check system resources and service dependencies</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Display Not Initializing</strong>
+      </td>
+      <td>Stuck at logo screen</td>
+      <td>Verify HDMI connections and display settings</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>App Loading Failures</strong>
+      </td>
+      <td>Blank screen after logo</td>
+      <td>Check app settings</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Configuration Errors</strong>
+      </td>
+      <td>Service fails to start</td>
+      <td>Verify screen twin configuration and settings</td>
+    </tr>
+  </tbody>
+</table>
 
 ### **📊 Troubleshoot Reported Screen Properties**
 
@@ -901,13 +1214,52 @@ journalctl -u phydevice -o cat | awk '/handleInstanceMessage/,/^\}/'
 
 **Common screen app event and signal issues and solutions:**
 
-| Issue                         | Symptoms                           | Solution                                                |
-| ----------------------------- | ---------------------------------- | ------------------------------------------------------- |
-| **Events Not Received**       | No event logs, missing data        | Check network connectivity and PhyHub connection        |
-| **Event Processing Failures** | Error messages in logs             | Verify event handler implementation and data validation |
-| **Signal Generation Issues**  | Missing user interaction signals   | Check signal implementation in screen app code          |
-| **Property Reporting Issues** | Properties not updating in console | Check property reporting frequency and data format      |
-| **Display Event Problems**    | Missing display-related events     | Verify display event monitoring and reporting           |
+<table>
+  <thead>
+    <tr>
+      <th>Issue</th>
+      <th>Symptoms</th>
+      <th>Solution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong>Events Not Received</strong>
+      </td>
+      <td>No event logs, missing data</td>
+      <td>Check network connectivity and PhyHub connection</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Event Processing Failures</strong>
+      </td>
+      <td>Error messages in logs</td>
+      <td>Verify event handler implementation and data validation</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Signal Generation Issues</strong>
+      </td>
+      <td>Missing user interaction signals</td>
+      <td>Check signal implementation in screen app code</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Property Reporting Issues</strong>
+      </td>
+      <td>Properties not updating in console</td>
+      <td>Check property reporting frequency and data format</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Display Event Problems</strong>
+      </td>
+      <td>Missing display-related events</td>
+      <td>Verify display event monitoring and reporting</td>
+    </tr>
+  </tbody>
+</table>
 
 ### **🔧 Remote Debug via Chrome DevTools**
 
@@ -975,13 +1327,52 @@ Once DevTools is connected, you can:
 
 **Common remote debugging scenarios and solutions:**
 
-| Scenario                  | Symptoms                  | Solution                                              |
-| ------------------------- | ------------------------- | ----------------------------------------------------- |
-| **Port Forwarding Fails** | Connection refused errors | Check device connectivity and firewall settings       |
-| **DevTools Not Loading**  | Blank or error pages      | Verify port forwarding and Chrome configuration       |
-| **Console Not Updating**  | Missing or stale logs     | Refresh the DevTools connection or restart forwarding |
-| **Network Tab Empty**     | No request data visible   | Check if app is making HTTP requests and refresh      |
-| **Performance Issues**    | Slow DevTools response    | Close unnecessary tabs and optimize network settings  |
+<table>
+  <thead>
+    <tr>
+      <th>Scenario</th>
+      <th>Symptoms</th>
+      <th>Solution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong>Port Forwarding Fails</strong>
+      </td>
+      <td>Connection refused errors</td>
+      <td>Check device connectivity and firewall settings</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>DevTools Not Loading</strong>
+      </td>
+      <td>Blank or error pages</td>
+      <td>Verify port forwarding and Chrome configuration</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Console Not Updating</strong>
+      </td>
+      <td>Missing or stale logs</td>
+      <td>Refresh the DevTools connection or restart forwarding</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Network Tab Empty</strong>
+      </td>
+      <td>No request data visible</td>
+      <td>Check if app is making HTTP requests and refresh</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Performance Issues</strong>
+      </td>
+      <td>Slow DevTools response</td>
+      <td>Close unnecessary tabs and optimize network settings</td>
+    </tr>
+  </tbody>
+</table>
 
 ### **🖥️ VNC Remote Access**
 
@@ -1081,10 +1472,9 @@ df -h
 
 **What to expect:**
 
-- **Available space** should be sufficient for app operations (recommended >20% free)
-- **High usage** (>80%) may indicate the need for cleanup or storage expansion
-- **Critical levels** (<10% free) can cause system instability and app failures
-- **Temporary filesystems** (tmpfs) should show minimal usage
+- **Available space** should be sufficient for app operations (recommended over 20% free)
+- **High usage** (over 80%) may indicate the need for cleanup or storage expansion
+- **Critical levels** (less than 10% free) can cause system instability and app failures
 
 ## ✅ **Checkpoint:**
 
