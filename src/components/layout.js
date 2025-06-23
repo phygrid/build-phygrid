@@ -6,19 +6,21 @@
  */
 
 import * as React from "react"
-import { useState } from "react"
 import { useStaticQuery, graphql } from "gatsby"
+import { Layout, Drawer } from "antd"
 import styled from "@emotion/styled"
 
-import { breakpoints } from "../styles/breakpoints"
 import Header from "./header"
 import Sidebar from "./sidebar"
 import "./global.css"
-import Search from "./search"
 
-import logo from "../images/logo.svg"
+const { Sider, Content, Footer } = Layout
 
-const Layout = ({ children }) => {
+const AppLayout = ({ children }) => {
+  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false)
+  const [drawerVisible, setDrawerVisible] = React.useState(false)
+  const [isMobile, setIsMobile] = React.useState(false)
+
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
       site {
@@ -29,102 +31,118 @@ const Layout = ({ children }) => {
     }
   `)
 
-  const [showSearch, setShowSearch] = useState(false)
+  // Handle responsive behavior
+  React.useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768
+      setIsMobile(mobile)
+      // Close drawer when switching to desktop
+      if (!mobile) {
+        setDrawerVisible(false)
+      }
+    }
 
-  const toggleSearch = () => {
-    setShowSearch(prev => !prev)
+    // Set initial state
+    handleResize()
+
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+  const toggleSidebar = () => {
+    if (isMobile) {
+      setDrawerVisible(!drawerVisible)
+    } else {
+      setSidebarCollapsed(!sidebarCollapsed)
+    }
   }
 
-  // Show maintenance message in production build
-  if (process.env.NODE_ENV !== "development") {
-    return (
-      <Wrapper>
-        <Logo src={logo} alt="Phygrid" />
-        <h2>🛠️ We're Updating Our Developer Docs</h2>
-        <p>
-          Our documentation site is currently down for scheduled updates. We're
-          making improvements and will be back very soon.
-        </p>
-      </Wrapper>
-    )
+  const closeMobileDrawer = () => {
+    setDrawerVisible(false)
   }
 
-  // Show normal documentation site in production/other environments
   return (
-    <>
+    <Layout
+      style={{
+        minHeight: "100vh",
+      }}
+    >
       <Header
         siteTitle={data.site.siteMetadata?.title || `Title`}
-        toggleSearch={toggleSearch}
+        onToggleSidebar={toggleSidebar}
+        sidebarCollapsed={sidebarCollapsed}
       />
-      <Container>
-        <Sidebar />
-        <Main>
-          <Page>{children}</Page>
-        </Main>
-      </Container>
-      <Footer>
+      <Layout>
+        {/* Desktop Sidebar */}
+        {!isMobile && (
+          <Sider
+            collapsed={sidebarCollapsed}
+            onCollapse={setSidebarCollapsed}
+            breakpoint="md"
+            collapsedWidth={0}
+            width={280}
+            style={{
+              background: "var(--ant-layout-color-bg-body)",
+              borderRight: "1px solid var(--ant-color-border-secondary)",
+            }}
+          >
+            <Sidebar />
+          </Sider>
+        )}
+
+        {/* Mobile Drawer */}
+        <Drawer
+          title="Navigation"
+          placement="left"
+          onClose={closeMobileDrawer}
+          open={drawerVisible}
+          width={280}
+          style={{
+            display: isMobile ? "block" : "none",
+          }}
+          styles={{
+            body: {
+              padding: 0,
+              background: "#000",
+            },
+          }}
+        >
+          <Sidebar onNavigate={closeMobileDrawer} />
+        </Drawer>
+
+        <StyledContent>
+          <ContentWrapper>{children}</ContentWrapper>
+        </StyledContent>
+      </Layout>
+      <StyledFooter>
         <p>
           © {new Date().getFullYear()} &middot; Phygrid. An{" "}
           <a href="https://ombori.com">Ombori</a> company
         </p>
-      </Footer>
-      {showSearch && <Search toggleSearch={toggleSearch} />}
-    </>
+      </StyledFooter>
+    </Layout>
   )
 }
 
-export default Layout
+export default AppLayout
 
-const Logo = styled.img`
-  height: 40px;
-  margin: 0;
+const StyledContent = styled(Content)`
+  background: transparent;
+  /* max-width: 1400px; */
+  margin: 0 auto;
 `
 
-const Footer = styled.footer`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  border-top: 1px solid var(--color-border);
-  font-size: var(--font-sm);
-  padding: var(--space-3);
+const ContentWrapper = styled.div`
+  margin: var(--ant-margin-lg) 0;
+  border-radius: var(--ant-border-radius);
+`
+
+const StyledFooter = styled(Footer)`
+  border-top: 1px solid var(--ant-color-border-secondary);
+  font-size: var(--ant-font-size);
+  background: transparent;
+
   p {
     margin: 0;
   }
-`
-
-const Wrapper = styled.div`
-  /* Remove after update */
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100svh;
-  width: 100svw;
-  padding: 20px;
-
-  h2,
-  p {
-    max-width: 640px;
-    text-align: center;
-  }
-`
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  @media (min-width: ${breakpoints.md}) {
-    flex-direction: row;
-  }
-`
-const Page = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: var(--space-4) 0;
-  border-radius: var(--border-radius);
-`
-const Main = styled.main`
-  flex: 1 auto;
-  /* background: var(--color-pageBg); */
 `

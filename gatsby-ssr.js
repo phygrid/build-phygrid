@@ -1,12 +1,13 @@
-/**
- * Implement Gatsby's SSR (Server Side Rendering) APIs in this file.
- *
- * See: https://www.gatsbyjs.com/docs/reference/config-files/gatsby-ssr/
- */
+import React from "react"
+import { ThemeProvider } from "./src/context/themeContext"
 
-/**
- * @type {import('gatsby').GatsbySSR['onRenderBody']}
- */
-exports.onRenderBody = ({ setHtmlAttributes }) => {
-  setHtmlAttributes({ lang: `en` })
+// Import IBM Plex Mono font
+import "@fontsource/ibm-plex-mono/400.css" // Regular
+import "@fontsource/ibm-plex-mono/500.css" // Bold
+
+import "prismjs/themes/prism.css"
+import "./src/styles/prism-theme.css"
+
+export const wrapRootElement = ({ element }) => {
+  return <ThemeProvider>{element}</ThemeProvider>
 }
