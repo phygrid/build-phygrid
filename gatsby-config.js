@@ -1,9 +1,9 @@
 module.exports = {
   siteMetadata: {
-    title: `Learn Phygrid`,
+    title: `Build Phygrid`,
     description: `Learn how to use the Phygrid platform with tips, tricks, and user guides`,
-    author: `@rmalpass`,
-    siteUrl: `https://learn.phygrid.com`,
+    author: `@phygrid`,
+    siteUrl: `https://build.phygrid.com`,
   },
   plugins: [
     `gatsby-plugin-image`,
