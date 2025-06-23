@@ -38,6 +38,86 @@ sudo su
 
 This will provide you with the necessary privileges to access logs, modify configurations, and perform diagnostic operations.
 
+#### Enabling Developer Mode
+
+Developer Mode allows you to directly deploy and test your Edge Apps and Screen Apps on the device without building and publishing them to the console first. This feature significantly accelerates the development workflow by enabling rapid iteration and real-time debugging capabilities.
+
+**Benefits of Developer Mode:**
+
+- Instant deployment of code changes without console publishing
+- Direct access to application logs for real-time debugging
+- Faster development cycles and testing iterations
+- Ability to test configurations and settings immediately
+
+To enable Developer Mode on your device:
+
+```shell
+phy dev shell <device_name>
+```
+
+Once connected to the device:
+
+1. Press `Enter` to bring up the interactive menu
+2. Select `Advanced` and press `Enter`
+3. Select `Enable Developer Mode` and press `Enter`
+4. Choose from the following authentication methods:
+
+   **Option 1: Set Custom Password**
+
+   - Select `Set Password` and press `Enter`
+   - Enter a custom password when prompted
+   - Confirm the password to complete setup
+
+   **Option 2: SSH Public Key Authentication (Recommended)**
+
+   - Select `Provide SSH public key` and press `Enter`
+   - Paste your public SSH key when prompted
+   - This method provides enhanced security and convenience
+
+   **Option 3: Default Password**
+
+   - Select `Use default password (123)` and press `Enter`
+   - Uses the default password "123" (not recommended for production)
+
+**Note:** If you don't have an SSH public key, you can generate one using the following commands:
+
+**macOS:**
+
+```bash
+# Generate SSH key pair
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+
+# Display the public key to copy
+cat ~/.ssh/id_rsa.pub
+```
+
+**Windows (PowerShell):**
+
+```powershell
+# Generate SSH key pair
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+
+# Display the public key to copy
+Get-Content ~/.ssh/id_rsa.pub
+```
+
+**Linux:**
+
+```bash
+# Generate SSH key pair
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+
+# Display the public key to copy
+cat ~/.ssh/id_rsa.pub
+```
+
+**Security Recommendations:**
+
+- Use SSH public key authentication for enhanced security
+- Avoid using the default password in production environments
+- Keep your private key secure and never share it
+- Consider using a passphrase for additional protection
+
 ## **🔍 Common Troubleshooting Scenarios**
 
 Before diving into specific troubleshooting procedures, here are the most frequently encountered issues and their quick solutions:
