@@ -1,3 +1,6 @@
+---
+icon: "PaperPlaneTilt"
+---
 ## Settings Schema in the Screen/Edge Apps
 
 ### What is a Settings Schema?
@@ -51,7 +54,11 @@ export default interface Settings {
 
 ### Schema Conversion
 
-When the TypeScript interface is processed by the schema tooling, it is automatically converted into a JSON Schema. This ensures the resulting UI and validations are based on a consistent, developer-maintained source of truth.
+When building the application, the TypeScript interface `schema.ts` is automatically converted into two schemas:
+- `schema.json`: a standard JSON Schema used for validation and data structure.
+- `meta-schema.json`: a Meta-JSON Schema that provides UI configuration, such as widget selection and display behaviors (e.g., mediaPicker, multiLanguageText).
+
+This build-time conversion ensures that UI rendering, custom widgets, and data validation are all based on a single, developer-defined source of truth.
 
 `schema.json`
 
@@ -80,7 +87,7 @@ When the TypeScript interface is processed by the schema tooling, it is automati
 - ✅ Built-in Validation: UI components and backend validation share the same rules, reducing bugs and mismatches.
 - 🛠️ Tooling Friendly: Changes in the schema are instantly reflected in the generated forms.
 
-## Sample Examples for the Settings Schema
+## Examples for the Settings Schema
 
 ---
 
