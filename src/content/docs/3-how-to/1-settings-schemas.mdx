@@ -1,6 +1,1110 @@
----
-title: "Settings Schemas"
-icon: "Gear"
+## Settings Schema in the Screen/Edge Apps
+
+### What is a Settings Schema?
+
+A **Settings Schema** is a structured definition of configuration data,
+represented using **JSON Schema**. It describes the shape of the settings data used within an application—defining fields,
+their types, constraints (like required fields or value ranges), and how the data should be structured.
+
+This schema acts as a contract between the data and the user interface, especially when building dynamic forms.
+In our case, the schema can be consumed by tools such as `react-jsonschema-form` to automatically generate UI forms that match the defined settings structure.
+
+### Purpose of the Settings Schema
+
+The Settings Schema serves multiple purposes in the app:
+
+- **UI Form Generation:** It enables dynamic generation of forms using libraries like `react-jsonschema-form`, reducing the need for manual UI coding.
+- **Validation:** Ensures that the configuration entered by users is valid and complete.
+- **Consistency:** Maintains consistency across different parts of the application that rely on settings.
+- **Extensibility:** Makes it easier to extend or modify settings without rewriting large parts of the UI or validation logic.
+
+By using a schema-driven approach, the app becomes more scalable, predictable, and developer-friendly.
+
+### Why Use TypeScript to Define the Schema?
+
+Rather than writing JSON Schema manually, we define the schema using **TypeScript interfaces and types**.
+This approach provides several key benefits:
+
+- **Type Safety:** Developers get immediate feedback when types are inconsistent or misused.
+- **Editor Support:** IDEs offer autocomplete, inline documentation, and validation based on TypeScript definitions.
+- **Single Source of Truth:** Using TypeScript ensures the same definitions are used throughout the codebase—both in the logic and in schema generation.
+- **Maintainability:** Changes to the structure are easier to track and update using standard TypeScript tooling.
+  The TypeScript types are then automatically transformed into JSON Schema, ensuring alignment between the developer-defined types and the generated schema.
+
+### How it works?
+
+This example demonstrates how to define a simple name setting using TypeScript. This improves maintainability by ensuring changes to the schema are reflected automatically in the generated JSON Schema.
+
+`schema.ts`
+
+```ts
+export default interface Settings {
+  /**
+   * @title Name
+   * @description The user's name. Must be between 3 and 50 characters.
+   * @minLength 3
+   * @maxLength 50
+   */
+  name: string
+}
+```
+
+### Schema Conversion
+
+When the TypeScript interface is processed by the schema tooling, it is automatically converted into a JSON Schema. This ensures the resulting UI and validations are based on a consistent, developer-maintained source of truth.
+
+`schema.json`
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Name",
+      "description": "The user's name. Must be between 3 and 50 characters.",
+      "minLength": 3,
+      "maxLength": 50
+    },
+  },
+  "required": [
+    "name"
+  ]
+}Í
+```
+
+#### Why it matters
+
+- 🔄 Single Source of Truth: The TypeScript interface serves both the developer and the platform that renders the UI.
+- ✅ Built-in Validation: UI components and backend validation share the same rules, reducing bugs and mismatches.
+- 🛠️ Tooling Friendly: Changes in the schema are instantly reflected in the generated forms.
+
+## Sample Examples for the Settings Schema
+
 ---
 
-Hello world
+### String Type
+
+This example shows how to define a simple string setting with validation constraints such as minimum and maximum length.
+
+`schema.ts`
+
+```ts
+export default interface Settings {
+  /**
+   * @title Name
+   * @description The user's name. Must be between 3 and 50 characters.
+   * @minLength 3
+   * @maxLength 50
+   */
+  name: string
+}
+```
+
+JSON equivalent schema
+
+`schema.json`
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Name",
+      "description": "The user's name. Must be between 3 and 50 characters.",
+      "minLength": 3,
+      "maxLength": 50
+    },
+  },
+  ,
+  "required": [
+    "name"
+  ]
+}Í
+```
+
+### How It Works
+
+- The `name` field represents a user-configurable string setting.
+- Validation constraints are added through the `@minLength` and `@maxLength` annotations, ensuring the name is at least 3 characters and no longer than 50 characters.
+
+![Text](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/c94ae267-de95-429a-a238-ccfd9ded7bbe)
+
+## Sample Examples for the Settings Schema
+
+---
+
+### Localized Field
+
+This example shows how to define a simple string setting with validation constraints such as minimum and maximum length.
+
+`schema.ts`
+
+```ts
+export default interface Settings {
+  /**
+   * @title Home page
+   */
+  homePage: {
+    title: Record<string, string>
+  }
+}
+```
+
+JSON equivalent schema
+
+`schema.json`
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Name",
+      "description": "The user's name. Must be between 3 and 50 characters.",
+      "minLength": 3,
+      "maxLength": 50
+    },
+  },
+  ,
+  "required": [
+    "name"
+  ]
+}Í
+```
+
+### How It Works
+
+- The `name` field represents a user-configurable string setting.
+- Validation constraints are added through the `@minLength` and `@maxLength` annotations, ensuring the name is at least 3 characters and no longer than 50 characters.
+
+![Text](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/c94ae267-de95-429a-a238-ccfd9ded7bbe)
+
+### Boolean Type
+
+This example shows how to define a boolean setting for true/false configurations.
+
+`schema.ts`
+
+```ts
+export default interface Settings {
+  /**
+   * @title Notifications Enabled
+   * @description Enables or disables notifications.
+   */
+  notificationsEnabled: boolean
+}
+```
+
+JSON equivalent schema
+
+`schema.json`
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "notificationsEnabled": {
+      "type": "boolean",
+      "title": "Notifications Enabled",
+      "description": "Enables or disables notifications."
+    },
+  },
+  "required": [
+    "notificationsEnabled"
+  ]
+}Í
+```
+
+### How It Works
+
+- The notificationsEnabled field accepts a boolean value (true or false).
+- This setting is typically rendered as a toggle switch or checkbox in the UI.
+
+![Boolean](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/dcd0c18d-e2ae-4503-9029-2f573d90e867)
+
+### Number Type
+
+This example demonstrates how to define a numeric setting with minimum and maximum value validations.
+
+`schema.ts`
+
+```ts
+export default interface Settings {
+  /**
+   * @title Age
+   * @description The age of the user. Must be between 18 and 120.
+   * @minimum 18
+   * @maximum 120
+   */
+  age: number
+}
+```
+
+JSON equivalent schema
+
+`schema.json`
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "age": {
+      "type": "number",
+      "title": "Age",
+      "description": "The age of the user. Must be between 18 and 120.",
+      "minimum": 18,
+      "maximum": 120
+    }
+  },
+  "required": [
+    "age"
+  ]
+}Í
+```
+
+### How It Works
+
+- he age field represents a numeric setting.
+- The @minimum and @maximum annotations ensure the number falls within a specified range.
+
+![Number](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/ec979c47-4dfc-42a7-8f9d-c7c29abc4983)
+
+### URL Type
+
+This example shows how to define a URL as an optional setting with validation that ensures the input is a valid URI.
+
+`schema.ts`
+
+```ts
+export default interface Settings {
+  /**
+   * @title Website
+   * @description The user's personal website URL.
+   * @format uri
+   */
+  website?: string
+}
+```
+
+JSON equivalent schema `schema.json`
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "website": {
+      "type": "string",
+      "title": "Website",
+      "description": "The user's personal website URL.",
+      "format": "uri"
+    }
+  }
+}
+```
+
+### How It Works
+
+- The website field optional and accepts a string input that must be a valid URL.
+- The @format uri annotation enforces URL validation.
+
+![URI](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/5fc65813-7a66-44cc-ae52-554287174299)
+
+### Enum / Dropdown List
+
+This example illustrates how to define an enum setting to provide a dropdown selection of predefined options.
+
+`schema.ts`
+
+```ts
+export default interface Settings {
+  /**
+   * @title Favorite Color
+   * @description User's favorite color from a predefined list.
+   * @enum ["Red", "Green", "Blue", "Yellow"]
+   */
+  favoriteColor: "Red" | "Green" | "Blue" | "Yellow"
+}
+```
+
+JSON equivalent schema `schema.json`
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "favoriteColor": {
+      "type": "string",
+      "enum": ["Red", "Green", "Blue", "Yellow"],
+      "title": "Favorite Color",
+      "description": "User's favorite color from a predefined list."
+    }
+  },
+  "required": ["favoriteColor"]
+}
+```
+
+### How It Works
+
+- The favoriteColor field limits user input to one of the predefined options.
+- The @enum annotation lists all valid choices, which render as a dropdown in the UI.
+
+![Enum](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/3bd60fab-119f-476f-87a9-2ad33fffa296)
+
+### Date Type
+
+This example shows how to define a date setting using a string with a date format.
+
+```ts
+export default interface Settings {
+  /**
+   * @title Birth Date
+   * @description The user's birth date.
+   * @format date
+   */
+  birthDate: string
+}
+```
+
+JSON equivalent schema `schema.json`
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "birthDate": {
+      "type": "string",
+      "title": "Birth Date",
+      "description": "The user's birth date.",
+      "format": "date"
+    }
+  },
+  "required": ["birthDate"]
+}
+```
+
+### How It Works
+
+- The birthDate field expects a string formatted as a date (YYYY-MM-DD).
+- The @format date annotation enforces that the input matches a valid date format.
+
+![Date](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/cd753e1a-0f89-48f0-938b-6cf6cc75cc64)
+
+### Email Type
+
+This example shows how to define a email setting using a string with a email format.
+
+```ts
+export default interface Settings {
+  /**
+   * @title Email Address
+   * @description User's email address.
+   * @format email
+   */
+  email: string
+}
+```
+
+JSON equivalent schema `schema.json`
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "title": "Email Address",
+      "description": "User's email address.",
+      "format": "email"
+    }
+  },
+  "required": ["email"]
+}
+```
+
+### How It Works
+
+- The email field accepts strings formatted as a valid email address.
+- The @format email annotation ensures input matches an email pattern.
+
+![Email](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/b868079a-3968-47c5-b530-0c9311c03f60)
+
+### Password Type
+
+This example shows how to define a password setting using a string with a password format.
+
+```ts
+export default interface Settings {
+  /**
+   * @title Password
+   * @description User password must be at least 8 characters, At least one lowercase letter, one uppercase letter, one digit and one special character
+   * @format password
+   * @minLength 8
+   * @pattern ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$
+   */
+  password: string
+}
+```
+
+JSON equivalent schema `schema.json`
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "password": {
+      "type": "string",
+      "title": "Password",
+      "description": "User password. Must be at least 8 characters, At least one lowercase letter, one uppercase letter, one digit and one special character",
+      "format": "password",
+      "minLength": 8,
+      "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"
+    }
+  },
+  "required": ["password"]
+}
+```
+
+### How It Works
+
+- The password field is a string with validation on minimum length.
+- @ui password hints UI to render as a password input (masked).
+- @pattern enforces the presence of:
+  - At least one lowercase letter
+  - At least one uppercase letter
+  - At least one number
+  - At least one special character
+
+![Password](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/046e6f08-3283-417b-837f-82f431263a86)
+
+### Array Type
+
+This example shows how to define an array setting.
+
+```ts
+export default interface Settings {
+  /**
+   * @title Tags
+   * @description List of tags associated with the item.
+   */
+  tags: string[]
+}
+```
+
+JSON equivalent schema `schema.json`
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Tags",
+      "description": "List of tags associated with the item."
+    }
+  },
+  "required": ["tags"]
+}
+```
+
+### How It Works
+
+- The tags field accepts an array of strings (could be other types).
+- Useful for multi-select or lists of values.
+
+![Array](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/f91e8ee5-cfe9-493a-8ba5-8909a4dcbfe1)
+
+### Object Type (Nested Settings)
+
+This example shows how to define Nested Settings using object type.
+
+```ts
+export interface Address {
+  /**
+   * @title Street
+   */
+  street: string
+
+  /**
+   * @title City
+   */
+  city: string
+}
+
+export default interface Settings {
+  /**
+   * @title User Address
+   */
+  address: Address
+}
+```
+
+JSON equivalent schema `schema.json`
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "address": {
+      "type": "object",
+      "properties": {
+        "street": {
+          "type": "string",
+          "title": "Street"
+        },
+        "city": {
+          "type": "string",
+          "title": "City"
+        }
+      },
+      "required": ["street", "city"],
+      "title": "User Address"
+    }
+  },
+  "required": ["address"]
+}
+```
+
+### How It Works
+
+- The address field is a nested object with its own typed properties.
+- Enables grouping related settings.
+
+![Object / Nested Settings](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/07923e4a-5f99-4947-9f2d-b34da0dfe484)
+
+### Media Type
+
+This example shows how to define a media picker for file upload.
+
+```ts
+export type Media = {
+  ref: "media"
+  type: string
+  id: string
+  url: string
+}
+
+export default interface Settings {
+  /**
+   * @title Profile Picture
+   * @ui mediaPicker
+   * @mediaTypes image/png,image/jpeg
+   */
+  profilePicture: Media
+}
+```
+
+JSON equivalent schema `schema.json`
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "profilePicture": {
+      "type": "object",
+      "properties": {
+        "ref": {
+          "type": "string",
+          "const": "media"
+        },
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": ["ref", "type", "id", "url"],
+      "title": "Profile Picture"
+    }
+  },
+  "required": ["profilePicture"]
+}
+```
+
+Meat-schema equivalent `meta-schema.json`
+
+```json
+{
+  "profilePicture": {
+    "ref": {},
+    "ui:field": "mediaPicker",
+    "type": {},
+    "id": {},
+    "url": {}
+  }
+}
+```
+
+### How It Works
+
+- The profilePicture allows selecting/uploading media files.
+- UI can restrict file types and manage storage.
+
+![Media](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/ce7ffb98-df35-47e7-b172-5e96c8e941b3)
+
+## Fonts
+
+This example demonstrates how the Settings Schema allows users to upload custom font files (e.g., TTF, WOFF, OTF), which can then be used consistently across the app for typography and branding.
+
+```ts
+type FontType = "otf" | "font/otf" | "font/ttf" | "font/woff" | "font/woff2"
+
+interface FontMedia {
+  media?: {
+    ref: "media"
+    type: FontType
+    id: string
+    url: string
+  }
+}
+
+interface Fonts {
+  /**
+   * @title Light
+   */
+  light?: FontMedia
+  /**
+   * @title Regular
+   */
+  regular?: FontMedia
+  /**
+   * @title Semi-bold
+   */
+  semiBold?: FontMedia
+  /**
+   * @title Bold
+   */
+  bold?: FontMedia
+}
+
+/**
+ * @title Example schema
+ */
+export type Settings = {
+  /**
+   * @title Fonts
+   */
+  fonts: Fonts
+}
+
+export default Settings
+```
+
+JSON equivalent schema `schema.json`
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "fonts": {
+      "type": "object",
+      "properties": {
+        "light": {
+          "type": "object",
+          "properties": {
+            "media": {
+              "type": "object",
+              "properties": {
+                "ref": {
+                  "type": "string",
+                  "const": "media"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "otf",
+                    "font/otf",
+                    "font/ttf",
+                    "font/woff",
+                    "font/woff2"
+                  ]
+                },
+                "id": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              },
+              "required": ["ref", "type", "id", "url"]
+            }
+          },
+          "title": "Light"
+        },
+        "regular": {
+          "type": "object",
+          "properties": {
+            "media": {
+              "type": "object",
+              "properties": {
+                "ref": {
+                  "type": "string",
+                  "const": "media"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "otf",
+                    "font/otf",
+                    "font/ttf",
+                    "font/woff",
+                    "font/woff2"
+                  ]
+                },
+                "id": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              },
+              "required": ["ref", "type", "id", "url"]
+            }
+          },
+          "title": "Regular"
+        },
+        "semiBold": {
+          "type": "object",
+          "properties": {
+            "media": {
+              "type": "object",
+              "properties": {
+                "ref": {
+                  "type": "string",
+                  "const": "media"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "otf",
+                    "font/otf",
+                    "font/ttf",
+                    "font/woff",
+                    "font/woff2"
+                  ]
+                },
+                "id": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              },
+              "required": ["ref", "type", "id", "url"]
+            }
+          },
+          "title": "Semi-bold"
+        },
+        "bold": {
+          "type": "object",
+          "properties": {
+            "media": {
+              "type": "object",
+              "properties": {
+                "ref": {
+                  "type": "string",
+                  "const": "media"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "otf",
+                    "font/otf",
+                    "font/ttf",
+                    "font/woff",
+                    "font/woff2"
+                  ]
+                },
+                "id": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              },
+              "required": ["ref", "type", "id", "url"]
+            }
+          },
+          "title": "Bold"
+        }
+      },
+      "title": "Fonts"
+    }
+  },
+  "required": ["fonts"]
+}
+```
+
+Meat-schema equivalent `meta-schema.json`
+
+```json
+{
+  "profilePicture": {
+    "ui:field": "mediaPicker"
+  }
+}
+```
+
+### How It Works
+
+- The `mediaPicker` UI component allows users to upload font files in supported formats.
+- The `@mediaTypes` directive restricts uploads to specific MIME types (e.g., `font/ttf`, `font/woff2`).
+- Once uploaded, these fonts can be referenced and applied throughout the application for consistent styling and branding.
+  ![Fonts](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/f3064a49-ed9f-446a-b22a-74ccc9d50577)
+
+## Theme
+
+This example demonstrates how the Settings Schema enables users to configure color themes , allowing consistent branding throughout the application.
+
+```ts
+interface ThemeBaseColors {
+  /**
+   * @widget color
+   */
+  primary: string
+  /**
+   * @widget color
+   */
+  secondary: string
+  /**
+   * @widget color
+   */
+  error: string
+  /**
+   * @widget color
+   */
+  success: string
+  /**
+   * @widget color
+   */
+  warning: string
+}
+
+interface Theme {
+  /**
+   * @title Colors
+   */
+  colors: ThemeBaseColors
+}
+
+export type Settings = {
+  /**
+   * @title Theme settings
+   */
+  theme: Theme
+}
+
+export default Settings
+```
+
+Schema equivalent `schema.json`
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "theme": {
+      "type": "object",
+      "properties": {
+        "colors": {
+          "type": "object",
+          "properties": {
+            "primary": {
+              "type": "string"
+            },
+            "secondary": {
+              "type": "string"
+            },
+            "error": {
+              "type": "string"
+            },
+            "success": {
+              "type": "string"
+            },
+            "warning": {
+              "type": "string"
+            }
+          },
+          "required": ["primary", "secondary", "error", "success", "warning"],
+          "title": "Colors"
+        }
+      },
+      "required": ["colors"],
+      "title": "Theme settings"
+    }
+  },
+  "required": ["theme"]
+}
+```
+
+Meat-schema equivalent `meta-schema.json`
+
+```json
+{
+  "theme": {
+    "colors": {
+      "primary": {
+        "ui:widget": "color"
+      },
+      "secondary": {
+        "ui:widget": "color"
+      },
+      "error": {
+        "ui:widget": "color"
+      },
+      "success": {
+        "ui:widget": "color"
+      },
+      "warning": {
+        "ui:widget": "color"
+      }
+    }
+  }
+}
+```
+
+### How It Works
+
+- The ThemeBaseColors interface defines several color fields using the @widget color annotation, which typically renders a color picker in the UI.
+- These fields allow users to select branding colors such as accent, primary, and error states.
+- Once uploaded, these fonts can be referenced and applied throughout the application for consistent styling and branding.
+
+![Theme](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/8abdab5a-283b-475c-98ed-e465453aa627)
+
+## Real-Life Examples of Settings Schema Usage
+
+The Settings Schema is used to configure various aspects of an application in a structured and consistent way. Here are some real-world use cases where the schema has been applied effectively:
+
+- **App Theme Configuration:** Allowing users to define primary/secondary colors, font families, or layout preferences.
+- **Feature Toggles:** Enabling or disabling features dynamically, such as enabling beta features for some spaces/devices.
+- **Text and Labels Customization:** Letting users or organizations override default text strings or provide translations.
+- **Media Uploads:** Providing the ability to upload and use media such as images, videos, or fonts directly from the settings UI.
+- **Payment Picker**
+  Allows the user to select a specific payment method that should be available during the checkout process. This could include integrations with payment providers like Stripe, PayPal, or in-store terminals. The selected method is used by the app to process transactions accordingly.
+
+- **Peripheral Picker**
+  Allows users to select hardware peripherals connected to the device, enabling the screen app to communicate with them seamlessly. This is useful in scenarios where external devices are part of the interaction flow, such as retail, kiosks, AI apps, or operational dashboards.
+  Peripherals examples include devices like **printers**, **cameras**, **barcode scanners**, **RFID readers**. Once a peripheral is selected through the settings schema, the app can automatically establish a connection and interact with it based on the app’s logic—for example, printing a receipt, scanning a code, or capturing a photo.
+
+- **Space Picker**
+  Lets the user select a specific space. This can be used to override certain settings or customize data fetching based on the selected space.
+  _Example use case:_ In the **Endless Aisle** solution, the selected space determines which online stock data to display to customers.
+
+- **Product Picker**
+  Allows selection of one or more products to be featured or used within an app workflow.
+  _Example use case:_ In the **Lift & Learn** solution, a specific product is selected so the display updates to show relevant content when a user interacts with that product.
+
+- **Queue Picker**
+  Enables selection of a specific queue from which the app settings will fetch or manage data. This is useful in a variety of customer service and operational contexts.
+  _Example use cases:_
+  - **Appointment Booking**: selecting a queue to manage appointments.
+  - **People Counter**: assigning a queue to count people entering/exiting.
+  - **Occupancy Signage**: linking to a queue that tracks capacity in real time.
+  - **Queue Kiosk**: letting users choose a service queue when arriving at a kiosk.
+
+## Example: Queue Picker
+
+This example shows how the Settings Schema enables users to select a specific queue, useful in apps such as Appointment Booking, People Counter, or Queue Kiosk.
+
+```ts
+type Queue = {
+  /**
+   * @title Queue ID
+   */
+  queueId: string
+
+  /**
+   * @title Organisation name
+   */
+  organization: string
+
+  /**
+   * @title Queue endpoint
+   */
+  queueEndpoint: string
+}
+
+export type Settings = {
+  /**
+   * @title Queue
+   * @ui queuePicker
+   */
+  queue: Queue
+}
+export default Settings
+```
+
+### How It Works
+
+- The `queuePicker` UI component presents available queues for selection, filtered by the current organization.
+
+- Once a queue is selected, the app can use its `queueEndpoint` to fetch data or send updates.
+
+- This enables queue-specific customization and behavior in various visitor management or signage apps.
+
+### Example: Selecting Hardware Peripherals via Twin Picker
+
+This example demonstrates how the Settings Schema can be used to let users select specific hardware peripherals—such as barcode scanners or receipt printers—connected to their device. Once selected, the screen app can directly communicate with these peripherals, enabling features like scanning barcodes or printing receipts.
+
+This pattern is useful in retail, kiosk, or point-of-sale (POS) scenarios where physical hardware enhances the user experience.
+
+```ts
+interface TwinPickerFormData {
+  id: string
+  ref: "twin"
+}
+
+export interface Settings {
+  /**
+   * @title Barcode Scanner
+   * @description Select a barcode scanner peripheral connected to the device.
+   * @ui twinPicker
+   * @uiOptions {
+   *   "twinTypes": ["Peripheral"],
+   *   "twinDescriptors": ["phygrid/barcodescanner"]
+   * }
+   */
+  barcodeScanner: TwinPickerFormData
+
+  /**
+   * @title Printer
+   * @description Select a printer peripheral connected to the device.
+   * @ui twinPicker
+   * @uiOptions {
+   *   "twinTypes": ["Peripheral"],
+   *   "twinDescriptors": ["phygrid/printer"]
+   * }
+   */
+  printer: TwinPickerFormData
+}
+```
+
+### How It Works
+
+- The `twinPicker` UI component allows users to choose from available hardware peripherals.
+- `twinTypes` and `twinDescriptors` filter the selection to specific types of devices (e.g., barcode scanners, printers).
+- Once configured, the app can interface with the selected device to perform related tasks (e.g., scanning product codes or printing tickets).
