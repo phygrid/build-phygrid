@@ -149,7 +149,12 @@ export default interface Settings {
    * @title Home page
    */
   homePage: {
-    title: Record<string, string>
+    /**
+     * @title Page title
+     * @description Home page title
+     * @ui multiLanguageText
+     */
+    title?: Record<string, string>
   }
 }
 ```
