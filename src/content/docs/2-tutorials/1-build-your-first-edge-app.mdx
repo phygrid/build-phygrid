@@ -14,6 +14,7 @@ Edge apps run on PhyOS-enabled devices. Just like screen apps, edge apps are:
 - Integrated with platform features, including:
   - App versioning
   - Settings schemas
+  - Centralized configuration and content management
   - Real-time event collection via Signals
 
 
@@ -39,15 +40,12 @@ Official Phygrid templates and examples use Node with TypeScript, offering moder
 Before you begin, make sure the following are set up and ready to go:
 
 ### ✅ A Phygrid Tenant
-// KP TODO 2025-06-20: Insert link
 
-You'll need access to a Phygrid tenant — your organization's managed environment where apps and devices are registered, deployed, and monitored. If you don't yet have one, please refer to the Onboarding guide here.
+You'll need access to a Phygrid tenant — your organization's managed environment where apps and devices are registered, deployed, and monitored. If you don't yet have one, please refer to the [Tenant Setup](/getting-started/tenant-setup) here.
 
 ### ✅ Local Development Environment with PhyCLI Installed and Configured
 
-// KP TODO 2025-06-20: Insert link
-
-If you haven't set up CLI on your machine yet, refer to the Getting Started guide.
+If you haven't set up CLI on your machine yet, refer to the [Local Environment Setup](/getting-started/local-environment-setup/) guide.
 
 ### ✅ A Docker Hub Account
 
@@ -136,14 +134,6 @@ With both sets of credentials in place, the CLI will now:
 
 Once complete, your app will be available in the Phygrid Console, ready to be installed and deployed to any edge capable device. We will cover this part later in the tutorial.
 
-### ✅ Checkpoint
-
-After completing this process, you'll have:
-
-- An edge app project on your local machine
-- A Docker image published to your registry
-- A new App available in your tenant for installation
-
 You can explore your newly created project. In the directory with the project, you will find a containerized Node TypeScript application, including:
 
 - **Dockerfile** for multi-arch build
@@ -151,6 +141,18 @@ You can explore your newly created project. In the directory with the project, y
   - `schema.ts` – settings schema for your application with example settings (to learn more about settings schemas, check this how-to guide)
   - `app.ts` – application entry point with simple example code that performs basic logging to standard output
 - Other files commonly found in Node projects, like `package.json` containing useful scripts, `.nvmrc`, `tsconfig.json`, and more
+
+The `app.ts` file demonstrates the usage of `@phygrid/hub-client` package for platform integration.
+
+The example code retrieves app settings through the Hub Client and logs them to the console.
+
+### ✅ Checkpoint
+
+After completing this process, you'll have:
+
+- An edge app project on your local machine
+- A Docker image published to your registry
+- A new app available in your tenant for installation
 
 ## 🚀 Deploying the App to a PhyOS Device or VM
 
@@ -221,7 +223,7 @@ Settings: {
 }
 ```
 
-If you run into issues at this stage, refer to the **Debugging & Troubleshooting** section of the documentation.
+If you run into issues at this stage, refer to the **[Debugging & Troubleshooting](/how-to/debugging-troubleshooting)** article of the documentation.
 
 ### 💻 Connect a PhyOS VM
 
@@ -325,6 +327,8 @@ yarn pub
 4. In the **Version** dropdown, select **0.2.0**
 5. Press **Save all changes**
 
+When you access the Settings tab of your installation, you'll see that the settings defined in your app's `schema.ts` appear in the Console as an editable form.
+
 After a few moments, your app will be redeployed with the new version.
 
 Reconnect to your device:
@@ -372,7 +376,7 @@ After completing this part of the tutorial, you should have:
 
 Now that your app is setup, you can:
 
-- Configure your app using the settings schema
-- Start integrating with peripheral twins
-- Use Signals to emit events and monitor edge activity
+- [Create settings schema to manage your app's configuration](/how-to/settings-schemas/)
+- [Start integrating with peripheral twins](/how-to/peripherals-and-descriptors/)
+- [Use Signals to emit events and monitor edge activity](/how-to/signals/)
 
