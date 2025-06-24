@@ -3,4 +3,376 @@ title: "Build An Edge App"
 icon: "Cpu"
 ---
 
-Hello world
+## 🧠 What Are Edge Apps?
+
+Edge apps are a type of application that runs on Phygrid-connected devices without a graphical user interface. These apps execute locally in the field as fully managed Phygrid containers, providing compute power and logic right where it's needed — at the edge.
+
+Edge apps run on PhyOS-enabled devices. Just like screen apps, edge apps are:
+
+- Published and managed via your Phygrid tenant
+- Deployed and configured using the Console
+- Integrated with platform features, including:
+  - App versioning
+  - Settings schemas
+  - Real-time event collection via Signals
+
+
+## 🔧 Common Use Cases for Edge Apps
+
+Edge apps are ideal for tasks that require local processing or interaction with hardware. Typical scenarios include:
+
+- Running AI/ML models at the edge (e.g., object detection, people counting)
+- Managing peripheral hardware not directly connected to the platform (e.g., doors, printers, sensors)
+- Performing real-time data processing before syncing with the cloud
+
+## ⚙️ How Edge Apps Work
+
+- **Runtime:** Powered by Docker — each edge app runs inside an isolated container on the device.
+- **Language Flexibility:** You can build edge apps in any language that runs in a Docker container.
+
+Whether you're building hardware integrations, deploying AI workloads, or processing data locally, edge apps give you full control at the device level — all while being securely managed by the Phygrid platform.
+
+## 🧰 Prerequisites
+
+Official Phygrid templates and examples use Node with TypeScript, offering modern tooling, strong typing, and native SDK support. This is the stack we'll be working with throughout this tutorial.
+
+Before you begin, make sure the following are set up and ready to go:
+
+### ✅ A Phygrid Tenant
+// KP TODO 2025-06-20: Insert link
+
+You'll need access to a Phygrid tenant — your organization's managed environment where apps and devices are registered, deployed, and monitored. If you don't yet have one, please refer to the Onboarding guide here.
+
+### ✅ Local Development Environment with PhyCLI Installed and Configured
+
+// KP TODO 2025-06-20: Insert link
+
+If you haven't set up CLI on your machine yet, refer to the Getting Started guide.
+
+### ✅ A Docker Hub Account
+
+For the purpose of this tutorial, you'll need a Docker.io account to publish your app as a container image.
+
+**Important:** You'll need two sets of credentials:
+
+- **Push credentials** (with read/write access): used locally for publishing your app image
+- **Pull credentials** (read-only): embedded in your app and used by devices to fetch the image
+
+### ✅ Docker Installed
+
+Ensure you have Docker Desktop installed and running on your development machine.
+
+You must enable the **containerd image store**, a requirement for proper image handling with Phygrid.
+
+To do this:
+
+1. Open Docker Desktop
+2. Go to **Settings → General**
+3. Enable the option **"Use containerd for pulling and storing images"**
+4. Click **Apply & Restart**
+
+> This feature is available in Docker Desktop ≥ 4.29
+
+## 🛠 Step-by-Step: Creating and Publishing an Edge App
+
+Once your environment is ready, you can create and publish your first edge app. This process involves generating a starter project, configuring your Docker registry, building and pushing the app image, and finally uploading the app to your tenant.
+
+### 1. Scaffold the Edge App project
+
+Run the following command to begin:
+
+```bash
+phy app create
+```
+
+You'll be prompted to provide a name for your application. If you don't specify one via CLI args, you'll be asked interactively.
+
+Then you'll select the app type - choose **❯ Edge Application**
+
+This tells the CLI to scaffold a non-GUI containerized edge application.
+
+### 2. Set Up Your Container Registry
+
+Next, you'll configure the container registry where your app image will be published.
+
+- You'll be asked to enter a container registry — in this example, we will use **docker.io** (you can confirm the default value)
+- Then, provide your Docker Hub username or organization name
+- Finally, specify a unique image name for your app (or confirm the default name)
+
+This registry configuration will be saved in your project's metadata so future builds and deployments know where to push the image.
+
+### 3. Authenticate: Push Credentials (Read/Write)
+
+The CLI will now attempt to push a test image to the registry to ensure everything is set up correctly.
+
+You will be prompted to enter your Docker Hub username and a Personal Access Token (PAT) with read/write access.
+
+This token is used locally to push the app image during development — it is not stored in the final app.
+
+> 🔐 **Tip:** Never share these credentials with your team or include them in version control. They grant write access to your Docker registry.
+
+### 4. Authenticate: Pull Credentials (Read-Only)
+
+Once the push test succeeds, you'll be prompted for a second set of credentials — these are the **pull credentials**.
+
+These are important because they will be:
+- Stored in the app metadata
+- Deployed to devices so they can download the container image
+
+Use a **read-only** Docker PAT here to limit risk in case of compromise.
+
+> 🚫 **Never reuse your push token here** — devices should never have write access to your registry.
+
+These credentials are securely stored and reused for future builds to the same registry.
+
+### 5. Build, Push & Register the App
+
+With both sets of credentials in place, the CLI will now:
+
+1. Pull the edge app boilerplate to your local machine
+2. Build the app image using Docker
+3. Push the image to your container registry
+4. Create and upload the app to your Phygrid tenant
+
+Once complete, your app will be available in the Phygrid Console, ready to be installed and deployed to any edge capable device. We will cover this part later in the tutorial.
+
+### ✅ Checkpoint
+
+After completing this process, you'll have:
+
+- An edge app project on your local machine
+- A Docker image published to your registry
+- A new App available in your tenant for installation
+
+You can explore your newly created project. In the directory with the project, you will find a containerized Node TypeScript application, including:
+
+- **Dockerfile** for multi-arch build
+- **src/** directory with:
+  - `schema.ts` – settings schema for your application with example settings (to learn more about settings schemas, check this how-to guide)
+  - `app.ts` – application entry point with simple example code that performs basic logging to standard output
+- Other files commonly found in Node projects, like `package.json` containing useful scripts, `.nvmrc`, `tsconfig.json`, and more
+
+## 🚀 Deploying the App to a PhyOS Device or VM
+
+Now that your app is ready, the next step is to create an installation and deploy it to a PhyOS VM or a physical PhyOS device.
+
+### 📦 Create an Installation
+
+1. Log in to **console.phygrid.com**
+// KP TODO 2025-06-20: Be more specific
+2. Navigate to the **Marketplace** and locate your app
+3. Press the **Install** button and provide a name for your new installation
+4. After confirmation, you will be redirected to the **Installation** page
+5. A build of your app will be created automatically as part of the installation
+
+### 🔌 Connect a PhyOS Device
+
+> **Note:** This step requires a freshly provisioned physical PhyOS device.
+> If you don't have a physical device available, skip to the [**Connect PhyOS VM**](#-connect-a-phyos-vm) section.
+
+1. Navigate to the **Devices** tab on your Installation page
+2. Press the **Connect a device** button
+3. In the modal that appears, click **Setup a new device**
+4. Select **x86-64** as the device type
+5. Enter:
+   - A name for the device
+   - The serial number or provisioning code shown on your PhyOS device's screen
+6. Confirm by pressing the **Connect device** button 
+
+For additional details on creating installations and connecting devices, check out this comprehensive guide (KP TODO 2025-06-20: Input link here)
+
+Once the device is successfully connected, you should see:
+- The device name appear on the device screen
+- The connection status update on the physical screen of the device
+- Your app will be automatically downloaded and started
+
+To verify deployment from your computer, run:
+
+```bash
+phy dev shell <device-name>
+```
+
+Replace `<device-name>` with the name used during setup (also shown on the device screen).
+
+Once connected, select the **Shell** option from the menu and confirm.
+
+Run the following to check if your app is running:
+
+```bash
+docker ps
+```
+
+You should see a container running, with a name matching your app's image.
+
+To inspect logs, use:
+
+```bash
+docker logs <container-id> -f
+```
+
+The `<container-id>` is displayed as the first column in the `docker ps` output.
+
+If everything is working correctly, you'll see output similar to:
+
+```
+Hello, world! 10
+Settings: {
+  "testSetting": "Default value"
+}
+```
+
+If you run into issues at this stage, refer to the **Debugging & Troubleshooting** section of the documentation.
+
+### 💻 Connect a PhyOS VM
+
+VMs are a great option during development and for testing purposes. You can create a virtual PhyOS device using the Phy CLI. This is supported on macOS and Linux.
+
+1. Run the following command:
+
+```bash
+phy app vm create
+```
+
+2. Provide a name for the VM (this is how you'll identify it later)
+3. When prompted for VM architecture, confirm the default (host architecture)
+4. Confirm:
+   - Use of the latest PhyOS version
+   - The default memory allocation
+
+The CLI will now download the PhyOS image to your machine.
+
+After the process is completed, a message will appear with the command to start your VM:
+
+```bash
+phy vm start <vm-name>
+```
+
+If dependencies are missing on your system, the CLI will prompt you to install them — confirm and wait for setup to complete.
+
+Once the VM is running, follow the same steps as in the physical device section to connect it to your installation.
+
+// TODO KP 2025-06-20: Finish this section
+
+### 🚧 Enable Development Mode
+
+Now let's deploy your app to the connected VM or physical device in development mode. Please note that this feature is intended for development and iteration, not for managing production devices.
+
+This is done using:
+
+```bash
+phy app deploy
+```
+
+Once deployed, your app will start running on the target device.
+
+// TODO KP 2025-06-20: How to verify this?
+
+### ✏️ Make Code Changes
+
+With your app now running on the device in development mode, let's make some changes to see the development workflow in action.
+
+Open `src/app.ts` and update the code by adding an additional `console.log` statement:
+
+```typescript
+setInterval(() => {
+  counter += 1;
+  console.log('Hello, world!', counter);
+  console.log('This is a test'); // <-- added
+  console.log('Settings:', JSON.stringify(settings, null, 2));
+}, 3000);
+```
+
+Now deploy your changes directly to the device with deploy command:
+
+```bash
+phy app deploy
+```
+
+This will rebuild and push the updated version to the device.
+
+// TODO KP 2025-06-20: How to verify this?
+
+### 🚀 Publish an Updated Version
+
+Once your app is updated and working as expected, it's time to publish a new version and deploy it via the Console.
+
+1. Open your project in your IDE
+2. In `package.json`, increase the version number:
+
+```json
+"version": "0.2.0"
+```
+
+3. Run the build script:
+
+```bash
+yarn build
+```
+
+This builds the updated Docker image, pushes it to your registry, and generates a new `.gridapp` file ready to be published.
+
+4. Publish the new version to your tenant:
+
+```bash
+yarn pub
+```
+
+### 🧪 Test the New Version in Console
+
+1. Go back to your installation in the Phygrid Console
+2. Open the **Settings** tab and press **Edit settings**
+3. Change the value of "A test setting" to "New setting value"
+4. In the **Version** dropdown, select **0.2.0**
+5. Press **Save all changes**
+
+After a few moments, your app will be redeployed with the new version.
+
+Reconnect to your device:
+
+```bash
+phy dev shell <device-name>
+```
+
+Verify the new image is running:
+
+```bash
+docker ps
+```
+
+Then inspect the logs:
+
+```bash
+docker logs <container-id> -f
+```
+
+You should see updated output reflecting your changes:
+
+```
+Hello, world! 3
+This is a test
+Settings: {
+  "testSetting": "New setting value"
+}
+```
+
+## 🎉 Success!
+
+Your app is now running the updated version with modified code and updated settings.
+
+You've successfully gone from creation to deployment, iteration, and production publishing — all with full integration into the Phygrid platform.
+
+### ✅ Checkpoint
+
+After completing this part of the tutorial, you should have:
+
+- A fully functional edge app deployed and running on your device or VM
+- An installation in your tenant
+
+## 🔄 Next Steps
+
+Now that your app is setup, you can:
+
+- Configure your app using the settings schema
+- Start integrating with peripheral twins
+- Use Signals to emit events and monitor edge activity
+

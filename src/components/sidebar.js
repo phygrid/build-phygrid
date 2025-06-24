@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import { graphql, useStaticQuery, Link } from "gatsby"
 import { Menu } from "antd"
 import { useLocation } from "@reach/router"
@@ -137,7 +137,7 @@ const Sidebar = ({ onNavigate }) => {
   const nestedSections = buildNestedStructure(data.allMdx.nodes)
 
   // Helper function to get all pages from nested structure
-  const getAllPages = (structure = nestedSections) => {
+  const getAllPages = useCallback((structure = nestedSections) => {
     let pages = [...structure.topLevel]
 
     const traverseFolders = folders => {
@@ -151,43 +151,43 @@ const Sidebar = ({ onNavigate }) => {
 
     traverseFolders(structure.folders)
     return pages
-  }
-
-  // Helper function to find required open keys for current page
-  const getRequiredOpenKeys = () => {
-    const requiredKeys = []
-    const allPages = getAllPages()
-
-    const currentPage = allPages.find(page =>
-      location.pathname.includes(page.slug)
-    )
-
-    if (currentPage) {
-      // Find all folder paths that contain this page
-      const findFolderPaths = (folders, targetSlug, currentPath = []) => {
-        Object.entries(folders).forEach(([folderKey, folder]) => {
-          const newPath = [...currentPath, folderKey]
-
-          // Check if this folder contains the target page
-          if (folder.children.some(child => child.slug === targetSlug)) {
-            requiredKeys.push(...newPath)
-          }
-
-          // Recursively check subfolders
-          if (Object.keys(folder.subfolders).length > 0) {
-            findFolderPaths(folder.subfolders, targetSlug, newPath)
-          }
-        })
-      }
-
-      findFolderPaths(nestedSections.folders, currentPage.slug)
-    }
-
-    return [...new Set(requiredKeys)]
-  }
+  }, [nestedSections])
 
   // Ensure current page's section is open when location changes
   useEffect(() => {
+    // Helper function to find required open keys for current page
+    const getRequiredOpenKeys = () => {
+      const requiredKeys = []
+      const allPages = getAllPages()
+
+      const currentPage = allPages.find(page =>
+        location.pathname.includes(page.slug)
+      )
+
+      if (currentPage) {
+        // Find all folder paths that contain this page
+        const findFolderPaths = (folders, targetSlug, currentPath = []) => {
+          Object.entries(folders).forEach(([folderKey, folder]) => {
+            const newPath = [...currentPath, folderKey]
+
+            // Check if this folder contains the target page
+            if (folder.children.some(child => child.slug === targetSlug)) {
+              requiredKeys.push(...newPath)
+            }
+
+            // Recursively check subfolders
+            if (Object.keys(folder.subfolders).length > 0) {
+              findFolderPaths(folder.subfolders, targetSlug, newPath)
+            }
+          })
+        }
+
+        findFolderPaths(nestedSections.folders, currentPage.slug)
+      }
+
+      return [...new Set(requiredKeys)]
+    }
+
     const requiredKeys = getRequiredOpenKeys()
     if (requiredKeys.length > 0) {
       setOpenKeys(prevKeys => {
@@ -198,7 +198,7 @@ const Sidebar = ({ onNavigate }) => {
         return newKeys
       })
     }
-  }, [location.pathname])
+  }, [location.pathname, getAllPages, nestedSections.folders])
 
   // Get currently selected keys based on location
   const getCurrentKey = () => {

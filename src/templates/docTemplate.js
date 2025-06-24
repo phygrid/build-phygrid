@@ -30,7 +30,7 @@ const components = {
 }
 
 const DocTemplate = ({ data, children }) => {
-  const { title, icon, images, category, access } = data.mdx.frontmatter
+  const { title, icon, images } = data.mdx.frontmatter
   const { tableOfContents } = data.mdx
   const { slug } = data.mdx.fields
 
