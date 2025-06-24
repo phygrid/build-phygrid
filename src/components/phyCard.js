@@ -4,7 +4,7 @@ import styled from "@emotion/styled"
 import { getImage } from "gatsby-plugin-image"
 
 // Higher order component to add noOffset className support
-export default ({
+const PhyCardComponent = ({
   className,
   noOffset,
   noPadding,
@@ -161,3 +161,5 @@ const PhyCard = styled(Card)`
     }
   }
 `
+
+export default PhyCardComponent
