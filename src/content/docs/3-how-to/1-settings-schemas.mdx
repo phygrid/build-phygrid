@@ -70,7 +70,7 @@ export default interface Settings {
 }
 ```
 
-### Schema Conversion
+### 🔄 Schema Conversion
 
 When building the application, the TypeScript interface `schema.ts`
 is automatically converted into two schemas:
@@ -110,7 +110,7 @@ developer-defined source of truth.
 }
 ```
 
-#### Why It Matters
+### ✨ Key Benefits
 
 - 🔄 **Single Source of Truth:** The TypeScript interface serves
   both the developer and the platform that renders the UI.
@@ -120,22 +120,22 @@ developer-defined source of truth.
 
 ## 🛠️ How to Define a Settings Schema
 
-### 🚀 Boilerplate Projects
-
 All Phygrid boilerplate projects include a settings schema definition by default.
 When you create a new app using the CLI, you'll find a `schema.ts` file in the
 `src/` directory that defines your app's configuration structure.
 
-#### 📱 Screen App Example
+### 📱 Screen App Example
+
+**1️⃣ Create a New Screen App**
 
 - Run the command: `phy app create`
 - Enter the desired app name.
 - When prompted, select:
   ❯ Screen Application (React)
 
-##### ➕ Updating the app settings
+**2️⃣ Update the Settings Schema**
 
-Here's we will updating the `schema.ts` file:
+Edit the `schema.ts` file to define your app's configuration:
 
 ```ts
 export default interface Settings {
@@ -150,11 +150,11 @@ export default interface Settings {
 }
 ```
 
-##### 🔗 Accessing Settings in Your App
+**3️⃣ Access Settings in Your App**
 
-This example works PhyOS devices (PhyBrowsers, PhyVM, PhyOS Devices) and locally:
+This example works on both PhyOS devices and locally:
 
-`app.tsx`
+**`app.tsx`**
 
 ```ts
 import React, { useCallback, useEffect, useState } from "react"
@@ -231,9 +231,9 @@ const Container = styled.div`
 export default App
 ```
 
-**To run this app locally, follow these steps:**
+**4️⃣ Local Development**
 
-1. **Update app settings in `src/settings/index.json`**:
+**Step 1:** Update app settings in `src/settings/index.json`:
 
 ```json
 {
@@ -246,29 +246,34 @@ export default App
   }
 }
 ```
-2. Run this command `yarn run start`
 
-Now you can develop and you can see the live updates locally
+**Step 2:** Start the development server:
 
+```bash
+yarn run start
+```
 
-**To run this app on PhyOS devices (PhyBrowsers, PhyVM, PhyOS Devices) , follow these steps:**
+Now you can develop and see live updates locally.
+
+**5️⃣ Deploy to PhyOS Devices**
 
 1. **Create a new version of the app** by updating the version in `package.json` file
-2. Push the new version of the app to your tenant by running the following command 
-    `yarn run build && yarn run pub`
+2. Push the new version of the app to your tenant by running the following command
+   `yarn run build && yarn run pub`
 3. Finally you can connect and deploy to your device. `<Link to how to connect a device to your installation>`
 
 ![Screen App](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/cd694d12-7868-419f-8064-09f46f2dda2c)
 
+### 🌐 Edge App Example
 
-#### 🌐 Edge App Example
-Now we can apply the same steps on the edge apps
+**1️⃣ Create a New Edge App**
+
 - Run the command: `phy app create`
 - Enter the desired app name.
 - When prompted, select:
   ❯ Edge Application (Node.js)
 
-##### ➕ Updating the app settings
+**2️⃣ Update the Settings Schema**
 
 **`schema.tsx`**
 
@@ -283,6 +288,8 @@ export default interface Settings {
   username: string
 }
 ```
+
+**3️⃣ Access Settings in Your App**
 
 **`app.tsx`**
 
@@ -302,6 +309,18 @@ setInterval(() => {
 }, 3000)
 ```
 
+**4️⃣ Deploy to PhyOS Devices**
+
+**Step 1:** Update the version in `package.json` file
+
+**Step 2:** Build and publish the app:
+
+```bash
+yarn run build && yarn run pub
+```
+
+**Step 3:** Connect and deploy to your device. See the guide on
+[Connecting a device to your installation](/tutorials/build-your-first-edge-app/#-create-an-installation)
 
 ### ✅ Validation
 
@@ -1233,13 +1252,6 @@ export default Settings
 
 ![Theme](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/8abdab5a-283b-475c-98ed-e465453aa627)
 
-## ⚙️ Settings Overrides
-
-Settings can be overridden at different levels to provide flexibility in configuration management:
-
-- **Device Level:** Settings can be overridden for specific devices, allowing device-specific configurations
-- **Space Level:** Settings can be overridden for specific spaces, enabling space-specific customizations
-
 For detailed information about settings overrides and their implementation, visit [learn.phygrid.com](http://learn.phygrid.com).
 
 ### 💳 Payment Picker
@@ -1641,6 +1653,13 @@ export default interface Settings {
 - **Queue Kiosk:** Letting users choose a service queue when arriving at a kiosk
 
 ![Queue Picker](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/cae2962a-d705-4417-8397-b806d17c5b30)
+
+## ⚙️ Settings Overrides
+
+Settings can be overridden at different levels to provide flexibility in configuration management:
+
+- **Device Level:** Settings can be overridden for specific devices, allowing device-specific configurations
+- **Space Level:** Settings can be overridden for specific spaces, enabling space-specific customizations
 
 ## ✅ Checkpoint
 
