@@ -1654,6 +1654,99 @@ export default interface Settings {
 
 ![Queue Picker](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/cae2962a-d705-4417-8397-b806d17c5b30)
 
+### 🛍️ Product Picker
+
+The Product Picker allows users to select products from their Grid catalog,
+enabling product-specific configurations and data management. This is essential for
+retail applications, product displays, and e-commerce integrations that need to
+reference specific products from the Grid platform.
+
+**`schema.ts`**
+
+```ts
+interface Product {
+  ref: "grid-product"
+  productGroupId: string
+  productId: string
+  defaultImage: string
+  productSourceUrl: string
+  env: string
+}
+
+export default interface Settings {
+  /**
+   * @title Product
+   * @description Select a product from your Grid catalog.
+   * @ui productPicker
+   */
+  product: Product
+}
+```
+
+**Generated `schema.json`**
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "product": {
+      "type": "object",
+      "properties": {
+        "ref": {
+          "type": "string",
+          "const": "grid-product"
+        },
+        "productGroupId": {
+          "type": "string"
+        },
+        "productId": {
+          "type": "string"
+        },
+        "defaultImage": {
+          "type": "string"
+        },
+        "productSourceUrl": {
+          "type": "string"
+        },
+        "env": {
+          "type": "string"
+        }
+      },
+      "required": ["ref", "productGroupId", "productId", "defaultImage", "productSourceUrl", "env"],
+      "title": "Product",
+      "description": "Select a product from your Grid catalog."
+    }
+  },
+  "required": ["product"]
+}
+```
+
+**Generated `meta-schema.json`**
+
+```json
+{
+  "product": {
+    "ui:field": "productPicker"
+  }
+}
+```
+
+**Key Features:**
+- The `productPicker` UI component presents available products from your Grid catalog
+- Users can select a specific product to enable product-specific functionality
+- The selected product includes essential details like ID, image, and source URL
+- Product information can be used to display product details or fetch real-time data
+
+**Common Use Cases:**
+
+- **Product Displays:** Selecting a product to show on digital signage or kiosks
+- **Product Recommendations:** Displaying related products based on selection
+
+![Product Picker](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/1feaaa00-e252-4f10-8024-8f1e24f2ec7f)
+![Product Picker](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/db861648-c179-45b9-8fe6-3a8fe15cc883)
+
+
 ## ⚙️ Settings Overrides
 
 Settings can be overridden at different levels to provide flexibility in configuration management:
