@@ -3,29 +3,38 @@ import React from "react"
 import { graphql } from "gatsby"
 import styled from "@emotion/styled"
 import { MDXProvider } from "@mdx-js/react"
-import { StaticImage } from "gatsby-plugin-image"
-import * as PhosphorIcons from "@phosphor-icons/react"
+import * as Icons from "@ant-design/icons"
+import { getImage, GatsbyImage } from "gatsby-plugin-image"
+import { Typography } from "antd"
 
 import Seo from "../components/seo"
 import Layout from "../components/layout"
 import Accordion from "../components/accordion"
 import TableOfContents from "../components/tableOfContents"
+import PhyCard from "../components/phyCard"
+import ResponsivePlayer from "../components/responsivePlayer"
+import { Alert } from "antd"
 import InfoBox from "../components/info"
 
 import { markdownStyles } from "../styles/markdownStyles"
-import { breakpoints } from "../styles/breakpoints"
 
 const components = {
-  StaticImage, // Add StaticImage to MDX scope
   Accordion,
-  PhosphorIcons,
+  Icons,
+  Alert,
+  PhyCard,
   InfoBox,
+  GatsbyImage,
+  getImage,
+  ResponsivePlayer,
 }
 
 const DocTemplate = ({ data, children }) => {
-  const { title } = data.mdx.frontmatter
+  const { title, icon, images } = data.mdx.frontmatter
   const { tableOfContents } = data.mdx
   const { slug } = data.mdx.fields
+
+  const IconComponent = icon && Icons[icon] ? Icons[icon] : null
 
   // Function to convert slug to title format, reversed for desired hierarchy
   const generateTitleFromSlug = slug => {
@@ -46,14 +55,23 @@ const DocTemplate = ({ data, children }) => {
     <Layout>
       <Seo title={seoTitle} />
       <Title>
+        {IconComponent && <IconComponent style={{ marginRight: 8 }} />}
         {title}
-        {/* {IconComponent && <IconComponent />} {title} */}
+        {/* {category && <Tag color="blue">{category}</Tag>}
+        {access && <Tag color="green">{access}</Tag>} */}
       </Title>
+
       <Container>
         <Article className="mdc">
-          <MDXProvider components={components}>{children}</MDXProvider>
+          <MDXProvider components={components}>
+            {React.cloneElement(children, {
+              images: images || [], // Pass images as props to MDX
+            })}
+          </MDXProvider>
         </Article>
-        <TableOfContents items={tableOfContents} />
+        <TableOfContentsWrapper>
+          <TableOfContents items={tableOfContents} />
+        </TableOfContentsWrapper>
       </Container>
     </Layout>
   )
@@ -64,39 +82,46 @@ export const query = graphql`
     mdx(id: { eq: $id }) {
       frontmatter {
         title
+        icon
+        category
+        access
+        images {
+          childImageSharp {
+            gatsbyImageData(layout: FULL_WIDTH)
+          }
+        }
       }
       fields {
         slug
       }
       tableOfContents
+      body
     }
   }
 `
 
 export default DocTemplate
 
-const Title = styled.h1`
-  padding: 0 var(--space-4) var(--space-4) var(--space-4);
-  margin: auto;
-  max-width: 980px;
+const Title = styled(Typography.Title)`
+  margin: 0 var(--ant-padding-lg) var(--ant-padding-md) var(--ant-padding-lg);
   width: 100%;
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  font-size: var(--space-5);
-
-  @media (min-width: ${breakpoints.md}) {
-    font-size: var(--space-6);
-  }
+  gap: var(--ant-margin-xs);
+  font-size: var(--ant-font-size-heading-2);
 `
 
 const Container = styled.div`
-  display: grid;
-  grid-template-columns: 1fr auto;
-  padding: 0 var(--space-4);
-  margin: auto;
-  max-width: 980px;
+  padding: 0 var(--ant-padding-lg);
   width: 100%;
+  display: flex;
+  gap: var(--ant-margin-lg);
+`
+
+const TableOfContentsWrapper = styled.div`
+  @media (max-width: 1199px) {
+    display: none;
+  }
 `
 
 const Article = styled.article`

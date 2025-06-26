@@ -1,7 +1,7 @@
 // src/components/Accordion.js
 import React, { useState } from "react"
 import styled from "@emotion/styled"
-import { CaretDown, CaretUp } from "@phosphor-icons/react"
+import { DownOutlined, UpOutlined } from "@ant-design/icons"
 
 const Accordion = ({ title, children, defaultOpen = false }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen)
@@ -10,7 +10,13 @@ const Accordion = ({ title, children, defaultOpen = false }) => {
     <AccordionContainer>
       <AccordionHeader onClick={() => setIsOpen(!isOpen)}>
         {title}
-        <span>{isOpen ? <CaretUp size={12} /> : <CaretDown size={12} />}</span>
+        <span>
+          {isOpen ? (
+            <UpOutlined style={{ fontSize: 12 }} />
+          ) : (
+            <DownOutlined style={{ fontSize: 12 }} />
+          )}
+        </span>
       </AccordionHeader>
       <AccordionContent isOpen={isOpen}>{children}</AccordionContent>
     </AccordionContainer>
@@ -22,7 +28,7 @@ export default Accordion
 const AccordionContainer = styled.div`
   display: block;
   width: 100%;
-  padding: 0 0 var(--space-3) 0;
+  padding: 0 0 var(--ant-padding) 0;
 `
 
 const AccordionHeader = styled.div`
@@ -31,9 +37,9 @@ const AccordionHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  padding: 0 var(--space-2) var(--space-1) var(--space-2);
-  color: rgba(255, 255, 255, 0.5);
-  font-size: var(--font-sm);
+  padding: 0 var(--ant-padding-xs) var(--ant-padding-xxs) var(--ant-padding-xs);
+  color: var(--ant-color-text-tertiary);
+  font-size: var(--ant-font-size);
   line-height: 1;
 
   span {
@@ -42,7 +48,7 @@ const AccordionHeader = styled.div`
   }
 
   &:hover {
-    color: var(--color-title);
+    color: var(--ant-color-text-heading);
   }
 `
 

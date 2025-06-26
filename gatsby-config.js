@@ -1,8 +1,8 @@
 module.exports = {
   siteMetadata: {
-    title: `Phygrid Developers`,
+    title: `Build Phygrid`,
     description: `Learn how to use the Phygrid platform with tips, tricks, and user guides`,
-    author: `@rmalpass`,
+    author: `@phygrid`,
     siteUrl: `https://build.phygrid.com`,
   },
   plugins: [
@@ -33,7 +33,6 @@ module.exports = {
             options: {
               offsetY: `100`,
               className: `header-anchor`,
-              maxDepth: 3,
             },
           },
           {
@@ -42,29 +41,11 @@ module.exports = {
           {
             resolve: `gatsby-remark-images`,
             options: {
-              maxWidth: 800,
+              maxWidth: 1440,
               linkImagesToOriginal: false,
             },
           },
         ],
-      },
-    },
-    {
-      resolve: `@gatsby-contrib/gatsby-plugin-elasticlunr-search`,
-      options: {
-        // Fields to index
-        fields: [`title`, `section`, `content`],
-        // How to resolve each field's value for a supported node type
-        resolvers: {
-          Mdx: {
-            title: node => node.fields.title, // Use the custom 'title' field from gatsby-node
-            section: node => node.fields.section, // Use the custom 'section' field from gatsby-node
-            content: node => node.rawBody, // Use rawBody for full content indexing
-            slug: node => node.fields.slug, // Use the custom 'slug' field from gatsby-node
-          },
-        },
-        // Optional filter to limit indexed nodes
-        filter: (node, getNode) => true, // Index all MDX nodes by default
       },
     },
     `gatsby-plugin-react-helmet`,
