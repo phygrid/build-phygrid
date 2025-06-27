@@ -14,7 +14,7 @@ This comprehensive troubleshooting guide provides step-by-step procedures for di
 
 **🛠️ Advanced Debugging Tools:**
 
-- **Remote debugging with Chrome DevTools** - Inspect DOM, console logs, and network requests in real-time
+- **Remote debugging with Chrome DevTools** - Inspect DOM, console output, and network requests in real-time
 - **VNC remote access** - Visual inspection of screen app rendering and user interface issues
 - **System diagnostics** - Monitor disk space, time synchronization, and overall device health
 
@@ -72,6 +72,7 @@ sudo su
 
 This will provide you with the necessary privileges to access logs, modify configurations, and perform diagnostic operations.
 
+> **Note:** Most of commands and scripts in this article are to be executed in the device shell.
 
 ## **🔍 Common Troubleshooting Scenarios**
 
@@ -81,7 +82,7 @@ Before diving into specific troubleshooting procedures, here are the most freque
 
 **When to use this guide:**
 
-- Device appears offline in console
+- Device appears offline in Phygrid Console
 - App deployments not reaching the device
 - Configuration updates not being applied
 - Device not responding to commands
@@ -90,8 +91,6 @@ Before diving into specific troubleshooting procedures, here are the most freque
 When a device cannot establish or maintain a connection with Phyhub, it prevents app deployment, configuration updates, and real-time monitoring. This section provides comprehensive diagnostic procedures to identify and resolve connectivity problems.
 
 #### **Step 1: Verify Device Network Configuration**
-
-> **Note:** Commands and scripts in this section should be executed on the device.
 
 Firstly, ensure your device is connected to a working network via WIFI or LAN. You can confirm this by simply running the following command:
 
@@ -134,7 +133,7 @@ cat /data/settings/phyhub/gridEnv.json
 **What to look for:**
 
 - Ensure region matches your tenant configuration
-- Verify device ID is properly assigned (You can check the device ID from device settings page in [Console](https://console.phygrid.com/))
+- Verify device ID is properly assigned (You can compare the device ID with the ID visible in device settings page in [Console](https://console.phygrid.com/))
 - Check that environment settings are correct. The environment should have **PROD** value
 
 #### **Step 3: Check Phyhub Connection Status**
@@ -174,59 +173,15 @@ curl http://portal-<region>.omborigrid.com/
 - **Network Blocking:** If no response is received from the portal, there's likely a network connectivity issue - ensure your network is not blocking access to `http://portal-<region>.omborigrid.com/`
 - **DNS Resolution:** Verify DNS resolution is working properly to resolve the portal domain name
 
-**Troubleshooting notes:**
-
-<table>
-  <thead>
-    <tr>
-      <th>Issue</th>
-      <th>Symptoms</th>
-      <th>Solution</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <strong>Network Timeout</strong>
-      </td>
-      <td>Connection attempts timeout</td>
-      <td>Check network stability</td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Proxy Authentication</strong>
-      </td>
-      <td>407/401 errors in logs</td>
-      <td>
-        Verify proxy (if using custom proxy on device) and Network settings
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <strong>DNS Resolution</strong>
-      </td>
-      <td>Cannot resolve portal URLs</td>
-      <td>Check DNS configuration and network settings</td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Certificate Issues</strong>
-      </td>
-      <td>SSL/TLS handshake failures</td>
-      <td>Verify system time and certificate validity</td>
-    </tr>
-  </tbody>
-</table>
-
 ### **🔀 Verify Twin Synchronization**
 
 **When to use this guide:**
 
-- App configurations not being received by device
-- Twin data missing or incomplete
-- Device not processing configuration updates
-- Twin initialization failures
-- Need to verify device has latest configuration
+- Device not receiving application configurations
+- Missing or incomplete device twin data
+- Configuration updates failing to process
+- Device twin initialization errors
+- Verifying device has current configuration state
 
 Twin synchronization is a critical process that ensures your device receives the latest configuration updates from Phyhub. This step verifies that the device is properly downloading and processing twin configurations, which contain essential app deployment and configuration information.
 
@@ -253,7 +208,7 @@ app for twin xxxxxxxxxxxx
 
 - **Successful Twin Reception:** Whether the device is successfully receiving twin configurations from Phyhub
 - **Initialization Errors:** Any errors during the twin initialization process that might prevent apps from starting
-- **Twin Processing:** Confirmation that the device is processing the correct number and types of twins (Edge, Screen, etc.)
+- **Twin Processing:** Confirmation that the device is processing the correct number and types of twins (Edge, Screen, etc.) - there should be a twin per each connected installation
 
 ### **🔌 Device Inaccessible via PhyCLI**
 
@@ -447,7 +402,6 @@ cat <edge-twin-id>-device-<device-id>.json | jq '.properties.desired'
 **What to look for:**
 
 - **Twin Caching:** Verify that edge twins are being successfully cached on the device with confirmation messages
-- **Twin Presence:** Ensure the edge twin ID appears in the device manifest alongside other twin types
 - **Registry Access:** Confirm that registry credentials are properly configured for pulling the container image
 - **Volume Mounts:** Verify that necessary volume mounts and bindings are configured if your app requires persistent storage
 
@@ -458,7 +412,6 @@ cat <edge-twin-id>-device-<device-id>.json | jq '.properties.desired'
 - Edge app appears deployed but container status shows "Exited" or "Failed"
 - Docker registry authentication fails during image download attempts
 - Container starts successfully but terminates within seconds of startup
-- Application logs show out-of-memory errors or CPU throttling warnings
 - Container deployment fails with "port already in use" or binding errors
 
 Docker container management is a critical aspect of Edge App deployment. This section helps you diagnose issues related to container creation, image pulling, and container startup processes. Understanding the container lifecycle is essential for identifying where deployment failures occur.
@@ -485,6 +438,15 @@ failed-container
 - **Running containers** should show "Up" status with uptime
 - **Stopped containers** will show "Exited" with exit codes
 - **Missing containers** indicate deployment or creation failures
+
+Once you've identified your app's container in the output above, examine its logs with the following command:
+
+```bash
+docker logs <container-id> -f
+```
+
+The `<container-id>` is displayed as the first column in the `docker ps` output.
+
 
 If no containers are available, there could be an issue during the image pulling process. To investigate this, run:
 
@@ -553,48 +515,6 @@ container for twin xxxxxxxxxxxxxxxxx
 - **Startup failures** may show port conflicts, missing dependencies, or application errors
 - **Immediate exits** indicate application crashes or configuration issues
 
-**Common container issues and solutions:**
-
-<table>
-  <thead>
-    <tr>
-      <th>Issue</th>
-      <th>Symptoms</th>
-      <th>Solution</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <strong>Image Pull Failure</strong>
-      </td>
-      <td>Authentication errors, network timeouts</td>
-      <td>Verify registry credentials and network connectivity</td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Container Creation Failure</strong>
-      </td>
-      <td>Invalid configuration, resource limits</td>
-      <td>Check createOptions in twin configuration</td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Container Startup Failure</strong>
-      </td>
-      <td>Port conflicts, missing volumes</td>
-      <td>Verify port mappings and volume configurations</td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Application Crashes</strong>
-      </td>
-      <td>Immediate exits, error logs</td>
-      <td>Check application logs and dependencies</td>
-    </tr>
-  </tbody>
-</table>
-
 ### **📡 Troubleshoot Edge App Phyhub Events**
 
 **When to use this guide:**
@@ -602,7 +522,6 @@ container for twin xxxxxxxxxxxxxxxxx
 - Twin messaging not working or failing
 - Property updates not being applied
 - Communication issues between app and Phyhub
-- Event processing errors or timeouts
 
 Event handling is a crucial component of Edge App communication with the Phygrid platform. This section helps you monitor and debug the various events that your Edge App generates, receives, and processes. Understanding event flow is essential for diagnosing communication issues between your application and the platform.
 
@@ -668,51 +587,6 @@ reportEdgeTwinProperties(): Successfully reported properties for twin **********
 - **Error Messages:** Identify any failed property reporting attempts
 - **Data Consistency:** Ensure reported properties match your application's current state
 
-**Common event-related issues and solutions:**
-
-<table>
-  <thead>
-    <tr>
-      <th>Issue</th>
-      <th>Symptoms</th>
-      <th>Solution</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <strong>Event Not Received</strong>
-      </td>
-      <td>No event logs, missing data</td>
-      <td>
-        Check network connectivity, Phyhub connection or event emitted by twins
-        based on the use case
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Event Processing Failures</strong>
-      </td>
-      <td>Error messages in logs</td>
-      <td>Verify event handler implementation and data validation</td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Property Reporting Issues</strong>
-      </td>
-      <td>Properties not updating in console</td>
-      <td>Check property reporting frequency and data format</td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Event Timing Problems</strong>
-      </td>
-      <td>Delayed or missing events</td>
-      <td>Verify event generation logic and network latency</td>
-    </tr>
-  </tbody>
-</table>
-
 ## **🖥️ Debugging Screen Apps**
 
 Use these steps to inspect and debug screen apps deployed to devices. Screen Apps can encounter various issues such as not reflecting deployed changes, getting stuck on loading screens, displaying blank content, or failing to respond to user interactions. These problems often stem from configuration issues, service failures, or communication problems between the app and the Phygrid platform. The following troubleshooting procedures will help you identify the root cause and resolve these issues effectively.
@@ -724,7 +598,6 @@ Use these steps to inspect and debug screen apps deployed to devices. Screen App
 - Screen app not loading or displaying correctly
 - Display settings not being applied (resolution, orientation)
 - Screen app not receiving configuration updates
-- Twin synchronization issues for screen apps
 
 Screen twin settings contain the configuration and deployment information for your Screen Apps. This section helps you verify that the device has properly received and cached the screen twin configurations from Phyhub, which is essential for successful screen app deployment and operation.
 
@@ -793,12 +666,7 @@ cat <screen-twin-id>-device-<device-id>.json | jq '.properties.desired'
 **What to look for:**
 
 - **Twin Caching:** Verify that screen twins are being successfully cached on the device with confirmation messages
-- **Twin Presence:** Ensure the screen twin ID appears in the device manifest alongside other twin types
-- **Complete Configuration:** Check that the desired properties contain all required screen app information including appUrl, settings, and environment variables
 - **Display Settings:** Verify that display mode, and other screen-specific settings are properly configured
-- **Environment Variables:** Ensure any required environment variables are properly defined for the screen app
-- **Auto-restart Configuration:** Check that auto-restart settings are appropriate for your use case
-- **Build Information:** Verify that installationId, appName, and buildId are correctly set
 
 ### **🖥️ Troubleshoot Physcreen**
 
@@ -861,51 +729,13 @@ twinUpdated event received { ... }
 - **Screenshot uploading failures** may indicate if the device was unable to upload screenshot
 - **Service crashes** will show error messages and restart attempts
 
-**Common Physcreen issues and solutions:**
-
-<table>
-  <thead>
-    <tr>
-      <th>Issue</th>
-      <th>Symptoms</th>
-      <th>Solution</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <strong>Service Not Starting</strong>
-      </td>
-      <td>Service shows "failed" status</td>
-      <td>Check system resources and service dependencies</td>
-    </tr>
-    <tr>
-      <td>
-        <strong>App Loading Failures</strong>
-      </td>
-      <td>Blank screen after logo</td>
-      <td>Check app settings</td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Configuration Errors</strong>
-      </td>
-      <td>Service fails to start</td>
-      <td>Verify screen twin configuration and settings</td>
-    </tr>
-  </tbody>
-</table>
-
 ### **📊 Troubleshoot Reported Screen Properties**
 
 **When to use this guide:**
 
 - Screenshots not being captured or uploaded
-- App status not updating in console
 - Display information not being reported
 - Property reporting failures or timeouts
-- Missing operational data in analytics
-- Screen app events not being received or processed
 
 Reported screen properties provide real-time information about the current state and status of your Screen Apps. This section helps you monitor and debug the properties that your screen app reports back to Phyhub, including screenshots, app status, and other operational data that can be used for monitoring and troubleshooting.
 
@@ -975,49 +805,6 @@ SOCKET on(): Received twinUpdated event {
 - **Event Reception:** Look for incoming events from Phyhub with complete data structures
 - **Event Processing:** Verify that events are being processed correctly by your screen application
 - **Error Handling:** Identify any failed event processing or communication errors
-- **Screen-specific Events:** Check for display-related events and user interaction data
-
-**Common screen app event and signal issues and solutions:**
-
-<table>
-  <thead>
-    <tr>
-      <th>Issue</th>
-      <th>Symptoms</th>
-      <th>Solution</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <strong>Events Not Received</strong>
-      </td>
-      <td>No event logs, missing data</td>
-      <td>Check network connectivity and Phyhub connection</td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Event Processing Failures</strong>
-      </td>
-      <td>Error messages in logs</td>
-      <td>Verify event handler implementation and data validation</td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Property Reporting Issues</strong>
-      </td>
-      <td>Properties not updating in console</td>
-      <td>Check property reporting frequency and data format</td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Display Event Problems</strong>
-      </td>
-      <td>Missing display-related events</td>
-      <td>Verify display event monitoring and reporting</td>
-    </tr>
-  </tbody>
-</table>
 
 ### **🔧 Remote Debug via Chrome DevTools**
 
@@ -1074,54 +861,12 @@ Port forwarding established successfully
 Once DevTools is connected, you can:
 
 - **Inspect DOM elements** to verify UI structure and styling
-- **Monitor console logs** to track application flow and identify errors
+- **Monitor console output** to track application flow and identify errors
 - **Analyze network requests** to debug API calls and data loading issues
 - **Set breakpoints** in JavaScript code for step-by-step debugging
 - **Monitor performance** using the Performance tab for optimization
 
 **Important Note:** All interactions in DevTools will reflect on both the device and your laptop simultaneously, allowing you to see real-time changes and debug issues as they occur.
-
-**Common remote debugging scenarios and solutions:**
-
-<table>
-  <thead>
-    <tr>
-      <th>Scenario</th>
-      <th>Symptoms</th>
-      <th>Solution</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <strong>Port Forwarding Fails</strong>
-      </td>
-      <td>Connection refused errors</td>
-      <td>Check device connectivity and firewall settings</td>
-    </tr>
-    <tr>
-      <td>
-        <strong>DevTools Not Loading</strong>
-      </td>
-      <td>Blank or error pages</td>
-      <td>Verify port forwarding and Chrome configuration</td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Console Not Updating</strong>
-      </td>
-      <td>Missing or stale logs</td>
-      <td>Refresh the DevTools connection or restart forwarding</td>
-    </tr>
-    <tr>
-      <td>
-        <strong>Network Tab Empty</strong>
-      </td>
-      <td>No request data visible</td>
-      <td>Check if app is making HTTP requests and refresh</td>
-    </tr>
-  </tbody>
-</table>
 
 ### **🖥️ VNC Remote Access**
 
@@ -1234,7 +979,7 @@ tmpfs           6.3G     0  6.3G   0% /sys/fs/cgroup
 - Event counts in analytics don't match expected user activity levels
 - Signal payloads appear malformed or contain incorrect data values
 
-The Phygrid platform utilizes three types of signals: **Client**, **Session**, and **Event** signals. These signals are essential for analytics, monitoring, and tracking user interactions with your applications. If your app is configured to send signals, there may be scenarios where the generated signals are not appearing in the analytics console.
+The Phygrid platform utilizes three types of signals: **Client**, **Session**, and **Event** signals. These signals are essential for analytics, monitoring, and tracking user interactions with your applications.
 
 To ensure signals are being generated correctly, you can use the following commands to inspect whether signals are being generated and examine their payload contents.
 
