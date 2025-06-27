@@ -1,0 +1,83 @@
+---
+title: "Advanced PhyOS Features"
+icon: "Cpu"
+---
+
+This guide explores some of advanced PhyOS features that address real-world challenges developers face when building edge-based solutions and digital experiences.
+
+## 🛜 Advanced Network Configuration
+
+
+## 🧑‍💻 Enabling Developer Mode
+
+Developer Mode allows you to directly deploy and test your Edge Apps and Screen Apps on the device without building and publishing them to the Console first. This feature significantly accelerates the development workflow by enabling rapid iteration and real-time debugging capabilities.
+
+**Benefits of Developer Mode:**
+
+- Deploy code changes directly to your device
+- Iterate faster with immediate code deployment and testing
+- Test instantly without waiting for build processes
+
+> **⚠️ Important:** Developer Mode should never be enabled on production devices. To disable Developer Mode, you must re-provision your device before deploying it to a production environment.
+
+To enable Developer Mode on your device:
+
+```shell
+phy dev shell <device-name>
+```
+
+Once connected to the device:
+
+1. Press `Enter` to bring up the interactive menu
+2. Select `Advanced` and press `Enter`
+3. Select `Enable Developer Mode` and press `Enter`
+4. Choose from the following authentication methods:
+
+   **Option 1: Set Custom Password**
+
+   - Select `Set Password` and press `Enter`
+   - Enter a custom password when prompted
+   - Confirm the password to complete setup
+
+   **Option 2: SSH Public Key Authentication (Recommended)**
+
+   - Select `Provide SSH public key` and press `Enter`
+   - Paste your public SSH key when prompted
+   - This method provides enhanced security and convenience
+
+   **Option 3: Default Password**
+
+   - Select `Use default password (123)` and press `Enter`
+   - Uses the default password "123"
+
+**Note:** If you don't have an SSH public key, you can generate one using the following commands:
+
+**macOS:**
+
+```bash
+# Generate SSH key pair
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+
+# Display the public key to copy
+cat ~/.ssh/id_rsa.pub
+```
+
+**Windows (PowerShell):**
+
+```powershell
+# Generate SSH key pair
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+
+# Display the public key to copy
+Get-Content ~/.ssh/id_rsa.pub
+```
+
+**Linux:**
+
+```bash
+# Generate SSH key pair
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+
+# Display the public key to copy
+cat ~/.ssh/id_rsa.pub
+```

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect, useCallback, useMemo } from "react"
 import { graphql, useStaticQuery, Link } from "gatsby"
 import { Menu } from "antd"
 import { useLocation } from "@reach/router"
@@ -18,6 +18,97 @@ const getSavedOpenKeys = () => {
     }
   }
   return []
+}
+
+// Helper function to build nested structure from MDX nodes
+const buildNestedStructure = nodes => {
+  const root = {
+    topLevel: [], // To store top-level files
+    folders: {}, // To store nested folder structure
+  }
+
+  // Helper function to create nested folder structure
+  const createNestedPath = (pathParts, node) => {
+    const { slug, order, skipNavigation } = node.fields
+    const { title = "Untitled", icon } = node.frontmatter
+
+    // Skip navigation items marked as `skipNavigation`
+    if (skipNavigation) return
+
+    // If it's a top-level file
+    if (pathParts.length === 1) {
+      root.topLevel.push({ slug, title, icon, order, type: "file" })
+      return
+    }
+
+    // Navigate through the folder structure and create nested folders
+    let currentLevel = root.folders
+
+    // Process all path parts except the last one (which is the file)
+    for (let i = 0; i < pathParts.length - 1; i++) {
+      const pathPart = pathParts[i]
+
+      const folderOrderMatch = pathPart.match(/^(\d+)-/)
+      const folderOrder = folderOrderMatch
+        ? parseInt(folderOrderMatch[1], 10)
+        : 0
+      const folderTitle = pathPart.replace(/^\d+-/, "").replace(/-/g, " ")
+
+      // Use just the current path part as the key at this level
+      const folderKey = pathPart
+
+      // Create folder if it doesn't exist at current level
+      if (!currentLevel[folderKey]) {
+        currentLevel[folderKey] = {
+          title: folderTitle,
+          order: folderOrder,
+          children: [],
+          subfolders: {},
+          type: "folder",
+        }
+      }
+
+      // For the last folder in the path, add the file
+      if (i === pathParts.length - 2) {
+        currentLevel[folderKey].children.push({
+          slug,
+          title,
+          icon,
+          order,
+          type: "file",
+        })
+      }
+
+      // Move to the subfolders of this folder for next iteration
+      currentLevel = currentLevel[folderKey].subfolders
+    }
+  }
+
+  // Process all nodes
+  nodes.forEach(node => {
+    createNestedPath(node.fields.pathParts, node)
+  })
+
+  // Sort everything recursively
+  const sortRecursively = structure => {
+    // Sort top-level files
+    if (structure.topLevel) {
+      structure.topLevel.sort((a, b) => a.order - b.order)
+    }
+
+    // Sort folders and their contents
+    if (structure.folders) {
+      Object.values(structure.folders).forEach(folder => {
+        folder.children.sort((a, b) => a.order - b.order)
+        if (Object.keys(folder.subfolders).length > 0) {
+          sortRecursively({ folders: folder.subfolders })
+        }
+      })
+    }
+  }
+
+  sortRecursively(root)
+  return root
 }
 
 const Sidebar = ({ onNavigate }) => {
@@ -44,97 +135,9 @@ const Sidebar = ({ onNavigate }) => {
     }
   `)
 
-  const buildNestedStructure = nodes => {
-    const root = {
-      topLevel: [], // To store top-level files
-      folders: {}, // To store nested folder structure
-    }
 
-    // Helper function to create nested folder structure
-    const createNestedPath = (pathParts, node) => {
-      const { slug, order, skipNavigation } = node.fields
-      const { title = "Untitled", icon } = node.frontmatter
 
-      // Skip navigation items marked as `skipNavigation`
-      if (skipNavigation) return
-
-      // If it's a top-level file
-      if (pathParts.length === 1) {
-        root.topLevel.push({ slug, title, icon, order, type: "file" })
-        return
-      }
-
-      // Navigate through the folder structure and create nested folders
-      let currentLevel = root.folders
-
-      // Process all path parts except the last one (which is the file)
-      for (let i = 0; i < pathParts.length - 1; i++) {
-        const pathPart = pathParts[i]
-
-        const folderOrderMatch = pathPart.match(/^(\d+)-/)
-        const folderOrder = folderOrderMatch
-          ? parseInt(folderOrderMatch[1], 10)
-          : 0
-        const folderTitle = pathPart.replace(/^\d+-/, "").replace(/-/g, " ")
-
-        // Use just the current path part as the key at this level
-        const folderKey = pathPart
-
-        // Create folder if it doesn't exist at current level
-        if (!currentLevel[folderKey]) {
-          currentLevel[folderKey] = {
-            title: folderTitle,
-            order: folderOrder,
-            children: [],
-            subfolders: {},
-            type: "folder",
-          }
-        }
-
-        // For the last folder in the path, add the file
-        if (i === pathParts.length - 2) {
-          currentLevel[folderKey].children.push({
-            slug,
-            title,
-            icon,
-            order,
-            type: "file",
-          })
-        }
-
-        // Move to the subfolders of this folder for next iteration
-        currentLevel = currentLevel[folderKey].subfolders
-      }
-    }
-
-    // Process all nodes
-    nodes.forEach(node => {
-      createNestedPath(node.fields.pathParts, node)
-    })
-
-    // Sort everything recursively
-    const sortRecursively = structure => {
-      // Sort top-level files
-      if (structure.topLevel) {
-        structure.topLevel.sort((a, b) => a.order - b.order)
-      }
-
-      // Sort folders and their contents
-      if (structure.folders) {
-        Object.values(structure.folders).forEach(folder => {
-          folder.children.sort((a, b) => a.order - b.order)
-          if (Object.keys(folder.subfolders).length > 0) {
-            sortRecursively({ folders: folder.subfolders })
-          }
-        })
-      }
-    }
-
-    sortRecursively(root)
-    return root
-  }
-
-  const nestedSections = buildNestedStructure(data.allMdx.nodes)
+  const nestedSections = useMemo(() => buildNestedStructure(data.allMdx.nodes), [data.allMdx.nodes])
 
   // Helper function to get all pages from nested structure
   const getAllPages = useCallback((structure = nestedSections) => {
@@ -212,21 +215,11 @@ const Sidebar = ({ onNavigate }) => {
       ""
     )
 
-    // Debug logging
-    console.log("Original pathname:", location.pathname)
-    console.log("Normalized pathname:", normalizedPathname)
-    console.log(
-      "All pages:",
-      allPages.map(p => ({ title: p.title, slug: p.slug }))
-    )
-
     const currentPage = allPages.find(page => {
       // Normalize the slug for comparison (remove trailing slash if present)
       const normalizedSlug = page.slug.replace(/\/$/, "")
       return normalizedPathname === normalizedSlug
     })
-
-    console.log("Found current page:", currentPage)
 
     return currentPage ? [currentPage.slug] : []
   }
