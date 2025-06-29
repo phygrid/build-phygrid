@@ -1,60 +1,61 @@
 ---
-title: "Settings Schema in the Screen/Edge Apps"
+title: "Settings Schemas"
 icon: "⚙️"
 ---
 
 ## ⚙️ What Are Settings Schemas?
 
-A **Settings Schema** is a structured definition of configuration data,
+A **settings schema** is a structured definition of configuration data,
 represented using **JSON Schema**. It describes the shape of the settings data
 used within an application—defining fields,
 their types, constraints (like required fields or value ranges),
 and how the data should be structured.
 
-This schema acts as a contract between the data and the user interface,
-especially when building dynamic forms. In our case,
-the schema can be consumed by our console
-to automatically generate UI forms
-that match the defined settings structure.
+**Settings** can be consumed by all types of Phygrid applications during runtime, for example to perform relevant business logic or establish connectivity to other solution components. 
 
-## 🎯 Purpose of the Settings Schema
+Settings values are configured through the Phygrid Console installation page. PhyCLI includes starter settings schemas in all new app projects.
 
-The Settings Schema serves multiple purposes in the app:
+After completing this guide, you should understand:
 
-- **UI Form Generation:** It enables dynamic generation
-  of forms,
-  reducing the need for manual UI coding.
+- How to define basic data types (string, boolean, number, etc.)
+- The relationship between TypeScript interfaces and generated JSON Schema
+- How to work with specialized UI components (media picker, color picker, etc.)
+- Good practices for creating maintainable and extensible settings schemas
+
+## 🎯 Settings Schema Purpose
+
+The Settings Schema serves multiple purposes:
+
+- **Settings Form:** The Phygrid Console uses this schema to generate UI forms that match your defined settings structure, enabling effortless configuration management across all your applications.
 - **Validation:** Ensures that the configuration entered by users is valid and complete.
-- **Consistency:** Maintains consistency across different
-  parts of the application that rely on settings.
-- **Extensibility:** Makes it easier to extend or modify settings without rewriting
-  large parts of the UI or validation logic.
+- **Consistency:** Maintains consistency across different parts of the application that rely on settings.
 
 By using a schema-driven approach, the app becomes more scalable,
-predictable, and developer-friendly.
+predictable, and user-friendly.
 
-## 🔧 Why Use TypeScript to Define the Schema?
+## 🔧 Using TypeScript
 
-Rather than writing JSON Schema manually, we define the schema using
+Rather than crafting complex JSON Schema manually, we encourage developers to define their schema using
 **TypeScript interfaces and types**.
 This approach provides several key benefits:
 
-- **Type Safety:** Developers get immediate feedback when types are inconsistent or misused.
+- **Type Safety:** Developers get immediate feedback when types are inconsistent or misused during development.
 - **Editor Support:** IDEs offer autocomplete, inline documentation,
   and validation based on TypeScript definitions.
 - **Single Source of Truth:** Using TypeScript ensures the same definitions are used
-  throughout the codebase—both in the logic and in schema generation.
+  throughout the codebase—both in the logic and in generated schema.
 - **Maintainability:** Changes to the structure are easier to track
   and update using standard TypeScript tooling.
 
-The TypeScript types are then automatically transformed into JSON Schema, ensuring alignment
-between the developer-defined types and the generated schema.
+TypeScript schema files are included in boilerplate projects created with PhyCLI for both screen and edge apps.
+
+During the build process, these TypeScript schema files are automatically transformed into JSON Schema and uploaded with your app to your tenant.
 
 ## 🔄 How It Works
 
-This example demonstrates how to define a simple name setting using TypeScript.
-This improves maintainability
-by ensuring changes to the schema are reflected automatically in the generated JSON Schema.
+The example below shows a `schema.ts` file with a simple background color setting.
+
+You can find a similar `schema.ts` file in your screen or edge app projects created with PhyCLI.
 
 **`schema.ts`**
 
@@ -72,16 +73,15 @@ export default interface Settings {
 
 ### 🔄 Schema Conversion
 
-When building the application, the TypeScript interface `schema.ts`
-is automatically converted into two schemas:
+During the app build process, the TypeScript interface `schema.ts`
+is automatically converted into two files by PhyCLI:
 
-- `schema.json`: a standard JSON Schema used for validation and data structure.
-- `meta-schema.json`: a Meta-JSON Schema that provides UI configuration, such as
-  widget selection and display behaviors (e.g., mediaPicker, multiLanguageText).
+- `schema.json`: a standard JSON Schema defining the shape of your app's settings
+- `meta-schema.json`: additional metadata that enables advanced UI widgets and form behaviors
 
-This build-time conversion ensures that UI rendering, custom widgets,
-and data validation are all based on a single,
-developer-defined source of truth.
+The Phygrid Console uses both files to render dynamic configuration forms with custom components and widgets.
+
+The example interface above generates the following output:
 
 **`schema.json`**
 
@@ -110,13 +110,15 @@ developer-defined source of truth.
 }
 ```
 
-### ✨ Key Benefits
+- `@title` and `@description` annotations provide label values for the Console form
+- `@default` annotation sets the initial value for the field in the generated schema
+- `@widget` annotation appears in the meta-schema and instructs the Console to render a color picker instead of a regular text input 
 
-- 🔄 **Single Source of Truth:** The TypeScript interface serves
-  both the developer and the platform that renders the UI.
-- ✅ **Built-in Validation:** UI components and backend validation share the same rules,
-  reducing bugs and mismatches.
-- 🛠️ **Tooling Friendly:** Changes in the schema are instantly reflected in the generated forms.
+### 💻 Settings Usage
+
+You configure settings on your app's installation page in the Phygrid Console. When you modify and save installation settings, the platform creates a new build with those settings and deploys it to connected devices. 
+
+In Phygrid apps, you access settings using the `@phygrid/hub-client` package. When an installation is deployed to a device, settings values are delivered to devices through twins, which the Hub Client then makes available to your app code.
 
 ## 🛠️ How to Define a Settings Schema
 
@@ -126,16 +128,13 @@ When you create a new app using the CLI, you'll find a `schema.ts` file in the
 
 ### 📱 Screen App Example
 
-**1️⃣ Create a New Screen App**
+**1️⃣ (Optional) Create a New Screen App**
 
-- Run the command: `phy app create`
-- Enter the desired app name.
-- When prompted, select:
-  ❯ Screen Application (React)
+If you don't have a screen app project yet, you can create one by following the [Build your first screen app](/tutorials/build-your-first-screen-app/) tutorial.
 
 **2️⃣ Update the Settings Schema**
 
-Edit the `schema.ts` file to define your app's configuration:
+Edit the `schema.ts` file to update your app's configuration schema:
 
 ```ts
 export default interface Settings {
@@ -152,7 +151,10 @@ export default interface Settings {
 
 **3️⃣ Access Settings in Your App**
 
-This example works on both PhyOS devices and locally:
+> **Note:** Components and scripts presented below is part of standard screen app boilerplate.
+This example demonstrates how the settings can be accessed in both local development and on-device environments.
+
+Update your `app.tsx` to use the newly defined setting:
 
 **`app.tsx`**
 
@@ -166,13 +168,11 @@ import Settings from "./schema"
 interface AppState {
   client: PhyHubClient | null
   settings: Settings | null
-  signals: PhyHubClient["signals"] | null
 }
 
 const initialState: AppState = {
   client: null,
   settings: null,
-  signals: null,
 }
 
 function App() {
@@ -188,10 +188,9 @@ function App() {
   const initializeClient = useCallback(async () => {
     try {
       const client = await connectPhyClient()
-      const signals = await client.initializeSignals()
       const settings = (await client.getSettings()) as Settings
 
-      setState({ client, settings, signals })
+      setState({ client, settings })
     } catch (err) {
       console.error("Error initializing client:", err)
     }
@@ -215,23 +214,25 @@ function App() {
 }
 
 const Container = styled.div`
-  text-align: center;
-  background-color: #000000;
-  height: 100%;
-  position: absolute;
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  color: white;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 1.5vmin);
+
+...
+
 `
 
 export default App
 ```
 
-**4️⃣ Local Development**
+The code above shows how settings are retrieved using `client.getSettings()` on the device, with conditional logic to access settings from the local `index.json` file during development.
+
+Notice that when accessing settings:
+
+```ts
+const welcomeMessage = state.settings?.welcomeMessage
+```
+
+Your settings object is fully typed, providing IDE autocomplete and type safety for better code maintainability.
+
+**4️⃣ Local Development Settings**
 
 **Step 1:** Update app settings in `src/settings/index.json`:
 
@@ -240,108 +241,60 @@ export default App
   "app": {
     "gridApp": {
       "settings": {
-        "welcomeMessage": "Hello World!"
+        "welcomeMessage": "Local Hello World!"
       }
     }
   }
 }
 ```
 
-**Step 2:** Start the development server:
+**Step 2:** Start the development server to run your app locally:
 
 ```bash
 yarn run start
 ```
 
-Now you can develop and see live updates locally.
+// TODO KP 2025-06-27: verify if this actually will work this way
 
-**5️⃣ Deploy to PhyOS Devices**
+You should see the value from the local settings `index.json` file you edited on your screen.
+
+If your local `src/settings/index.json` doesn't match the defined TypeScript interface, the TypeScript compiler will raise errors during development.
+
+**5️⃣ Publish an Updated Version**
+
+Once your settings schema is updated, it's time to publish a new app version.
 
 1. **Create a new version of the app** by updating the version in `package.json` file
-2. Push the new version of the app to your tenant by running the following command
-   `yarn run build && yarn run pub`
-3. Finally you can connect and deploy to your device. `<Link to how to connect a device to your installation>`
+2. Build and push the updated version of the app to your tenant
+
+> **Note:** If you need more information about the steps above, refer to the [Build your first screen app](/tutorials/build-your-first-screen-app/#-publish-an-updated-version) tutorial.
+
+Navigate to your app's installation settings page in the Phygrid Console (or [create one](/tutorials/build-your-first-screen-app/#-create-an-installation) if you don't have one yet).
+
+Make sure to select the latest app version in the installation settings to see your defined settings schema rendered as a form:
 
 ![Screen App](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/cd694d12-7868-419f-8064-09f46f2dda2c)
 
-### 🌐 Edge App Example
+In this example, you can see how your `schema.ts` definition translates to the installation settings form:
 
-**1️⃣ Create a New Edge App**
+- The `@title` annotation appears as the field label
+- The field shows an asterisk (*) because it's required in your schema
+- The `@description` annotation displays as help text below the label
+- The `@default` value is pre-filled in the input field
+- The form validates against your `@minLength` and `@maxLength` constraints, preventing invalid configurations from being saved
 
-- Run the command: `phy app create`
-- Enter the desired app name.
-- When prompted, select:
-  ❯ Edge Application (Node.js)
+### ⚙️ Settings Overrides
 
-**2️⃣ Update the Settings Schema**
+Settings can be overridden at different levels to provide flexibility in configuration management:
 
-**`schema.tsx`**
+- **Device Level:** Settings can be overridden for specific devices, allowing device-specific configurations
+- **Space Level:** Settings can be overridden for specific spaces, enabling space-specific customizations
 
-```ts
-export default interface Settings {
-  /**
-   * @title Username
-   * @description A display name for the user. Must be between 3 and 50 characters long.
-   * @minLength 3
-   * @maxLength 50
-   */
-  username: string
-}
-```
+When your app is deployed to a Phygrid device, the platform automatically merges global, device, and space-level settings overrides to provide the correct configuration for that specific deployment.
 
-**3️⃣ Access Settings in Your App**
+> **Note:** For more information about settings overrides, see the [learn.phygrid.com](https://learn.phygrid.com) documentation.
 
-**`app.tsx`**
-
-```tsx
-import { PhyHubClient, connectPhyClient } from "@phygrid/hub-client"
-import Settings from "./schema"
-
-const client: PhyHubClient = await connectPhyClient()
-const instance = await client.getInstance()
-const settings = (await client.getSettings()) as Settings
-
-let counter = 0
-setInterval(() => {
-  counter += +1
-  console.log("Hello, world!", counter)
-  console.log("Username:", settings.username)
-}, 3000)
-```
-
-**4️⃣ Deploy to PhyOS Devices**
-
-**Step 1:** Update the version in `package.json` file
-
-**Step 2:** Build and publish the app:
-
-```bash
-yarn run build && yarn run pub
-```
-
-**Step 3:** Connect and deploy to your device. See the guide on
-[Connecting a device to your installation](/tutorials/build-your-first-edge-app/#-create-an-installation)
-
-### ✅ Validation
-
-The schema automatically provides validation:
-
-- **String fields** with `@minLength` and `@maxLength` ensure proper text length
-- **Number fields** with `@minimum` and `@maximum` enforce value ranges
-- **Enum fields** restrict values to predefined options
-- **Required fields** ensure essential settings are provided
-
-### 🖥️ Console Rendering
-
-Once you publish your app, the settings schema automatically generates a form
-in the Phygrid Console. Users can:
-
-- Configure settings through an intuitive interface.
-- See validation errors in real-time.
-- Preview how changes will affect the app.
-- Save configurations for different environments.
-
-## 📝 Examples for the Settings Schema
+## 📝 Supported Types
 
 ### 🔤 String Type
 
@@ -482,7 +435,7 @@ export default interface Settings {
 ```
 
 - The `notificationsEnabled` field accepts a boolean value (true or false).
-- This setting is typically rendered as a toggle switch or checkbox in the UI.
+- This setting is typically rendered as a checkbox in the UI.
 
 ![Boolean](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/dcd0c18d-e2ae-4503-9029-2f573d90e867)
 
@@ -778,12 +731,12 @@ export default interface Settings {
 }
 ```
 
-- The `tags` field accepts an array of strings (could be other types).
+- The `tags` field accepts an array of strings.
 - Useful for multi-select or lists of values.
 
 ![Array](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/f91e8ee5-cfe9-493a-8ba5-8909a4dcbfe1)
 
-### 🏗️ Object Type (Nested Settings)
+### 🏗️ Object Type
 
 This example shows how to define nested settings using object type.
 
@@ -842,9 +795,11 @@ export default interface Settings {
 
 ![Object / Nested Settings](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/07923e4a-5f99-4947-9f2d-b34da0dfe484)
 
-### 📷 Media Type
+## 🚀 Advanced Widgets
 
-This example shows how to define a media picker for file upload.
+### 📷 Media Picker
+
+This example shows how to define a media picker that allows users to select existing files from the tenant's media library or upload new media files.
 
 **`schema.ts`**
 
@@ -907,16 +862,12 @@ export default interface Settings {
 }
 ```
 
-- The `profilePicture` allows selecting/uploading media files.
-- UI can restrict file types.
+- The `profilePicture` field enables users to select media files from the tenant's media library or upload new ones.
+- The `@ui mediaPicker` annotation renders an interactive media selection component in the installation settings interface.
 
 ![Media](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/ce7ffb98-df35-47e7-b172-5e96c8e941b3)
 
-### 🔤 Fonts
-
-This example demonstrates how the Settings Schema
-allows users to upload custom font files (e.g., TTF, WOFF, OTF),
-which can then be used consistently across the app for typography and branding.
+#### Fonts Picker
 
 **`schema.ts`**
 
@@ -1128,9 +1079,9 @@ export default Settings
 
 ![Fonts](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/f3064a49-ed9f-446a-b22a-74ccc9d50577)
 
-### 🎨 Theme
+### 🎨 Color Picker
 
-This example demonstrates how the Settings Schema enables users to configure color themes,
+This example demonstrates how the settings schema enables users to configure color themes,
 allowing consistent branding throughout the application.
 
 **`schema.ts`**
@@ -1245,209 +1196,114 @@ export default Settings
 
 - The `ThemeBaseColors` interface defines several color fields
   using the `@widget color` annotation,
-  which typically renders a color picker in the UI.
+  which renders a color picker in the UI.
 - These fields allow users to select branding colors such as primary, secondary and error states.
 - Once configured, these colors can be referenced and applied
   throughout the application for consistent styling and branding.
 
 ![Theme](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/8abdab5a-283b-475c-98ed-e465453aa627)
 
-For detailed information about settings overrides and their implementation, visit [learn.phygrid.com](http://learn.phygrid.com).
 
-### 💳 Payment Picker
+### 🛍️ Product Picker
 
-The Payment Picker allows users to configure payment methods for
-their applications, supporting both online and card-present payment modes. This is essential
-for retail, e-commerce, and point-of-sale applications that need to process transactions.
+> **Note:** The product picker requires Products to be configured for your tenant. For more information, see [Products Integration](/how-to/products-integration/).
 
-**Supported Payment Modes:**
+The product picker allows users to refer products from their tenant's catalog for use within their applications.
 
-- **Online Payments:** For e-commerce and remote transactions
-- **Card Present:** For in-store terminals and physical card readers
+This enables retail applications, product displays, and e-commerce integrations to work with specific products and their associated data.
 
 **`schema.ts`**
 
 ```ts
-type OnlinePaymentData = {
-  collectShippingAddress: boolean
-}
-
-type CardPresentPaymentData = {
-  terminalId: string
-}
-
-interface PaymentMethod {
-  id: string
-  title: string
-  mode: "online" | "cardPresent"
-  type: "adyenCloudCardTerminal" | "stripeOnlineCheckout"
-  data: OnlinePaymentData | CardPresentPaymentData
+interface Product {
+  ref: "grid-product"
+  productGroupId: string
+  productId: string
+  defaultImage: string
+  productSourceUrl: string
+  env: string
 }
 
 export default interface Settings {
   /**
-   * @title Payment Method
-   * @description Choose one or more supported payment modes.
-   * @ui paymentMethodPicker
-   * @uiOptions {
-   *   "mode": ["online", "cardPresent"]
-   * }
+   * @title Product
+   * @description Select a product from your Grid catalog.
+   * @ui productPicker
    */
-  paymentMethod: PaymentMethod
+  product: Product
 }
 ```
 
-**`schema.json`**
+**Generated `schema.json`**
 
 ```json
 {
   "schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "paymentMethod": {
+    "product": {
       "type": "object",
       "properties": {
-        "id": {
+        "ref": {
+          "type": "string",
+          "const": "grid-product"
+        },
+        "productGroupId": {
           "type": "string"
         },
-        "title": {
+        "productId": {
           "type": "string"
         },
-        "mode": {
+        "defaultImage": {
           "type": "string"
         },
-        "type": {
+        "productSourceUrl": {
           "type": "string"
         },
-        "data": {
-          "type": "object"
+        "env": {
+          "type": "string"
         }
       },
-      "required": ["id", "title", "mode", "type", "data"],
-      "title": "Payment Method",
-      "description": "Choose one or more supported payment modes."
+      "required": ["ref", "productGroupId", "productId", "defaultImage", "productSourceUrl", "env"],
+      "title": "Product",
+      "description": "Select a product from your Grid catalog."
     }
   },
-  "required": ["paymentMethod"]
+  "required": ["product"]
 }
 ```
 
-**`meta-schema.json`**
+**Generated `meta-schema.json`**
 
 ```json
 {
-  "paymentMethod": {
-    "ui:field": "paymentMethodPicker",
-    "ui:options": {
-      "mode": ["online", "cardPresent"]
-    }
+  "product": {
+    "ui:field": "productPicker"
   }
 }
 ```
 
-- The `paymentMethodPicker` UI component presents available payment methods for selection
-- Users can choose between online and card-present payment modes
-- The `@uiOptions` directive filters available payment types based on the selected mode
-- Once configured, the app can use the selected payment method to process transactions
+- The `productPicker` UI component displays all available products from your tenant's catalog
+- The selected product reference can be used within your app alongside the Products SDK to fetch detailed product information
 
-**Common Use Cases:**
+**Example Use Cases:**
 
-- **Retail Kiosks:** Configure card terminals for in-store payments
-- **E-commerce Apps:** Set up online payment gateways like Stripe
-- **Hybrid Solutions:** Support both online and in-person payment methods
+- **Product Displays:** Selecting a product to show on digital signage or kiosks
+- **Product Recommendations:** Displaying related products based on selection
 
-![Payment Method](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/647e296d-8180-4790-94e9-327186cf2c01)
+![Product Picker](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/1feaaa00-e252-4f10-8024-8f1e24f2ec7f)
+![Product Picker](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/db861648-c179-45b9-8fe6-3a8fe15cc883)
 
-### 🏢 Space Picker
 
-The Space Picker allows users to select a specific space from their organization,
-enabling space-specific configurations and data fetching. This is essential for
-multi-location businesses, retail chains, and organizations that need to customize app
-behavior based on different physical locations.
+### 🔧 Twin/Peripheral Picker
 
-**Common Use Cases:**
+The twin picker allows users to select any twin within their tenant, enabling powerful integration scenarios between different components in your Phygrid environment.
 
-- **Multi-location Retail:** Different product catalogs or pricing per store
+A common use case is selecting peripheral twins such as barcode scanners, printers, or other hardware devices connected to your system.
 
-**`schema.ts`**
+The twin picker supports filtering options to display only relevant twins based on their type and descriptors.
 
-```ts
-interface SpacePicker {
-  id: string
-  externalId?: string
-  valid?: boolean
-}
-
-export default interface Settings {
-  /**
-   * @title Space Picker
-   * @description Select a specific space for location-based configuration.
-   * @ui spacePicker
-   */
-  spacePicker: SpacePicker
-}
-```
-
-**`schema.json`**
-
-```json
-{
-  "schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object",
-  "properties": {
-    "spacePicker": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "externalId": {
-          "type": "string"
-        },
-        "valid": {
-          "type": "boolean"
-        }
-      },
-      "required": ["id"],
-      "title": "Space Picker",
-      "description": "Select a specific space for location-based configuration."
-    }
-  },
-  "required": ["spacePicker"]
-}
-```
-
-**`meta-schema.json`**
-
-```json
-{
-  "spacePicker": {
-    "ui:field": "spacePicker"
-  }
-}
-```
-
-- The `spacePicker` UI component presents available spaces from the user's organization
-- Users can select a specific space to enable location-based customization
-- The selected space ID can be used to fetch space-specific data.
-- This enables apps to behave differently based on the physical location where they're deployed
-
-**Common Use Cases:**
-
-- **Endless Aisle:** Different online stock data per store location
-
-![Space Picker](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/8a52fcb5-4ab5-4e02-b438-318a5dbe2e80)
-
-### 🔧 Peripheral Picker
-
-The Peripheral Picker allows users to select hardware peripherals connected to their device, enabling the screen app to
-communicate with external hardware seamlessly.
-This is essential for retail, kiosk, and point-of-sale applications that require hardware integration.
-
-**Supported Peripheral Types:**
-
-- **Printers:** Receipt printers, label printers
-- **Scanners:** Barcode scanners, QR code readers
+> **Learn More:** For detailed information about twins, peripherals and descriptors, see [Peripherals & Descriptors](/how-to/peripherals-and-descriptors/).
 
 **`schema.ts`**
 
@@ -1544,29 +1400,203 @@ export default interface Settings {
 }
 ```
 
-- The `peripheralPicker` UI component allows users to select from available hardware peripherals
-- `peripheralTypes` and `descriptors` filter the selection to specific device categories
-- Once configured, the app can establish connections and communicate with selected peripherals
-- Peripheral capabilities are exposed to enable appropriate functionality (scanning, printing, etc.)
+- The `peripheralPicker` UI component allows users to select from available twins in their tenant
+- `twinTypes` and `twinDescriptors` filter the selection to specific twin categories
+- Once configured, the app can establish connections and communicate with selected twins using Hub Client
 
-**Common Use Cases:**
+**Example Use Cases:**
 
-- **Retail Kiosks:** Barcode scanning for product lookup and receipt printing
+- **Retail Kiosks:** Connect barcode scanners and receipt printers
 
 ![peripheral picker](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/86603833-27ad-4c2b-9c1c-29925c9d4c5e)
 
+### 💳 Payment Picker
+
+> **Note:** The payment picker requires Checkout to be configured for your tenant. For more information, see [Checkout Integration](/how-to/checkout-integration/).
+
+The payment picker allows users to configure payment methods for
+their applications, supporting both online and card-present payment modes. This is useful
+for retail, e-commerce, and point-of-sale applications that need to process transactions.
+
+The payment picker displays available payment options based on the methods and modes configured for your tenant.
+
+**Supported Payment Modes:**
+
+- **Online Payments:** For e-commerce and remote transactions
+- **Card Present:** For in-store terminals and physical card readers
+
+**`schema.ts`**
+
+```ts
+type OnlinePaymentData = {
+  collectShippingAddress: boolean
+}
+
+type CardPresentPaymentData = {
+  terminalId: string
+}
+
+interface PaymentMethod {
+  id: string
+  title: string
+  mode: "online" | "cardPresent"
+  type: "adyenCloudCardTerminal" | "stripeOnlineCheckout"
+  data: OnlinePaymentData | CardPresentPaymentData
+}
+
+export default interface Settings {
+  /**
+   * @title Payment Method
+   * @description Choose one or more supported payment modes.
+   * @ui paymentMethodPicker
+   * @uiOptions {
+   *   "mode": ["online", "cardPresent"]
+   * }
+   */
+  paymentMethod: PaymentMethod
+}
+```
+
+**`schema.json`**
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "paymentMethod": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": ["id", "title", "mode", "type", "data"],
+      "title": "Payment Method",
+      "description": "Choose one or more supported payment modes."
+    }
+  },
+  "required": ["paymentMethod"]
+}
+```
+
+**`meta-schema.json`**
+
+```json
+{
+  "paymentMethod": {
+    "ui:field": "paymentMethodPicker",
+    "ui:options": {
+      "mode": ["online", "cardPresent"]
+    }
+  }
+}
+```
+
+- The `paymentMethodPicker` UI component presents available payment methods for selection
+- The `@uiOptions` directive filters available payment types based on payment modes
+- Once configured, the app can use the selected payment method to process transactions
+
+**Example Use Cases:**
+
+- **Retail Kiosks:** Configure card terminals for in-store payments
+- **E-commerce Apps:** Set up online payment gateways like Stripe
+- **Hybrid Solutions:** Support both online and in-person payment methods
+
+![Payment Method](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/647e296d-8180-4790-94e9-327186cf2c01)
+
+
+### 🏢 Space Picker
+
+The space picker allows users to select a specific space from their tenant.
+
+While apps typically operate within the context of their device's space, this picker enables access to other spaces data when needed for cross-location functionality.
+
+**`schema.ts`**
+
+```ts
+interface SpacePicker {
+  id: string
+  externalId?: string
+  valid?: boolean
+}
+
+export default interface Settings {
+  /**
+   * @title Space Picker
+   * @description Select a specific space for location-based configuration.
+   * @ui spacePicker
+   */
+  spacePicker: SpacePicker
+}
+```
+
+**`schema.json`**
+
+```json
+{
+  "schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "spacePicker": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "externalId": {
+          "type": "string"
+        },
+        "valid": {
+          "type": "boolean"
+        }
+      },
+      "required": ["id"],
+      "title": "Space Picker",
+      "description": "Select a specific space for location-based configuration."
+    }
+  },
+  "required": ["spacePicker"]
+}
+```
+
+**`meta-schema.json`**
+
+```json
+{
+  "spacePicker": {
+    "ui:field": "spacePicker"
+  }
+}
+```
+
+- The `spacePicker` UI component presents available spaces from the user's tenant
+
+**Example Use Cases:**
+
+- **Endless Aisle:** Different online stock data per store location
+
+![Space Picker](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/8a52fcb5-4ab5-4e02-b438-318a5dbe2e80)
+
 ### 📋 Queue Picker
 
-The Queue Picker allows users to select a specific queue from their organization,
-enabling queue-specific data management and customization. This is essential for visitor management,
-appointment booking, and operational applications that need to track and manage queues of people or items.
+> **Note:** The queue picker is part of Phygrid's Queue Management solution. For more information about queue system functionality, visit [learn.phygrid.com](https://learn.phygrid.com).
 
-**Common Use Cases:**
+The queue picker allows users to select a specific queue from their tenant, enabling access to queue-specific data and customization options.
 
-- **Appointment Booking:** Manage appointment queues and scheduling
-- **People Counter:** Track visitor counts and capacity management
-- **Queue Kiosks:** Self-service queue management for customer service
-- **Occupancy Signage:** Real-time capacity tracking and display
+This picker is designed for applications that integrate with Phygrid's visitor management ecosystem, including Queue Management and Appointment Booking solutions.
 
 **`schema.ts`**
 
@@ -1640,134 +1670,22 @@ export default interface Settings {
 }
 ```
 
-- The `queuePicker` UI component presents available queues for selection, filtered by the current organization
-- Users can select a specific queue to enable queue-specific data management and tracking
-- The selected queue's `queueEndpoint` can be used to fetch real-time queue data or send updates
-- Queue information includes essential details like ID, organization, endpoint, name, and description
+- The `queuePicker` UI component displays all available queues within the tenant for selection
+- Once selected, the queue's endpoint enables real-time data retrieval and queue status updates
 
-**Common Use Cases:**
+**Example Use Cases:**
 
-- **Appointment Booking:** Selecting a queue to manage appointments and scheduling
 - **People Counter:** Assigning a queue to count people entering/exiting a space
 - **Occupancy Signage:** Linking to a queue that tracks capacity in real time
 - **Queue Kiosk:** Letting users choose a service queue when arriving at a kiosk
 
 ![Queue Picker](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/cae2962a-d705-4417-8397-b806d17c5b30)
 
-### 🛍️ Product Picker
-
-The Product Picker allows users to select products from their Grid catalog,
-enabling product-specific configurations and data management. This is essential for
-retail applications, product displays, and e-commerce integrations that need to
-reference specific products from the Grid platform.
-
-**`schema.ts`**
-
-```ts
-interface Product {
-  ref: "grid-product"
-  productGroupId: string
-  productId: string
-  defaultImage: string
-  productSourceUrl: string
-  env: string
-}
-
-export default interface Settings {
-  /**
-   * @title Product
-   * @description Select a product from your Grid catalog.
-   * @ui productPicker
-   */
-  product: Product
-}
-```
-
-**Generated `schema.json`**
-
-```json
-{
-  "schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object",
-  "properties": {
-    "product": {
-      "type": "object",
-      "properties": {
-        "ref": {
-          "type": "string",
-          "const": "grid-product"
-        },
-        "productGroupId": {
-          "type": "string"
-        },
-        "productId": {
-          "type": "string"
-        },
-        "defaultImage": {
-          "type": "string"
-        },
-        "productSourceUrl": {
-          "type": "string"
-        },
-        "env": {
-          "type": "string"
-        }
-      },
-      "required": ["ref", "productGroupId", "productId", "defaultImage", "productSourceUrl", "env"],
-      "title": "Product",
-      "description": "Select a product from your Grid catalog."
-    }
-  },
-  "required": ["product"]
-}
-```
-
-**Generated `meta-schema.json`**
-
-```json
-{
-  "product": {
-    "ui:field": "productPicker"
-  }
-}
-```
-
-**Key Features:**
-- The `productPicker` UI component presents available products from your Grid catalog
-- Users can select a specific product to enable product-specific functionality
-- The selected product includes essential details like ID, image, and source URL
-- Product information can be used to display product details or fetch real-time data
-
-**Common Use Cases:**
-
-- **Product Displays:** Selecting a product to show on digital signage or kiosks
-- **Product Recommendations:** Displaying related products based on selection
-
-![Product Picker](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/1feaaa00-e252-4f10-8024-8f1e24f2ec7f)
-![Product Picker](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/db861648-c179-45b9-8fe6-3a8fe15cc883)
-
-
-## ⚙️ Settings Overrides
-
-Settings can be overridden at different levels to provide flexibility in configuration management:
-
-- **Device Level:** Settings can be overridden for specific devices, allowing device-specific configurations
-- **Space Level:** Settings can be overridden for specific spaces, enabling space-specific customizations
-
-## ✅ Checkpoint
-
-After completing this guide, you should understand:
-
-- How to define basic data types (string, boolean, number, etc.)
-- How to work with specialized UI components (media picker, color picker, etc.)
-- How to use platform-specific pickers for hardware and services
-- The relationship between TypeScript interfaces and generated JSON Schema
-- Best practices for creating maintainable and extensible settings schemas
-
 ## 🔄 Next Steps
 
-Now that you understand Settings Schemas, you can:
+Now that you understand settings schemas, you can:
 
-- Configure your app using the settings schema
-- Start integrating with peripheral twins
-- Explore advanced schema patterns for complex configurations
+- [Start integrating with peripheral twins](/how-to/peripherals-and-descriptors/)
+- [Use Signals to emit events and monitor edge activity](/how-to/signals/)
+- [Integrate with Products to manage and display catalog data](/how-to/products-integration/)
+

@@ -1,0 +1,1218 @@
+---
+title: "Troubleshoot & Debug"
+icon: "Bug"
+---
+
+This comprehensive troubleshooting guide provides step-by-step procedures for diagnosing and resolving issues with **Edge Apps** and **Screen Apps** deployed on physical devices or virtual machines managed by the Phygrid platform.
+
+**🔍 Diagnostic Capabilities:**
+
+- **Device connectivity troubleshooting** - Verify Phyhub connections, network reachability, and twin synchronization
+- **Container management debugging** - Monitor Docker container lifecycle, image pulling, and startup processes
+- **Application log analysis** - Access real-time logs for both Edge and Screen Apps to identify runtime issues
+- **Event and signal monitoring** - Track app events, property reporting, and signal transmission for analytics
+
+**🛠️ Advanced Debugging Tools:**
+
+- **Remote debugging with Chrome DevTools** - Inspect DOM, console output, and network requests in real-time
+- **VNC remote access** - Visual inspection of screen app rendering and user interface issues
+- **System diagnostics** - Monitor disk space, time synchronization, and overall device health
+
+**📊 Monitoring and Verification:**
+
+- **Twin configuration validation** - Verify Edge and Screen twin settings and deployment configurations
+- **Property reporting analysis** - Monitor app status, screenshots, and operational data
+- **Performance monitoring** - Track resource usage, service health, and system stability
+
+**🚀 Recovery Procedures:**
+
+- **Alternative access methods** - SSH and physical access procedures when standard shell access fails
+- **Service recovery** - Restart and reconfigure services when they become unresponsive
+- **Data extraction** - Backup and export logs for offline analysis
+
+This troubleshooting guide empowers you to efficiently diagnose and resolve issues across the entire application lifecycle, from deployment to runtime monitoring, ensuring optimal performance and reliability of your Phygrid applications.
+
+## Prerequisites
+
+Before beginning the troubleshooting process, ensure you have the following:
+
+### ✅ Local Development Environment with PhyCLI Installed and Configured
+
+If you haven't set up CLI on your machine yet, refer to the [Local Environment Setup](/getting-started/local-environment-setup/) guide.
+
+### ✅ (Optional) Physical Keyboard and Monitor
+
+For devices that cannot be reached via Phyhub, you'll need direct hardware access with a keyboard and monitor to perform troubleshooting operations.
+
+#### Accessing Device Shell
+
+To begin troubleshooting, you can access the device shell using the Phy CLI:
+
+```shell
+phy dev shell <device-name>
+```
+**Important:** Make sure you are logged into the Phy CLI and have selected the correct tenant.
+
+If the device is not reachable using PhyCLI, you can access the device shell by connecting a physical keyboard to the device.
+
+For additional information about troubleshooting when devices become unreachable, refer to the [Device Inaccessible via PhyCLI](#device-inaccessible-via-phycli) section which covers additional access methods and recovery techniques.
+
+Once connected to the device:
+
+1. Press `Enter` to bring up the interactive menu
+2. Select **Shell** from the available options
+
+#### Switching to Root User
+
+For most troubleshooting operations in this guide, you'll need elevated permissions. Switch to the root user:
+
+```shell
+sudo su
+```
+
+This will provide you with the necessary privileges to access logs, modify configurations, and perform diagnostic operations.
+
+> **Note:** Most of commands and scripts in this article are to be executed in the device shell.
+
+## **🔍 Common Troubleshooting Scenarios**
+
+Before diving into specific troubleshooting procedures, here are the most frequently encountered issues and their quick solutions:
+
+### **🛜 Device Not Connecting to Phyhub**
+
+**When to use this guide:**
+
+- Device appears offline in Phygrid Console
+- App deployments not reaching the device
+- Configuration updates not being applied
+- Device not responding to commands
+- Network connectivity issues with Phyhub
+
+When a device cannot establish or maintain a connection with Phyhub, it prevents app deployment, configuration updates, and real-time monitoring. This section provides comprehensive diagnostic procedures to identify and resolve connectivity problems.
+
+#### **Step 1: Verify Device Network Configuration**
+
+Firstly, ensure your device is connected to a working network via WIFI or LAN. You can confirm this by simply running the following command:
+
+```shell
+ifconfig
+```
+
+Ensure the device is connected to the internet:
+
+```shell
+ping phygrid.com
+```
+
+**What to look for:**
+
+- Confirm device received an IP
+- Confirm that device is connected to internet by observing ping response
+
+#### **Step 2: Verify Device Provisioning Details**
+
+Gather essential device information to understand the current configuration:
+
+```shell
+# Region
+cat /data/settings/phyhub/region.json
+
+# Device ID
+cat /data/settings/phyhub/deviceId.json
+
+# Device Serial
+cat /data/settings/phyhub/deviceSerial.json
+
+# OS Version
+cat /data/settings/phyhub/osVersion.json
+
+# Environment
+cat /data/settings/phyhub/gridEnv.json
+```
+
+**What to look for:**
+
+- Ensure region matches your tenant configuration
+- Verify device ID is properly assigned (You can compare the device ID with the ID visible in device settings page in [Console](https://console.phygrid.com/))
+- Check that environment settings are correct. The environment should have **PROD** value
+
+#### **Step 3: Check Phyhub Connection Status**
+
+Monitor the connection attempts and status by examining the device logs for Phyhub connection activity:
+
+```shell
+journalctl -u phydevice -o cat | grep -i "connectPhyHub():"
+```
+
+**Expected output:** Look for successful connection messages or error patterns indicating connection failures.
+When a device successfully establishes connection with Phyhub, you can expect logs similar to the following:
+
+```shell
+2025-06-20T07:45:17.857Z [INFO] [phylogger-device-phyos] connectPhyHub(): Connected to
+Phyhub
+2025-06-20T07:45:17.863Z [INFO] [phylogger-device-phyos] connectPhyHub(): Device
+connected with details: { deviceId: 'xxxx-xxxx-xxxxx-xxxx-' }
+2025-06-20T07:45:17.863Z [INFO] [phylogger-device-phyos] connectPhyHub(): Environment
+already provisioned with device credentials, skipping configuration
+2025-06-20T07:45:17.863Z [INFO] [phylogger-device-phyos] connectPhyHub(): Caching
+twins from server response...
+```
+
+If Phyhub connection is failing, verify network reachability by testing connectivity to the Phyhub device proxy:
+
+```shell
+curl http://portal-<region>.omborigrid.com/
+```
+
+**Note:** Replace `<region>` with your device's region (see step 2 for how to find this information)
+
+**What to look for:**
+
+- **Connection Success:** Ensure the device is able to establish and maintain connection to Phyhub
+- **Portal Accessibility:** Ensure the device is able to successfully cURL `http://portal-<region>.omborigrid.com/`
+- **Network Blocking:** If no response is received from the portal, there's likely a network connectivity issue - ensure your network is not blocking access to `http://portal-<region>.omborigrid.com/`
+- **DNS Resolution:** Verify DNS resolution is working properly to resolve the portal domain name
+
+### **🔀 Verify Twin Synchronization**
+
+**When to use this guide:**
+
+- Device not receiving application configurations
+- Missing or incomplete device twin data
+- Configuration updates failing to process
+- Device twin initialization errors
+- Verifying device has current configuration state
+
+Twin synchronization is a critical process that ensures your device receives the latest configuration updates from Phyhub. This step verifies that the device is properly downloading and processing twin configurations, which contain essential app deployment and configuration information.
+
+Ensure the device is receiving configuration updates from Phyhub by monitoring the twin initialization process:
+
+```shell
+journalctl -u phydevice -o cat | grep  "initInstances"
+```
+
+**Expected output:**
+
+```shell
+2025-06-20T07:45:17.945Z [INFO] [phylogger-device-phyos] initInstances(): Initializing 4
+instance twins
+2025-06-20T07:45:17.945Z [INFO] [phylogger-device-phyos] initInstances(): Found 1 Edge
+twins to initialize: [
+2025-06-20T07:45:17.945Z [INFO] [phylogger-device-phyos] initInstances(): Processing twin
+xxxxxxxxxxxx of type Screen
+2025-06-20T07:45:17.945Z [INFO] [phylogger-device-phyos] initInstances(): Starting Screen
+app for twin xxxxxxxxxxxx
+```
+
+**What to look for:**
+
+- **Successful Twin Reception:** Whether the device is successfully receiving twin configurations from Phyhub
+- **Initialization Errors:** Any errors during the twin initialization process that might prevent apps from starting
+- **Twin Processing:** Confirmation that the device is processing the correct number and types of twins (Edge, Screen, etc.) - there should be a twin per each connected installation
+
+### **🔌 Device Inaccessible via PhyCLI**
+
+In some scenarios, a device may become inaccessible through the standard `phy dev shell <device-name>` command due to network issues or configuration problems. This section provides alternative methods to access the device and extract essential logs for troubleshooting purposes.
+
+#### SSH Access via Another Phyhub Device (Recommended)
+
+If SSH was enabled on the device (by running `physsh enable`) and there is another Phyhub device available on the same network:
+
+1. **Connect to an available device** via shell using the standard method
+2. **Establish SSH connection** to the faulty device by running:
+
+```shell
+ssh phygrid@<faulty-device-name>.local
+```
+
+3. **Enter the shell** when prompted
+4. **Begin troubleshooting** - you should now be able to access the device and perform diagnostic operations
+
+**Expected output:** Successful SSH connection should show the context menu on the faulty device
+
+**What to expect:**
+
+- **Successful connection** will show the device prompt and allow normal shell access
+- **Connection timeouts** suggest network connectivity problems between devices or SSH connection is disabled on the faulty device
+- **Host key warnings** are normal for first-time connections and can be accepted
+
+#### Physical Access Logs Extraction
+
+In certain scenarios, you may prefer to extract device logs for offline analysis rather than performing real-time troubleshooting, particularly when physical access to the device is limited or intermittent.
+
+Once you have connected a keyboard and monitor to the device, obtain root access by running:
+
+```shell
+sudo su
+```
+
+4. **Export logs for backup** by running:
+
+```shell
+journalctl -u phydevice logs_backup.txt
+```
+
+5. **Create a temporary user** for remote access:
+
+```shell
+adduser <username>
+```
+
+6. **Grant SSH permissions** to the temporary user:
+
+   1. Run `visudo` to edit sudoers file
+   2. Add `<usernameALL=(ALL:ALL) ALL` below the line where it says `root ALL=(ALL:ALL) ALL`
+   3. Press `Esc` key and type `:wq` and hit `Enter` to save
+
+7. **Get the device IP address** by running:
+
+```shell
+ifconfig
+```
+
+8. **Download logs from another device** (e.g., your laptop) by running:
+
+```shell
+scp <username>@<ip>:/root/logs_backup.txt /path/to/local/destination
+```
+
+9. **Access the backup logs** - you should now be able to access `logs_backup.txt` at `/path/to/local/destination` on your laptop
+
+**Expected output:** The log export should complete without errors:
+
+```shell
+# journalctl -u phydevice logs_backup.txt
+# ls -la logs_backup.txt
+-rw-r--r-- 1 root root 2048576 Jan 15 10:30 logs_backup.txt
+```
+
+**What to expect:**
+
+- **Successful log export** will create a file with substantial size containing device logs
+- **Permission errors** may occur if not running as root user
+- **Disk space issues** may prevent log export if device storage is full
+- **Network connectivity** should be verified before attempting SCP transfer
+
+## **☁️ Debugging Edge Apps**
+
+Edge Apps runs on both physcial devices and VMs, and can sometimes encounter issues during deployment and operation. This section provides comprehensive troubleshooting procedures to help you diagnose and resolve common problems. You'll learn how to verify device provisioning status, monitor container health, inspect signal events, and analyze application logs to identify and fix issues affecting your Edge App's performance.
+
+### **⚙️ Troubleshoot Edge Twin Settings**
+
+**When to use this guide:**
+
+- Edge app not deploying despite being assigned to device
+- Container image not being pulled or created
+- App configuration not being applied correctly
+- Twin synchronization issues or missing twin data
+
+Edge twin settings contain the configuration and deployment information for your Edge Apps. This section helps you verify that the device has properly received and cached the edge twin configurations from Phyhub, which is essential for successful app deployment and operation.
+
+First, check if the edge twin was downloaded and cached on the device:
+
+```shell
+journalctl -u phydevice -o cat | awk '/Caching Edge twin/'
+```
+
+**Expected output:** You should see confirmation messages indicating edge twins were cached:
+
+```shell
+cacheTwins(): Caching Edge twin xxxxxxxxxxxxxxxxxxxxxxx
+cacheTwins(): Caching Edge twin xxxxxxxxxxxxxxxxxxxxxxx
+```
+
+To verify if the device received the edge app details correctly, run the following command:
+
+```shell
+cd /data/settings/phyhub
+ls  # Look for twins-device-<device-id>.json
+```
+
+Inspect the manifest to see all available twins:
+
+```shell
+cat twins-device-<device-id>.json
+```
+
+**Expected output:** The manifest should show all twin types assigned to this device:
+
+```json
+{
+  "Screen": ["xxxxxxxxxxxxxxxxxxxxxxx"],
+  "Device": ["xxxxxxxxxxxxxxxxxxxxxxx"],
+  "Edge": ["xxxxxxxxxxxxxxxxxxxxxxx"],
+  "Peripheral": ["xxxxxxxxxxxxxxxxxxxxxxx"]
+}
+```
+
+Check and verify the desired properties of an edge twin by running the following command. The `<edge-twin-id>` will be available from the previous command:
+
+```shell
+cat <edge-twin-id>-device-<device-id>.json | jq '.properties.desired'
+```
+
+**Expected output:** The desired properties should contain complete deployment configuration:
+
+```json
+{
+  "image": "xxxxxxxxxxx.xxxx/xxxxxxxxxxx:1.0.0",
+  "createOptions": {
+    "HostConfig": {
+      "NetworkMode": "host",
+      "RestartPolicy": {
+        "Name": "always"
+      },
+      "Privileged": true,
+      "Memory": 0,
+      "CpuShares": 0,
+      "DiskQuota": 0,
+      "ReadonlyRootfs": false,
+      "BlkioWeight": 0,
+      "BlkioDeviceReadBps": [],
+      "BlkioDeviceWriteBps": [],
+      "Devices": [],
+      "Binds": [],
+      "ExtraHosts": []
+    },
+    "Env": [],
+    "Cmd": null,
+    "WorkingDir": "",
+    "Volumes": null,
+    "RegistryCredentials": {
+      "xxxxxxxxxxx.xxxx": {
+        "username": "xxxx",
+        "password": "xxxx"
+      }
+    }
+  },
+  "credentials": {
+    "address": "xxxxxxxxxxx.xxxx",
+    "username": "xxxx",
+    "password": "xxxx"
+  },
+  "installationId": "xxxxxxxxxxx",
+  "appName": "xxxxxxxxxxx-1.0.0",
+  "settings": {
+    "name": "test"
+  },
+  "buildId": "xxxxxxxxxxx"
+}
+```
+
+**What to look for:**
+
+- **Twin Caching:** Verify that edge twins are being successfully cached on the device with confirmation messages
+- **Registry Access:** Confirm that registry credentials are properly configured for pulling the container image
+- **Volume Mounts:** Verify that necessary volume mounts and bindings are configured if your app requires persistent storage
+
+### **🐳 Troubleshoot Docker Container**
+
+**When to use this guide:**
+
+- Edge app appears deployed but container status shows "Exited" or "Failed"
+- Docker registry authentication fails during image download attempts
+- Container starts successfully but terminates within seconds of startup
+- Container deployment fails with "port already in use" or binding errors
+
+Docker container management is a critical aspect of Edge App deployment. This section helps you diagnose issues related to container creation, image pulling, and container startup processes. Understanding the container lifecycle is essential for identifying where deployment failures occur.
+
+First, check the current status of all Docker containers on the device:
+
+```shell
+docker ps -a
+```
+
+**Expected output:** You should see a list of all containers with their status:
+
+```shell
+CONTAINER ID   IMAGE                    COMMAND   CREATED         STATUS
+PORTS     NAMES
+abc123def456   myapp:latest            "/app"    2 minutes ago    Up 2 minutes
+0.0.0.0:8080->8080/tcp   myapp-container
+def456ghi789   another-app:1.0.0       "/start"  5 minutes ago    Exited (1) 3 minutes ago
+failed-container
+```
+
+**What to expect:**
+
+- **Running containers** should show "Up" status with uptime
+- **Stopped containers** will show "Exited" with exit codes
+- **Missing containers** indicate deployment or creation failures
+
+Once you've identified your app's container in the output above, examine its logs with the following command:
+
+```bash
+docker logs <container-id> -f
+```
+
+The `<container-id>` is displayed as the first column in the `docker ps` output.
+
+
+If no containers are available, there could be an issue during the image pulling process. To investigate this, run:
+
+```shell
+journalctl -u phydevice -o cat | grep pullImage
+```
+
+**Expected output:** Look for image pull attempts and results:
+
+```shell
+2025-06-20T07:45:17.857Z [INFO] [phylogger-device-phyos] pullImage(): Pulling image
+myapp:latest
+2025-06-20T07:45:20.123Z [INFO] [phylogger-device-phyos] pullImage(): Successfully
+pulled image myapp:latest
+```
+
+**What to expect:**
+
+- **Successful pulls** will show completion messages
+- **Failed pulls** may show authentication errors, network issues, or invalid image names
+- **No output** indicates the image pull process hasn't been attempted
+
+If the image was downloaded but container creation failed, run the following to investigate the reason for container failure:
+
+```shell
+journalctl -u phydevice -o cat | awk '/createContainer/,/^\}/'
+```
+
+**Expected output:** Container creation logs should show the creation process:
+
+```shell
+2025-06-20T07:47:29.341Z [INFO] [phylogger-device-phyos] createContainer(): Twin object
+for xxxxxxxxxxxxxx: {
+... container details
+}
+```
+
+**What to expect:**
+
+- **Successful creation** will show container ID and confirmation along with the container details
+- **Creation failures** may show configuration errors, resource constraints, or invalid options
+- **Partial logs** indicate interrupted creation process
+
+If the container was created successfully but failed to start, use the following commands to investigate the startup issues:
+
+```shell
+journalctl -u phydevice -o cat | grep startContainer
+# or
+journalctl -u phydevice -o cat | grep startEdgeApp
+```
+
+**Expected output:** Container startup logs should show the launch process:
+
+```shell
+2025-06-20T07:47:29.341Z [INFO] [phylogger-device-phyos] startContainer(): Attempting to
+create container for twin xxxxxxxxxxxxxxxxx with GPU support
+2025-06-20T07:47:29.351Z [INFO] [phylogger-device-phyos] startContainer(): Container
+created for twin xxxxxxxxxxxxxxxxx, preparing to start it
+2025-06-20T07:47:29.390Z [INFO] [phylogger-device-phyos] startContainer(): Started
+container for twin xxxxxxxxxxxxxxxxx
+```
+
+**What to expect:**
+
+- **Successful startup** will show confirmation messages
+- **Startup failures** may show port conflicts, missing dependencies, or application errors
+- **Immediate exits** indicate application crashes or configuration issues
+
+### **📡 Troubleshoot Edge App Phyhub Events**
+
+**When to use this guide:**
+
+- Twin messaging not working or failing
+- Property updates not being applied
+- Communication issues between app and Phyhub
+
+Event handling is a crucial component of Edge App communication with the Phygrid platform. This section helps you monitor and debug the various events that your Edge App generates, receives, and processes. Understanding event flow is essential for diagnosing communication issues between your application and the platform.
+
+You can view the events generated by your Edge application, including reported properties, twin messaging, and updates received by the app. To view comprehensive event data, run the following command:
+
+```shell
+journalctl -u phydevice -o cat | awk '/handleInstanceMessage/,/^\}/'
+```
+
+**Expected output:** You should see detailed event logs showing events emitted or handled by the device:
+
+```shell
+SOCKET on(): Received twinUpdated event {
+  deviceId: '****************-****-****-****-************',
+  data: {
+    data: {
+      id: '************************',
+      deviceId: '****************-****-****-****-************',
+      tenantId: '************************',
+      version: 1,
+      status: 'Online',
+      statusHistory: '{"s":0,"t":1750363250903},{"s":1,"t":1750363385770},
+{"s":0,"t":1750379306822},{"s":1,"t":1750379332938},{"s":0,"t":1750380472871},{
+   "s":1,"t":1750380503265},{"s":0,"t":1750381506449},{"s":1,"t":1750381523500},
+   {"s":0,"t":1750405502434},{"s":1,"t":1750405640914},',
+      createdAt: '2025-06-13T10:14:41.725Z',
+      updatedAt: '2025-06-20T11:26:37.532Z',
+      lastStatusUpdatedAt: '2025-06-20T11:26:37.529Z',
+      type: 'Peripheral',
+      properties: [Object],
+      descriptors: [Object]
+    },
+    twinId: '************************'
+  }
+}
+```
+
+**What to expect:**
+
+- **Event Reception:** Look for incoming events from Phyhub with complete data structures
+- **Event Processing:** Verify that events are being processed correctly by your application
+- **Error Handling:** Identify any failed event processing or communication errors
+
+If you want to investigate the reported properties of your application specifically, run the following command:
+
+```shell
+journalctl -u phydevice -o cat | awk '/reportEdgeTwinProperties()/,/^\}/'
+```
+
+**Expected output:** You should see property reporting activities from the device:
+
+```shell
+reportEdgeTwinProperties(): Reporting twin ************************ properties {
+... reported properties
+}
+reportEdgeTwinProperties(): Successfully reported properties for twin *******************
+```
+
+**What to expect:**
+
+- **Property Reporting:** Confirm that your app is actively reporting properties to Phyhub
+- **Reporting Success:** Look for successful property transmission confirmations
+- **Error Messages:** Identify any failed property reporting attempts
+- **Data Consistency:** Ensure reported properties match your application's current state
+
+## **🖥️ Debugging Screen Apps**
+
+Use these steps to inspect and debug screen apps deployed to devices. Screen Apps can encounter various issues such as not reflecting deployed changes, getting stuck on loading screens, displaying blank content, or failing to respond to user interactions. These problems often stem from configuration issues, service failures, or communication problems between the app and the Phygrid platform. The following troubleshooting procedures will help you identify the root cause and resolve these issues effectively.
+
+### **⚙️ Troubleshoot Screen Twin Settings**
+
+**When to use this guide:**
+
+- Screen app not loading or displaying correctly
+- Display settings not being applied (resolution, orientation)
+- Screen app not receiving configuration updates
+
+Screen twin settings contain the configuration and deployment information for your Screen Apps. This section helps you verify that the device has properly received and cached the screen twin configurations from Phyhub, which is essential for successful screen app deployment and operation.
+
+First, check if the screen twin was downloaded and cached on the device:
+
+```shell
+journalctl -u phydevice -o cat | awk '/Caching Screen twin/'
+```
+
+**Expected output:** You should see confirmation messages indicating screen twins were cached:
+
+```shell
+cacheTwins(): Caching Screen twin ************************
+```
+
+To verify if the device received the screen app details correctly, run the following command:
+
+```shell
+cd /data/settings/phyhub
+ls  # Look for twins-device-<device-id>.json
+```
+
+Inspect the manifest to see all available twins:
+
+```shell
+cat twins-device-<device-id>.json
+```
+
+**Expected output:** The manifest should show all twin types assigned to this device:
+
+```json
+{
+  "Screen": ["************************"],
+  "Device": ["************************"],
+  "Edge": ["************************"],
+  "Peripheral": ["************************"]
+}
+```
+
+Check and verify the desired properties of a screen twin by running the following command. The `<screen-twin-id>` will be available from the previous command:
+
+```shell
+cat <screen-twin-id>-device-<device-id>.json | jq '.properties.desired'
+```
+
+**Expected output:** The desired properties should contain complete screen app configuration:
+
+```json
+{
+  "url": "https://screen.phygrid.com/************************/**********************
+**/************************/#browserId=****************-****-****-****-**********
+**&accessKey=****************-****-****-****-************&env=prod&spaceId=************
+************&deviceName=************************&instanceId=************************",
+  "screenResolution": "default",
+  "soundOutput": "hdmi1",
+  "soundInput": "default",
+  "scale": "1.0",
+  "screenOrientation": "landscape",
+  "enableDebug": false,
+  "installationId": "************************",
+  "buildId": "************************",
+  "settings": { ... }
+}
+```
+
+**What to look for:**
+
+- **Twin Caching:** Verify that screen twins are being successfully cached on the device with confirmation messages
+- **Display Settings:** Verify that display mode, and other screen-specific settings are properly configured
+
+### **🖥️ Troubleshoot Physcreen**
+
+**When to use this guide:**
+
+- Device stuck on Phygrid logo or loading screen
+- Screen app not starting or displaying
+- Physcreen service not running or crashing
+- Display initialization failures
+- Screenshot upload issues or failures
+
+Physcreen is the display management service responsible for rendering Screen Apps on physical devices. This section helps you diagnose issues related to the Physcreen service, including startup problems, display rendering issues, and service stability problems that can affect screen app functionality.
+
+If the device is displaying the Phygrid logo (stuck at logo screen or stuck in a loop where it displays logo and black screen), run the following command to verify if the Physcreen service is running:
+
+```shell
+systemctl status physcreen
+```
+
+**Expected output:** You should see the service status and recent activity:
+
+```shell
+● physcreen.service - Phygrid Screen Service
+     Loaded: loaded (/etc/systemd/system/physcreen.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2025-01-15 10:30:00 UTC; 2h 15min ago
+   Main PID: 1234 (physcreen)
+      Tasks: 5 (limit: 4915)
+     Memory: 45.2M
+     CGroup: /system.slice/physcreen.service
+             └─1234 /usr/bin/physcreen
+```
+
+**What to expect:**
+
+- **Active service** should show "active (running)" status with uptime
+- **Inactive service** will show "inactive (dead)" or "failed" status
+- **Service errors** may show restart attempts or failure messages
+- **Memory usage** should be reasonable for the display service
+
+If the Physcreen service is running but still stuck at the logo screen, run the following command to check logs for service restarts or crashes:
+
+```shell
+tail -f /var/log/physcreen-manager
+```
+
+**Expected output:** You should see real time log entries from the Physcreen manager:
+
+```shell
+uploadScreenshot(): Upload block blob xxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx.jpg
+successfully xxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx
+twinUpdated event received { ... }
+```
+
+**What to expect:**
+
+- **Successful startup** will show initialization messages and app loading confirmations
+- **Configuration errors** may show missing or invalid settings
+- **Display issues** may show HDMI connection problems or resolution conflicts
+- **App loading failures** may indicate URL accessibility or network connectivity issues
+- **Screenshot uploading failures** may indicate if the device was unable to upload screenshot
+- **Service crashes** will show error messages and restart attempts
+
+### **📊 Troubleshoot Reported Screen Properties**
+
+**When to use this guide:**
+
+- Screenshots not being captured or uploaded
+- Display information not being reported
+- Property reporting failures or timeouts
+
+Reported screen properties provide real-time information about the current state and status of your Screen Apps. This section helps you monitor and debug the properties that your screen app reports back to Phyhub, including screenshots, app status, and other operational data that can be used for monitoring and troubleshooting.
+
+To investigate the reported properties of your screen app, run the following command:
+
+```shell
+journalctl -u phydevice -o cat | awk '/setScreenInstanceReportedProperties/'
+```
+
+**Expected output:** You should see property reporting activities with detailed data:
+
+```shell
+setScreenInstanceReportedProperties(): Reporting screen properties for twin ************************
+setScreenInstanceReportedProperties(): Properties reported successfully {
+  "twinId": "************************",
+  "data": {
+    "screenshot": "https://************************.blob.core.windows.net/screenshots/**
+**************-****-****-****-************.jpg",
+    "appStatus": "running",
+    "lastUpdated": "2025-01-15T10:30:00.123Z",
+    "displayInfo": {
+      "resolution": "1920x1080",
+      "orientation": "landscape"
+    }
+  }
+}
+```
+
+**What to expect:**
+
+- **Property Reporting:** Confirm that your screen app is actively reporting properties to Phyhub
+- **App Status Updates:** Verify that app status is being reported correctly (running, stopped, error)
+- **Display Information:** Ensure display resolution and orientation are accurately reported
+- **Error Messages:** Identify any failed property reporting attempts or data validation issues
+
+### **📡 Troubleshoot Screen App Phyhub Events**
+
+Screen app events are crucial for monitoring user interactions, app state changes, and communication between the screen app and the Phygrid platform. This section helps you monitor and debug the various events that your screen app generates, receives, and processes. Understanding event flow, eg receiving and processing updates, handling screen settings change etc. is essential for diagnosing communication issues, tracking user behavior, and ensuring proper app functionality.
+
+```shell
+journalctl -u phydevice -o cat | awk '/handleInstanceMessage/,/^\}/'
+```
+
+**Expected output:** You should see detailed event logs showing events emitted or handled by the screen app:
+
+```shell
+SOCKET on(): Received twinUpdated event {
+  deviceId: '****************-****-****-****-************',
+  data: {
+    data: {
+      id: '************************',
+      deviceId: '****************-****-****-****-************',
+      tenantId: '************************',
+      version: 1,
+      status: 'Online',
+      type: 'Screen',
+      properties: [Object],
+      descriptors: [Object]
+    },
+    twinId: '************************'
+  }
+}
+```
+
+**What to expect:**
+
+- **Event Reception:** Look for incoming events from Phyhub with complete data structures
+- **Event Processing:** Verify that events are being processed correctly by your screen application
+- **Error Handling:** Identify any failed event processing or communication errors
+
+### **🔧 Remote Debug via Chrome DevTools**
+
+**When to use this guide:**
+
+- Screen app displays incorrectly or has visual rendering issues
+- JavaScript errors are occurring but not visible in standard logs
+- API calls or network requests are failing without clear error messages
+- Client-side code requires step-by-step debugging and inspection
+- App performance issues need detailed analysis and optimization
+
+Remote debugging allows you to inspect and debug your Screen Apps in real-time using Chrome DevTools, even when the app is running on a physical device or VM. This powerful debugging method provides access to the DOM, console, network requests, and JavaScript execution, making it easier to identify and resolve issues in your screen applications.
+
+#### **Step 1: Set Up Port Forwarding**
+
+First, establish a port forwarding connection from your laptop to the device:
+
+```shell
+phy dev forward <device_namehttp://localhost:1234
+```
+
+**Expected output:** You should see confirmation of the port forwarding setup:
+
+```shell
+Forwarding http://localhost:1234 -<device-name>:1234
+Port forwarding established successfully
+```
+
+**What to expect:**
+
+- **Successful forwarding** will show the local and remote port mapping
+- **Connection errors** may indicate network issues or device accessibility problems
+- **Port conflicts** may occur if the local port is already in use
+
+#### **Step 2: Access Chrome DevTools**
+
+1. **Copy the port number** from the new browser tab that opens automatically
+2. **Open Chrome** and navigate to `chrome://inspect/#devices`
+3. **Enable network discovery** by clicking on "Discover network targets" "Configure..."
+4. **Add the target** by entering `localhost:<port>` in the configuration dialog
+5. **Click "Inspect"** next to the "Phygrid App" entry that appears
+
+**Expected output:** Chrome DevTools should open with access to your screen app
+
+**What to expect:**
+
+- **DevTools interface** should load with your screen app's DOM structure
+- **Console access** will show real-time JavaScript logs and errors
+- **Network monitoring** allows inspection of HTTP requests and responses
+- **Live debugging** enables setting breakpoints and stepping through code
+
+#### **Step 3: Debug Your Application**
+
+Once DevTools is connected, you can:
+
+- **Inspect DOM elements** to verify UI structure and styling
+- **Monitor console output** to track application flow and identify errors
+- **Analyze network requests** to debug API calls and data loading issues
+- **Set breakpoints** in JavaScript code for step-by-step debugging
+- **Monitor performance** using the Performance tab for optimization
+
+**Important Note:** All interactions in DevTools will reflect on both the device and your laptop simultaneously, allowing you to see real-time changes and debug issues as they occur.
+
+### **🖥️ VNC Remote Access**
+
+**When to use this guide:**
+
+- Screen app content differs from expected display or shows blank/corrupted visuals
+- User interface elements are misaligned, overlapping, or not rendering properly
+- Touch interactions or button clicks are not registering or behaving incorrectly
+- App layout appears broken or inconsistent across different screen resolutions
+- Real-time user interaction testing is needed to reproduce specific issues
+
+VNC (Virtual Network Computing) provides direct visual access to the device's display, allowing you to see exactly what is being displayed on the screen and interact with the device as if you were physically present. This is particularly useful for debugging display issues, verifying app rendering, and troubleshooting user interface problems.
+
+You can access the device's screen content via VNC by running:
+
+```shell
+phy dev vnc <device-name>
+```
+
+**Expected output:** VNC session should start and open a viewer window:
+
+```shell
+Starting VNC session...
+Opening stream
+Starting local VNC client pointing to 127.0.0.1:12558...
+VNC connection established at 127.0.0.1:12558. Press Ctrl+C when done.
+```
+
+**What to expect:**
+
+- **VNC viewer window** should open showing the device's current display
+- **Real-time interaction** allows you to see and interact with the screen app
+- **Display verification** helps confirm that the app is rendering correctly
+- **Error visualization** shows exactly what users see when issues occur
+
+**Note:** Make sure you have VNC Viewer installed on your system. If not installed, you will see an error message:
+
+```shell
+phy dev vnc <device-name>
+Error: VNC Viewer not found, please install from https://www.realvnc.com/en/connect/download/viewer/
+```
+
+## **🔧 Additional Troubleshooting**
+
+This section covers additional diagnostic procedures that can help resolve common device issues not directly related to app deployment or configuration.
+
+#### **Time Synchronization Issues**
+
+Sometimes devices can behave unexpectedly due to incorrect timezone or time synchronization settings. This can affect logging, authentication, and various system operations.
+
+You can verify the current timezone and time settings by running:
+
+```shell
+timedatectl status
+```
+
+**Expected output:** You should see the current time and timezone information:
+
+```shell
+               Local time: Mon 2025-01-15 10:30:00 UTC
+           Universal time: Mon 2025-01-15 10:30:00 UTC
+                 RTC time: Mon 2025-01-15 10:30:00 UTC
+                Time zone: UTC (UTC, +0000)
+System clock synchronized: yes
+              NTP service: active
+          RTC in local TZ: no
+```
+
+**What to expect:**
+
+- **Synchronized time** should show "System clock synchronized: yes"
+- **NTP service** should be active for automatic time updates
+- **Correct timezone** should match your deployment requirements
+- **Time drift** may indicate NTP configuration issues
+
+#### **Disk Space Monitoring**
+
+If you notice the device is lagging, throttled, or experiencing performance issues, it may be due to insufficient disk space. Low disk space can affect app deployment, logging, and overall system performance.
+
+You can check disk usage by running:
+
+```shell
+df -h
+```
+
+**Expected output:** You should see disk usage information for all mounted filesystems:
+
+```shell
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        20G   15G  4.0G  79% /
+tmpfs           3.2G     0  3.2G   0% /dev/shm
+tmpfs           6.3G  1.2M  6.3G   1% /run
+tmpfs           6.3G     0  6.3G   0% /sys/fs/cgroup
+```
+
+**What to expect:**
+
+- **Available space** should be sufficient for app operations (recommended over 20% free)
+- **High usage** (over 80%) may indicate the need for cleanup or storage expansion
+- **Critical levels** (less than 10% free) can cause system instability and app failures
+
+
+#### **Signal Transmission Issues**
+
+**When to use this guide:**
+
+- Analytics dashboard shows no data or missing user interaction events
+- Reports contain gaps in user behavior tracking or incomplete session data
+- Application logs show signal transmission errors or failed delivery attempts
+- Event counts in analytics don't match expected user activity levels
+- Signal payloads appear malformed or contain incorrect data values
+
+The Phygrid platform utilizes three types of signals: **Client**, **Session**, and **Event** signals. These signals are essential for analytics, monitoring, and tracking user interactions with your applications.
+
+To ensure signals are being generated correctly, you can use the following commands to inspect whether signals are being generated and examine their payload contents.
+
+```shell
+journalctl -u phydevice -o cat | awk '/sendEventSignal/,/^\}/'
+journalctl -u phydevice -o cat | awk '/sendSessionSignal/,/^\}/'
+journalctl -u phydevice -o cat | awk '/sendClientSignal/,/^\}/'
+```
+
+**Expected output:** You should be able to see output similar to the following example:
+
+```shell
+sendEventSignal(): sending Event Signal from device xxxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxx {
+  deviceId: 'xxxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxx',
+  data: {
+    g: 'UAE',
+    b: 'xxxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxx',
+    t: '2025-06-20T07:47:29.348',
+    s: 'MONITOR_CONTAINER_CRASH',
+    u: false,
+    h: 'xxxxxxxxxxxxxxxxxxxxxxx',
+    ac: undefined,
+    ad: 'xxxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxx',
+    c: 'xxxxxxxxxxxxxxxxxxxxxxx'
+  }
+}
+```
+
+The Phygrid platform automatically shortens signal keys in the payload as a way of compressing payload size for efficient transmission. To decode these shortened keys and understand what each field represents, refer to the Signal Key Lookup Table provided below.
+
+<table>
+  <thead>
+    <tr>
+      <th>Actual Key</th>
+      <th>Short Key</th>
+      <th>Actual Key</th>
+      <th>Short Key</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>captureId</td>
+      <td>a</td>
+      <td>clientUserAgent</td>
+      <td>aj</td>
+    </tr>
+    <tr>
+      <td>sessionId</td>
+      <td>b</td>
+      <td>clientDeviceVendor</td>
+      <td>ak</td>
+    </tr>
+    <tr>
+      <td>tenantId</td>
+      <td>c</td>
+      <td>clientDeviceModel</td>
+      <td>al</td>
+    </tr>
+    <tr>
+      <td>sessionCreated</td>
+      <td>d</td>
+      <td>clientDeviceType</td>
+      <td>am</td>
+    </tr>
+    <tr>
+      <td>ip</td>
+      <td>e</td>
+      <td>clientOsName</td>
+      <td>an</td>
+    </tr>
+    <tr>
+      <td>environment</td>
+      <td>f</td>
+      <td>clientOsVersion</td>
+      <td>ao</td>
+    </tr>
+    <tr>
+      <td>dataResidency</td>
+      <td>g</td>
+      <td>clientBrowserName</td>
+      <td>ap</td>
+    </tr>
+    <tr>
+      <td>spaceId</td>
+      <td>h</td>
+      <td>clientBrowserVersion</td>
+      <td>aq</td>
+    </tr>
+    <tr>
+      <td>appId</td>
+      <td>i</td>
+      <td>clientBrowserMajor</td>
+      <td>ar</td>
+    </tr>
+    <tr>
+      <td>appVersion</td>
+      <td>j</td>
+      <td>clientBrowserEngine</td>
+      <td>as</td>
+    </tr>
+    <tr>
+      <td>installationId</td>
+      <td>k</td>
+      <td>clientBrowserEngineVersion</td>
+      <td>at</td>
+    </tr>
+    <tr>
+      <td>installationVersion</td>
+      <td>l</td>
+      <td>clientCpuArchitecture</td>
+      <td>au</td>
+    </tr>
+    <tr>
+      <td>country</td>
+      <td>m</td>
+      <td>clientScreenWidth</td>
+      <td>av</td>
+    </tr>
+    <tr>
+      <td>locationAccuracy</td>
+      <td>n</td>
+      <td>clientScreenHeight</td>
+      <td>aw</td>
+    </tr>
+    <tr>
+      <td>latitude</td>
+      <td>o</td>
+      <td>clientScreenColorDepth</td>
+      <td>ax</td>
+    </tr>
+    <tr>
+      <td>longitude</td>
+      <td>p</td>
+      <td>clientScreenPixelDepth</td>
+      <td>ay</td>
+    </tr>
+    <tr>
+      <td>deviceId</td>
+      <td>q</td>
+      <td>stateful</td>
+      <td>ba</td>
+    </tr>
+    <tr>
+      <td>clientId</td>
+      <td>r</td>
+      <td>public</td>
+      <td>bb</td>
+    </tr>
+    <tr>
+      <td>eventType</td>
+      <td>s</td>
+      <td>currency</td>
+      <td>bc</td>
+    </tr>
+    <tr>
+      <td>eventTime</td>
+      <td>t</td>
+      <td>revenue</td>
+      <td>bd</td>
+    </tr>
+    <tr>
+      <td>interaction</td>
+      <td>u</td>
+      <td>products</td>
+      <td>be</td>
+    </tr>
+    <tr>
+      <td>productId</td>
+      <td>v</td>
+      <td>transactionId</td>
+      <td>bf</td>
+    </tr>
+    <tr>
+      <td>categoryId</td>
+      <td>w</td>
+      <td>affiliation</td>
+      <td>bg</td>
+    </tr>
+    <tr>
+      <td>int1</td>
+      <td>x</td>
+      <td>shipping</td>
+      <td>bh</td>
+    </tr>
+    <tr>
+      <td>int2</td>
+      <td>y</td>
+      <td>tax</td>
+      <td>bi</td>
+    </tr>
+    <tr>
+      <td>int3</td>
+      <td>z</td>
+      <td>coupon</td>
+      <td>bj</td>
+    </tr>
+    <tr>
+      <td>int4</td>
+      <td>aa</td>
+      <td>str4</td>
+      <td>af</td>
+    </tr>
+    <tr>
+      <td>int5</td>
+      <td>ab</td>
+      <td>str5</td>
+      <td>ag</td>
+    </tr>
+    <tr>
+      <td>str1</td>
+      <td>ac</td>
+      <td>clientCreated</td>
+      <td>ah</td>
+    </tr>
+    <tr>
+      <td>str2</td>
+      <td>ad</td>
+      <td>clientIp</td>
+      <td>ai</td>
+    </tr>
+    <tr>
+      <td>str3</td>
+      <td>ae</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+**What to look for:**
+
+- **Signal Generation:** Verify that signals are being generated by your application and appearing in the device logs
+- **Signal Types:** Confirm that the correct signal types (Client, Session, Event) are being sent based on your application's requirements
+- **Payload Structure:** Check that signal payloads contain the expected data fields and are properly formatted
+- **Transmission Success:** Look for confirmation messages indicating successful signal transmission to the Phyhub
+- **Error Messages:** Identify any error messages or failed transmission attempts that might indicate connectivity or configuration issues
