@@ -12,6 +12,13 @@ export const markdownStyles = css`
       border-radius: var(--border-radius);
     }
   }
+  
+  img {
+    max-width: 800px;
+    width: 100%;
+    height: auto;
+    margin: 1rem 0;
+  }
   code {
     font-size: var(--font-xs) !important;
   }
