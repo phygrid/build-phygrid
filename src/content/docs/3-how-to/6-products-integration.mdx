@@ -3,4 +3,791 @@ title: "Products Integration"
 icon: "Basket"
 ---
 
-Hello world
+## 🛍️ What Are Products?
+
+In Phygrid, Products represent the core entities for showcasing and managing inventory. Each product serves as a detailed,
+structured data object that includes attributes like multilingual names and descriptions,
+product types, pricing, availability across physical locations (spaces),
+and configuration variants such as color or size.
+Products are centrally maintained through the Phygrid Console and are designed to be integrated
+seamlessly into Screen Apps and Edge Apps, enabling rich, dynamic, and data-driven customer experiences.
+
+**Each product may include:**
+
+- **Localization:** Support for multiple languages in names, descriptions, and statuses.
+
+- **Space-specific status:** Products can be active or inactive across different physical spaces.
+
+- **Variants:** Differentiations like size, color, or style under the same product group.
+
+- **Relationships:** Links to recommended or related product groups.
+
+- **Metadata:** Information such as sort order, availability, introduction or discontinuation dates, and shelf life.
+
+- **Presentation logic:** Including sort-friendly names and prices to control how products appear in UI layers.
+
+## 🔧 Common Use Cases and Real-Life Scenarios
+
+**Products integration is essential for various business scenarios:**
+
+- **Retail Displays**: Showcase products with real-time pricing and availability on digital signage.
+
+- **Interactive Kiosks**: Allow customers to browse products, view details, and check inventory.
+
+- **Inventory Management**: Track stock levels and update product information across multiple locations.
+
+- **Dynamic Pricing**: Display promotional pricing, discounts, and special offers.
+
+- **Product Catalogs**: Create comprehensive product listings with images, descriptions, and specifications.
+
+- **Multi-location Retail**: Manage products across different stores with location-specific pricing and inventory.
+
+## 🚀 Available Ways to Create Products
+
+There are several methods to integrate products into your Phygrid ecosystem, each suited for different use cases and technical requirements.
+
+### API-Based Integration
+
+The most flexible approach for custom integrations and automated workflows.
+
+**Best for:**
+
+- Custom applications with specific requirements
+
+- Automated product updates from external systems
+
+- Real-time synchronization with existing inventory systems
+
+**Key benefits:**
+
+- Full control over product data structure
+
+- Real-time updates and synchronization
+
+- Integration with existing business systems
+
+**[How to integrate?]()**
+
+### Google Product Feed (GPF)
+
+A streamlined approach for retailers using Google's product feed format.
+
+**Best for:**
+
+- Retailers already using Google Shopping
+
+- Standardized product data management
+
+- Quick setup with existing Google feeds
+
+**Key benefits:**
+
+- Leverages existing Google Shopping feeds
+
+- Automatic synchronization with Google's product format
+
+**[How to integrate?](https://learn.phygrid.com/products/integrate-products-using-google-product-feed/)**
+
+### Console UI
+
+The most user-friendly approach for manual product management.
+
+**Best for:**
+
+- Small to medium product catalogs
+
+- Manual product entry and management
+
+- Teams without technical expertise
+
+**Key benefits:**
+
+- No technical knowledge required
+
+- Visual interface for product management
+
+**[How to integrate?](https://learn.phygrid.com/products/create-a-product-manually/)**
+
+## 🎯 Getting Started with Products in Screen Apps
+
+Let's walk through how to integrate products into your Screen Apps, starting with the basics and moving to more advanced implementations.
+The goal here is integrating the products sdk in screen app so we will create a signage app which allow you to show promotions by using products picker and showing this product in the screen app.
+As a first step **[Let's as a first step create a screen app](/tutorials/build-your-first-screen-app)**
+
+### How to Initialize Products SDK
+
+The Products SDK provides a simple interface for accessing product data in your applications. Here's how to get started:
+After creating a new screen app we need to install the products sdk so inside app directory you need to run the following command:
+
+```bash
+cd <app-name>
+yarn add @phygrid/products-react
+```
+
+### Create an Example Product in Console
+
+Before diving into code, let's create a sample product to work with:
+
+1. Navigate to **Content → Products** in the Phygrid Console
+2. Click **New Product** in the Products tab
+3. Fill in the basic information:
+   - **Title**: "Sample Product"
+   - **Description**: "A sample product for testing integration"
+4. Set the product details in the sidebar:
+   - **Environment**: Production
+   - **Product Language**: English
+   - **Space**: Default
+   - **Category**: Electronics
+   - **Tags**: sample, test
+5. Add product media (images, videos)
+6. Configure pricing in the Pricing section
+7. Set inventory quantities
+8. Click **Save Product**
+
+### Create an Example Product using products push API
+
+1. Navigate to **Apps → Developer → Access tokens** in the Phygrid Console
+2. Create a token that can be used to authorize the API
+3. By using POST man
+   - API-URL :`https://api.phygrid.com/regions/<Data-Residancy>/products/v1/tenants/<tenant-Id>/<environment>/products-push`
+   - HTTP Method: POST
+   - Headers: `{"x-api-key": <token>}`
+   - Payload:
+
+```json
+{
+  "data": [
+    {
+      "productGroupId": "PARENT_SKU_TEST",
+      "productName": [
+        {
+          "isoLanguageId": "en-US",
+          "productName": "OtterBox USB C PD GaN Wall Charger 30W Shimmer"
+        }
+      ],
+      "productDescription": [
+        {
+          "isoLanguageId": "en-US",
+          "productDescription": "<p>OtterBox Chargers are engineered rugged and built to outlast. Featuring a smart and compact design, OtterBox Chargers are drop tested and wrapped in a tough exterior.</p><ul><li>Rigorous testing to ensure devices charge safely and efficient</li><li>Smart, compact chargers for at home or on the go</li><li>Designed to work flawlessly with OtterBox cables</li></ul>"
+        }
+      ],
+      "variants": [
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_01",
+          "color": "Black",
+          "size": "",
+          "style": "",
+          "europeanArticleNumber": ["BARCODE_VALUE"],
+          "globalTradeItemNumber": [],
+          "universalProductCode": [],
+          "productName": [
+            {
+              "isoLanguageId": "en-US",
+              "productName": "OtterBox USB C PD GaN Wall Charger 30W Black Shimmer"
+            }
+          ],
+          "originalEuropeanArticleNumber": [],
+          "originalGlobalTradeItemNumber": [],
+          "originalUniversalProductCode": [],
+          "colorImageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsfL6qHffOMYlYqWccvHq7u7-fDOicHBxhHQ&s"
+        },
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_02",
+          "color": "White",
+          "size": "",
+          "style": "",
+          "europeanArticleNumber": ["BARCODE_VALUE"],
+          "globalTradeItemNumber": [],
+          "universalProductCode": [],
+          "productName": [
+            {
+              "isoLanguageId": "en-US",
+              "productName": "OtterBox USB C PD GaN Wall Charger 30W White Shimmer"
+            }
+          ],
+          "originalEuropeanArticleNumber": [],
+          "originalGlobalTradeItemNumber": [],
+          "originalUniversalProductCode": [],
+          "colorImageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-IJZzny3CE-8vUkrgIqpqB9GkZuKfyoA8Lg&s"
+        }
+      ],
+      "brand": [
+        {
+          "isoLanguageId": "en-US",
+          "brandName": "OtterBox"
+        }
+      ],
+      "productFeature": [
+        {
+          "productId": "PARENT_SKU_TEST_01",
+          "isoLanguageId": "en-US",
+          "productFeatureType": "Color",
+          "productFeatureValue": "Black"
+        },
+        {
+          "productId": "PARENT_SKU_TEST_01",
+          "isoLanguageId": "en-US",
+          "productFeatureType": "Brand",
+          "productFeatureValue": "OtterBox"
+        },
+        {
+          "productId": "PARENT_SKU_TEST_01",
+          "isoLanguageId": "en-US",
+          "productFeatureType": "Tag",
+          "productFeatureValue": "Charging Solutions"
+        },
+        {
+          "productId": "PARENT_SKU_TEST_01",
+          "productFeatureType": "Make",
+          "productFeatureValue": "Universal",
+          "isoLanguageId": "en-US"
+        },
+        {
+          "productId": "PARENT_SKU_TEST_02",
+          "isoLanguageId": "en-US",
+          "productFeatureType": "Color",
+          "productFeatureValue": "White"
+        },
+        {
+          "productId": "PARENT_SKU_TEST_02",
+          "isoLanguageId": "en-US",
+          "productFeatureType": "Brand",
+          "productFeatureValue": "OtterBox"
+        },
+        {
+          "productId": "PARENT_SKU_TEST_02",
+          "isoLanguageId": "en-US",
+          "productFeatureType": "Tag",
+          "productFeatureValue": "Charging Solutions"
+        },
+        {
+          "productId": "PARENT_SKU_TEST_02",
+          "productFeatureType": "Make",
+          "productFeatureValue": "Universal",
+          "isoLanguageId": "en-US"
+        }
+      ],
+      "catalogPageLocationProduct": [
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_01",
+          "catalogType": "image/jpg",
+          "catalogPageLocationProduct": "https://api.omborigrid.com/regions/us/products/v1/assets/658076ecdb0cff0008f07007-prod/2f8c9716-ffa4-5d02-bfec-8687e7dc4cb3",
+          "catalogPageLocation": "https://api.omborigrid.com/regions/us/products/v1/assets/658076ecdb0cff0008f07007-prod/2f8c9716-ffa4-5d02-bfec-8687e7dc4cb3"
+        },
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_02",
+          "catalogType": "image/jpg",
+          "catalogPageLocationProduct": "https://api.omborigrid.com/regions/us/products/v1/assets/658076ecdb0cff0008f07007-prod/d076ae2d-827e-5746-8953-8b915a0e3d00",
+          "catalogPageLocation": "https://api.omborigrid.com/regions/us/products/v1/assets/658076ecdb0cff0008f07007-prod/d076ae2d-827e-5746-8953-8b915a0e3d00"
+        },
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_01",
+          "catalogType": "image/jpg",
+          "catalogPageLocationProduct": "https://api.omborigrid.com/regions/us/products/v1/assets/658076ecdb0cff0008f07007-prod/3b549046-3dfc-5ce3-bf91-0e729d154bea",
+          "catalogPageLocation": "https://api.omborigrid.com/regions/us/products/v1/assets/658076ecdb0cff0008f07007-prod/3b549046-3dfc-5ce3-bf91-0e729d154bea"
+        },
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_01",
+          "catalogType": "image/jpg",
+          "catalogPageLocationProduct": "https://api.omborigrid.com/regions/us/products/v1/assets/658076ecdb0cff0008f07007-prod/e3943be1-e46d-59aa-b4a6-61b5bd360151",
+          "catalogPageLocation": "https://api.omborigrid.com/regions/us/products/v1/assets/658076ecdb0cff0008f07007-prod/e3943be1-e46d-59aa-b4a6-61b5bd360151"
+        },
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_02",
+          "catalogType": "image/jpg",
+          "catalogPageLocationProduct": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY7iemlA2bw-w33-GB5OLbzlcJjDV6TR0ipQ&s",
+          "catalogPageLocation": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY7iemlA2bw-w33-GB5OLbzlcJjDV6TR0ipQ&s"
+        },
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_02",
+          "catalogType": "image/jpg",
+          "catalogPageLocationProduct": "https://api.omborigrid.com/regions/us/products/v1/assets/658076ecdb0cff0008f07007-prod/d076ae2d-827e-5746-8953-8b915a0e3d00",
+          "catalogPageLocation": "https://api.omborigrid.com/regions/us/products/v1/assets/658076ecdb0cff0008f07007-prod/d076ae2d-827e-5746-8953-8b915a0e3d00"
+        },
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_02",
+          "catalogType": "image/jpg",
+          "catalogPageLocationProduct": "https://api.omborigrid.com/regions/us/products/v1/assets/658076ecdb0cff0008f07007-prod/3b549046-3dfc-5ce3-bf91-0e729d154bea",
+          "catalogPageLocation": "https://api.omborigrid.com/regions/us/products/v1/assets/658076ecdb0cff0008f07007-prod/3b549046-3dfc-5ce3-bf91-0e729d154bea"
+        }
+      ],
+      "productType": ["ALL_PRODUCTS"],
+      "productItemQuantity": [
+        {
+          "productId": "PARENT_SKU_TEST_01",
+          "spaceId": "<Space-ID>",
+          "productItemQuantity": 20
+        },
+        {
+          "productId": "PARENT_SKU_TEST_02",
+          "spaceId": "<Space-ID>",
+          "productItemQuantity": 20
+        }
+      ],
+      "productPriceList": [
+        {
+          "productId": "PARENT_SKU_TEST_01",
+          "priceListType": "Standard",
+          "isoLanguageId": "en-US",
+          "isoCurrencyCode": "USD",
+          "spaceId": "<Space-ID>",
+          "listPrice": 2900
+        },
+        {
+          "productId": "PARENT_SKU_TEST_02",
+          "priceListType": "Standard",
+          "isoLanguageId": "en-US",
+          "isoCurrencyCode": "USD",
+          "spaceId": "<Space-ID>",
+          "listPrice": 2900
+        }
+      ]
+    }
+  ]
+}
+```
+
+After pushing the product
+
+![Product example](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/b5b4566b-a724-4308-b051-6bce4cc5156d)
+
+### Use Settings Schema for Product Configuration
+
+Update the settings schema by adding the [TODO: A link to product picker from how to settings schemas]():
+
+```typescript
+// schema.ts
+interface Product {
+  ref: "grid-product"
+  productGroupId: string
+  productId: string
+  defaultImage: string
+  productSourceUrl: string
+  env: string
+}
+export default interface Settings {
+  /**
+   * @title Product
+   * @description Select a product from your Grid catalog.
+   * @ui productPicker
+   */
+  product: Product
+}
+```
+
+After updating the schema Update the app version in `package.json` file then run the following command
+```bash
+yarn run build && yarn run pub
+```
+
+After installing the app or upgrading the latest version
+
+
+### Integrate Product Information
+
+Now let's create a React component that displays products using the SDK:
+
+```typescript
+import React, { useEffect, useState } from "react"
+import { HubClient } from "@phygrid/hub-client"
+
+interface Product {
+  id: string
+  title: string
+  description: string
+  price: number
+  images: string[]
+  category: string
+  tags: string[]
+}
+
+const ProductDisplay: React.FC = () => {
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [settings, setSettings] = useState<any>({})
+
+  useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        const hubClient = new HubClient()
+
+        // Get app settings
+        const appSettings = await hubClient.settings.get()
+        setSettings(appSettings)
+
+        // Get products
+        const productList = await hubClient.products.list()
+        setProducts(productList)
+      } catch (error) {
+        console.error("Failed to initialize app:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    initializeApp()
+  }, [])
+
+  if (loading) {
+    return <div>Loading products...</div>
+  }
+
+  return (
+    <div className={`product-grid ${settings.displayMode}`}>
+      {products.map(product => (
+        <div key={product.id} className="product-card">
+          {product.images.length > 0 && (
+            <img src={product.images[0]} alt={product.title} />
+          )}
+          <h3>{product.title}</h3>
+          <p>{product.description}</p>
+          {settings.showPricing && (
+            <div className="price">${product.price.toFixed(2)}</div>
+          )}
+          <div className="category">{product.category}</div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export default ProductDisplay
+```
+
+## 🔌 API-Based Integration
+
+For more advanced use cases, you can use the Products API directly to create, update, and manage products programmatically.
+
+### Example Flow for Integration End-to-End
+
+Here's a complete example of how to integrate products using the API:
+
+```typescript
+import { HubClient } from "@phygrid/hub-client"
+
+class ProductManager {
+  private hubClient: HubClient
+
+  constructor() {
+    this.hubClient = new HubClient()
+  }
+
+  // Create a new product
+  async createProduct(productData: {
+    title: string
+    description: string
+    price: number
+    category: string
+    images?: string[]
+  }) {
+    try {
+      const product = await this.hubClient.products.create({
+        ...productData,
+        environment: "production",
+        language: "en",
+        space: "default",
+      })
+
+      console.log("Product created:", product.id)
+      return product
+    } catch (error) {
+      console.error("Failed to create product:", error)
+      throw error
+    }
+  }
+
+  // Update existing product
+  async updateProduct(productId: string, updates: Partial<Product>) {
+    try {
+      const updatedProduct = await this.hubClient.products.update(
+        productId,
+        updates
+      )
+      console.log("Product updated:", productId)
+      return updatedProduct
+    } catch (error) {
+      console.error("Failed to update product:", error)
+      throw error
+    }
+  }
+
+  // Get products with filtering
+  async getProducts(filters?: {
+    category?: string
+    tags?: string[]
+    priceRange?: { min: number; max: number }
+  }) {
+    try {
+      let products = await this.hubClient.products.list()
+
+      // Apply filters
+      if (filters?.category) {
+        products = products.filter(p => p.category === filters.category)
+      }
+
+      if (filters?.tags) {
+        products = products.filter(p =>
+          filters.tags!.some(tag => p.tags.includes(tag))
+        )
+      }
+
+      if (filters?.priceRange) {
+        products = products.filter(
+          p =>
+            p.price >= filters.priceRange!.min &&
+            p.price <= filters.priceRange!.max
+        )
+      }
+
+      return products
+    } catch (error) {
+      console.error("Failed to get products:", error)
+      throw error
+    }
+  }
+
+  // Delete a product
+  async deleteProduct(productId: string) {
+    try {
+      await this.hubClient.products.delete(productId)
+      console.log("Product deleted:", productId)
+    } catch (error) {
+      console.error("Failed to delete product:", error)
+      throw error
+    }
+  }
+}
+
+// Usage example
+const productManager = new ProductManager()
+
+// Create a product
+const newProduct = await productManager.createProduct({
+  title: "Wireless Headphones",
+  description: "High-quality wireless headphones with noise cancellation",
+  price: 199.99,
+  category: "Electronics",
+  images: ["https://example.com/headphones.jpg"],
+})
+
+// Get all electronics products
+const electronics = await productManager.getProducts({
+  category: "Electronics",
+})
+```
+
+For detailed API reference and advanced usage patterns, see the [Products API Reference](/api-reference/products) (to be added later).
+
+## 📊 GPF-Based Integration
+
+Google Product Feed integration provides a streamlined way to import and manage products using Google's standardized format.
+
+### Example Flow for Integration End-to-End
+
+1. **Set up GPF Integration in Console**:
+
+   - Navigate to **Content → Products**
+   - In the **Integrations** tab, click **New Integration**
+   - Select **Google Product Feed**
+   - Name your integration (e.g., "Main Product Feed")
+   - Set the sync schedule (e.g., every 6 hours)
+   - Select your environment
+   - Provide the feed URL for each language
+   - Save the integration
+
+2. **Configure Feed URL**:
+   Your Google Product Feed URL should follow this format:
+
+   ```
+   https://your-domain.com/feed.xml
+   ```
+
+3. **Monitor Integration**:
+
+   - Check the integration status in the Console
+   - Review sync logs for any errors
+   - Verify products are appearing correctly
+
+4. **Use Products in Your App**:
+
+   ```typescript
+   import { HubClient } from "@phygrid/hub-client"
+
+   const hubClient = new HubClient()
+
+   // Products from GPF will be available through the standard API
+   const products = await hubClient.products.list()
+
+   // Filter by source if needed
+   const gpfProducts = products.filter(p => p.source === "gpf")
+   ```
+
+## 🎮 Products SDK Usage in Apps
+
+The Products SDK provides various methods to interact with products in your applications. Here are common scenarios and use cases:
+
+### Different Scenarios and Use Cases
+
+#### 1. Product Catalog Display
+
+```typescript
+// Display all products in a grid
+const ProductCatalog = () => {
+  const [products, setProducts] = useState([])
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      const hubClient = new HubClient()
+      const allProducts = await hubClient.products.list()
+      setProducts(allProducts)
+    }
+    loadProducts()
+  }, [])
+
+  return (
+    <div className="catalog">
+      {products.map(product => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  )
+}
+```
+
+#### 2. Category-Based Filtering
+
+```typescript
+// Filter products by category
+const CategoryFilter = ({ selectedCategory }: { selectedCategory: string }) => {
+  const [products, setProducts] = useState([])
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      const hubClient = new HubClient()
+      const allProducts = await hubClient.products.list()
+      const filtered = allProducts.filter(p => p.category === selectedCategory)
+      setProducts(filtered)
+    }
+    loadProducts()
+  }, [selectedCategory])
+
+  return <ProductGrid products={products} />
+}
+```
+
+#### 3. Search Functionality
+
+```typescript
+// Search products by title or description
+const ProductSearch = ({ query }: { query: string }) => {
+  const [results, setResults] = useState([])
+
+  useEffect(() => {
+    const searchProducts = async () => {
+      const hubClient = new HubClient()
+      const allProducts = await hubClient.products.list()
+      const searchResults = allProducts.filter(
+        product =>
+          product.title.toLowerCase().includes(query.toLowerCase()) ||
+          product.description.toLowerCase().includes(query.toLowerCase())
+      )
+      setResults(searchResults)
+    }
+
+    if (query.length > 2) {
+      searchProducts()
+    }
+  }, [query])
+
+  return <ProductList products={results} />
+}
+```
+
+#### 4. Price Range Filtering
+
+```typescript
+// Filter products by price range
+const PriceFilter = ({
+  minPrice,
+  maxPrice,
+}: {
+  minPrice: number
+  maxPrice: number
+}) => {
+  const [products, setProducts] = useState([])
+
+  useEffect(() => {
+    const filterByPrice = async () => {
+      const hubClient = new HubClient()
+      const allProducts = await hubClient.products.list()
+      const filtered = allProducts.filter(
+        product => product.price >= minPrice && product.price <= maxPrice
+      )
+      setProducts(filtered)
+    }
+    filterByPrice()
+  }, [minPrice, maxPrice])
+
+  return <ProductGrid products={products} />
+}
+```
+
+#### 5. Real-time Product Updates
+
+```typescript
+// Listen for product changes
+const ProductMonitor = () => {
+  const [products, setProducts] = useState([])
+
+  useEffect(() => {
+    const hubClient = new HubClient()
+
+    // Initial load
+    const loadProducts = async () => {
+      const allProducts = await hubClient.products.list()
+      setProducts(allProducts)
+    }
+    loadProducts()
+
+    // Set up real-time updates (if supported)
+    const interval = setInterval(loadProducts, 30000) // Refresh every 30 seconds
+
+    return () => clearInterval(interval)
+  }, [])
+
+  return <ProductDashboard products={products} />
+}
+```
+
+### Focus on Examples and Outcomes
+
+The Products SDK enables you to create rich, interactive experiences:
+
+- **Dynamic Pricing Displays**: Show real-time pricing updates across multiple locations
+- **Inventory Management**: Display stock levels and availability status
+- **Personalized Recommendations**: Filter and sort products based on user preferences
+- **Multi-language Support**: Display products in different languages based on location
+- **Category Navigation**: Create hierarchical product browsing experiences
+
+> **Note:** This guide focuses on practical usage examples. For complete SDK reference documentation covering all available methods and options, see the [Products SDK Reference](/toolkit-reference/products-sdk) (to be added later).
+
+## 🚀 Next Steps
+
+Now that you understand the basics of Products integration, you can:
+
+- [Create settings schemas](/how-to/settings-schemas/) to configure your product displays
+- [Use Signals](/how-to/signals/) to track product interactions and user behavior
+- [Integrate with peripherals](/how-to/peripherals-and-descriptors/) to create interactive product experiences
+- [Set up checkout integration](/how-to/checkout-integration/) to enable purchases
+- [Generate reports](/how-to/reports/) on product performance and user engagement
+
+For advanced product management and automation, consider exploring the API reference documentation for complete programmatic control over your product ecosystem.
