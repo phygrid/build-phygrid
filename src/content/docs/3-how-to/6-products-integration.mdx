@@ -5,67 +5,54 @@ icon: "Basket"
 
 ## 🛍️ What Are Products?
 
-In Phygrid, Products represent the core entities for showcasing and managing inventory. Each product serves as a detailed,
-structured data object that includes attributes like multilingual names and descriptions,
-product types, pricing, availability across physical locations (spaces),
-and configuration variants such as color or size.
-Products are centrally maintained through the Phygrid Console and are designed to be integrated
+In Phygrid, Products represent the core entities for showcasing and managing inventory.
+Each product serves as a detailed, structured data object that includes attributes such as 
+multilingual names and descriptions, product types, pricing, availability across physical 
+locations (spaces), and configuration variants like color or size.
+
+Products are centrally maintained through the Phygrid Console and are designed to integrate
 seamlessly into Screen Apps and Edge Apps, enabling rich, dynamic, and data-driven customer experiences.
 
-**Each product may include:**
+**Each product includes:**
 
-- **Localization:** Support for multiple languages in names, descriptions, and statuses.
-
-- **Space-specific status:** Products can be active or inactive across different physical spaces.
-
-- **Variants:** Differentiations like size, color, or style under the same product group.
-
-- **Relationships:** Links to recommended or related product groups.
-
-- **Metadata:** Information such as sort order, availability, introduction or discontinuation dates, and shelf life.
-
-- **Presentation logic:** Including sort-friendly names and prices to control how products appear in UI layers.
+- **Localization:** Support for multiple languages in names, descriptions, and statuses
+- **Space-specific status:** Products can be active or inactive across different physical spaces
+- **Variants:** Differentiations such as size, color, or style under the same product group
+- **Relationships:** Links to recommended or related product groups
+- **Metadata:** Information including sort order, availability, introduction or discontinuation dates, and shelf life
+- **Presentation logic:** Including sort-friendly names and prices to control how products appear in UI layers
 
 ## 🔧 Common Use Cases and Real-Life Scenarios
 
 **Products integration is essential for various business scenarios:**
 
-- **Retail Displays**: Showcase products with real-time pricing and availability on digital signage.
-
-- **Interactive Kiosks**: Allow customers to browse products, view details, and check inventory.
-
-- **Inventory Management**: Track stock levels and update product information across multiple locations.
-
-- **Dynamic Pricing**: Display promotional pricing, discounts, and special offers.
-
-- **Product Catalogs**: Create comprehensive product listings with images, descriptions, and specifications.
-
-- **Multi-location Retail**: Manage products across different stores with location-specific pricing and inventory.
+- **Retail Displays:** Showcase products with real-time pricing and availability on digital signage
+- **Interactive Kiosks:** Allow customers to browse products, view details, and check inventory
+- **Inventory Management:** Track stock levels and update product information across multiple locations
+- **Dynamic Pricing:** Display promotional pricing, discounts, and special offers
+- **Product Catalogs:** Create comprehensive product listings with images, descriptions, and specifications
+- **Multi-location Retail:** Manage products across different stores with location-specific pricing and inventory
 
 ## 🚀 Available Ways to Create Products
 
-There are several methods to integrate products into your Phygrid ecosystem, each suited for different use cases and technical requirements.
+There are several methods to integrate products into your Phygrid ecosystem, 
+each suited for different use cases and technical requirements.
 
 ### API-Based Integration
 
 The most flexible approach for custom integrations and automated workflows.
 
 **Best for:**
-
 - Custom applications with specific requirements
-
 - Automated product updates from external systems
-
 - Real-time synchronization with existing inventory systems
 
 **Key benefits:**
-
 - Full control over product data structure
-
 - Real-time updates and synchronization
-
 - Integration with existing business systems
 
+// TODO: Add a link for the products SDK API Reference
 **[How to integrate?]()**
 
 ### Google Product Feed (GPF)
@@ -73,17 +60,12 @@ The most flexible approach for custom integrations and automated workflows.
 A streamlined approach for retailers using Google's product feed format.
 
 **Best for:**
-
 - Retailers already using Google Shopping
-
 - Standardized product data management
-
 - Quick setup with existing Google feeds
 
 **Key benefits:**
-
 - Leverages existing Google Shopping feeds
-
 - Automatic synchronization with Google's product format
 
 **[How to integrate?](https://learn.phygrid.com/products/integrate-products-using-google-product-feed/)**
@@ -93,31 +75,34 @@ A streamlined approach for retailers using Google's product feed format.
 The most user-friendly approach for manual product management.
 
 **Best for:**
-
 - Small to medium product catalogs
-
 - Manual product entry and management
-
 - Teams without technical expertise
 
 **Key benefits:**
-
 - No technical knowledge required
-
 - Visual interface for product management
 
 **[How to integrate?](https://learn.phygrid.com/products/create-a-product-manually/)**
 
 ## 🎯 Getting Started with Products in Screen Apps
 
-Let's walk through how to integrate products into your Screen Apps, starting with the basics and moving to more advanced implementations.
-The goal here is integrating the products sdk in screen app so we will create a signage app which allow you to show promotions by using products picker and showing this product in the screen app.
-As a first step **[Let's as a first step create a screen app](/tutorials/build-your-first-screen-app)**
+Let's walk through how to integrate products into your Screen Apps,
+starting with the basics and moving to more advanced implementations.
+
+The goal is to integrate the Products SDK into a screen app to 
+create a signage application that allows you to show promotions by using a product picker
+and displaying the selected product on the screen.
+
+**As a first step, [create a screen app](/tutorials/build-your-first-screen-app).**
 
 ### How to Initialize Products SDK
 
-The Products SDK provides a simple interface for accessing product data in your applications. Here's how to get started:
-After creating a new screen app we need to install the products sdk so inside app directory you need to run the following command:
+The Products SDK provides a simple interface for accessing product data in your applications.
+Here's how to get started:
+
+After creating a new screen app, you need to install the Products SDK.
+Inside your app directory, run the following command:
 
 ```bash
 cd <app-name>
@@ -131,28 +116,28 @@ Before diving into code, let's create a sample product to work with:
 1. Navigate to **Content → Products** in the Phygrid Console
 2. Click **New Product** in the Products tab
 3. Fill in the basic information:
-   - **Title**: "Sample Product"
-   - **Description**: "A sample product for testing integration"
+   - **Title:** "Sample Product"
+   - **Description:** "A sample product for testing integration"
 4. Set the product details in the sidebar:
-   - **Environment**: Production
-   - **Product Language**: English
-   - **Space**: Default
-   - **Category**: Electronics
-   - **Tags**: sample, test
+   - **Environment:** Production
+   - **Product Language:** English
+   - **Space:** Default
+   - **Category:** Electronics
+   - **Tags:** sample, test
 5. Add product media (images, videos)
 6. Configure pricing in the Pricing section
 7. Set inventory quantities
 8. Click **Save Product**
 
-### Create an Example Product using products push API
+### Create an Example Product Using Products Push API
 
 1. Navigate to **Apps → Developer → Access tokens** in the Phygrid Console
 2. Create a token that can be used to authorize the API
-3. By using POST man
-   - API-URL :`https://api.phygrid.com/regions/<Data-Residancy>/products/v1/tenants/<tenant-Id>/<environment>/products-push`
-   - HTTP Method: POST
-   - Headers: `{"x-api-key": <token>}`
-   - Payload:
+3. Using Postman:
+   - **API URL:** `https://api.phygrid.com/regions/<Data-Residency>/products/v1/tenants/<tenant-Id>/<environment>/products-push`
+   - **HTTP Method:** POST
+   - **Headers:** `{"x-api-key": <token>}`
+   - **Payload:**
 
 ```json
 {
@@ -168,7 +153,10 @@ Before diving into code, let's create a sample product to work with:
       "productDescription": [
         {
           "isoLanguageId": "en-US",
-          "productDescription": "<p>OtterBox Chargers are engineered rugged and built to outlast. Featuring a smart and compact design, OtterBox Chargers are drop tested and wrapped in a tough exterior.</p><ul><li>Rigorous testing to ensure devices charge safely and efficient</li><li>Smart, compact chargers for at home or on the go</li><li>Designed to work flawlessly with OtterBox cables</li></ul>"
+          "productDescription": "<p>OtterBox Chargers are engineered rugged and built to outlast.
+           Featuring a smart and compact design, OtterBox Chargers are drop tested and wrapped in a tough exterior.
+           </p><ul><li>Rigorous testing to ensure devices charge safely and efficiently</li><li>Smart,
+           compact chargers for at home or on the go</li><li>Designed to work flawlessly with OtterBox cables</li></ul>"
         }
       ],
       "variants": [
@@ -356,13 +344,13 @@ Before diving into code, let's create a sample product to work with:
 }
 ```
 
-After pushing the product
+After pushing the product, you should see it appear in your console:
 
 ![Product example](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/b5b4566b-a724-4308-b051-6bce4cc5156d)
 
 ### Use Settings Schema for Product Configuration
 
-Update the settings schema by adding the [TODO: A link to product picker from how to settings schemas]():
+Update the settings schema by adding the [Product Picker](/how-to/settings-schemas/#%EF%B8%8F-product-picker):
 
 ```typescript
 // schema.ts
@@ -374,6 +362,7 @@ interface Product {
   productSourceUrl: string
   env: string
 }
+
 export default interface Settings {
   /**
    * @title Product
@@ -384,401 +373,347 @@ export default interface Settings {
 }
 ```
 
-After updating the schema Update the app version in `package.json` file then run the following command
+After updating the schema, update the app version in the `package.json` file,
+ then run the following command:
+
 ```bash
 yarn run build && yarn run pub
 ```
 
-After installing the app or upgrading the latest version
+After installing the app or upgrading to the latest version,
+select the product from the product picker and save the settings.
+Finally, download these settings to work on the app locally:
 
+![After selecting the product](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/b6118346-2549-4686-9a2c-0f4719e228e5)
 
-### Integrate Product Information
+Run the following command to download the app settings:
+
+```bash
+phy app settings <installation-name>
+```
+
+After downloading the settings, you'll find them in `src/settings/index.json`:
+
+```json
+{
+  "general": {
+    "appId": "68625a103d17e50008ff041a",
+    "appName": "signage-app-test",
+    "appDisplayName": "signage-app-test",
+    "provider": "app-container",
+    "type": "gdm",
+    "release": "GridApp v4.1.20",
+    "defaultLanguage": "",
+    "supportedLanguages": [],
+    "organizationId": "64c785b9b8e89400080e6f7e",
+    "organizationName": "ahmed-workspace",
+    "dataResidency": "UAE",
+    "country": "AE",
+    "installationType": "screen"
+  },
+  "notifications": {
+    "org_id": "ahmed-workspace",
+    "secret": "",
+    "endpoint": "https://push.ombori.com"
+  },
+  "spacesSettings": {},
+  "devicesSettings": {},
+  "app": {
+    "gridApp": {
+      "valid": true,
+      "url": "686259af69b2a600075a2814/1f9c3e16-8d7a-4e62-bc21-5de8bf454b1a",
+      "name": "ahmed-workspace.signage-app-test-0.1.2.gridapp",
+      "id": "686259b869b2a600075a324c",
+      "type": "application/x-gridapp",
+      "ref": "media",
+      "iconUrl": null,
+      "gridapp": {
+        "id": "686259af69b2a600075a2814",
+        "buildId": "686259b869b2a600075a324c"
+      },
+      "settings": {
+        "product": {
+          "ref": "grid-product",
+          "productGroupId": "99465",
+          "productId": "N9C3MS-GOOGPL9-BLK",
+          "defaultImage": "https://api.omborigrid.com/regions/uae/products/v1/assets/64c785b9b8e89400080e6f7e-prod/321133d6-4132-595e-a632-eda797edeb09",
+          "productSourceUrl": "regions/UAE/products/v1/tenants/64c785b9b8e89400080e6f7e/prod/products",
+          "env": "prod"
+        }
+      },
+      "filename": "686259b869b2a600075a324c.tar.gz",
+      "path": "/grid-settings/686259b869b2a600075a324c"
+    }
+  }
+}
+```
+
+### Integrate Product Information and Run the App Locally
+
+After installing the `@phygrid/products-react` package,
+we'll fetch the product details and display the product in the app.
 
 Now let's create a React component that displays products using the SDK:
 
-```typescript
-import React, { useEffect, useState } from "react"
-import { HubClient } from "@phygrid/hub-client"
+We'll create a custom hook that can be used for fetching product details
+and update the app to show the product details. Our goal is to create a screen app like this:
 
-interface Product {
-  id: string
-  title: string
-  description: string
-  price: number
-  images: string[]
-  category: string
-  tags: string[]
+![Signage Screen App](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/9f5d3b14-5adf-4fb9-ac53-97ca6168f7a3)
+
+First, create a custom hook `useProduct.ts`:
+
+```typescript
+import { useState, useEffect } from 'react';
+import Settings from '../schema';
+
+interface ProductData {
+  id: string;
+  name: string;
+  price: number;
+  currency: string;
+  image: string;
+  description?: string;
 }
 
-const ProductDisplay: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
-  const [settings, setSettings] = useState<any>({})
+export const useProduct = (settings: Settings | null) => {
+  const [productData, setProductData] = useState<ProductData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        const hubClient = new HubClient()
-
-        // Get app settings
-        const appSettings = await hubClient.settings.get()
-        setSettings(appSettings)
-
-        // Get products
-        const productList = await hubClient.products.list()
-        setProducts(productList)
-      } catch (error) {
-        console.error("Failed to initialize app:", error)
-      } finally {
-        setLoading(false)
-      }
+    if (!settings?.product) {
+      setError('No product settings available');
+      return;
     }
 
-    initializeApp()
-  }, [])
+    const fetchProduct = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const { productGroupId, productId, productSourceUrl } = settings.product;
+        const baseUrl = 'https://api.omborigrid.com/';
+        const fullUrl = `${baseUrl}${productSourceUrl}/${productGroupId}`;
+        const response = await fetch(fullUrl);
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch product: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const productData = data.data;        
+        const productName = productData.productName?.[0]?.productName || 'Product Name';
+        const priceEntry = productData.productPriceList?.find((price: any) => price.productId === productId);
+        const price = priceEntry?.listPrice || 0;
+        const currency = priceEntry?.isoCurrencyCode || 'USD';
+        const image = settings.product.defaultImage;
+        
+        setProductData({
+          id: settings.product.productId,
+          name: productName,
+          price: price,
+          currency: currency,
+          image: image,
+          description: productData.productDescription?.[0]?.productDescription
+        });
+      } catch (err) {
+        console.error('Error fetching product:', err);
+        setError(err instanceof Error ? err.message : 'Failed to fetch product');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [settings]);
+
+  return { productData, loading, error };
+};
+```
+
+Update `app.tsx`:
+
+```typescript
+import React, { useCallback, useEffect, useState } from 'react';
+import styled, { keyframes } from 'styled-components';
+import { connectPhyClient, PhyHubClient } from '@phygrid/hub-client';
+import { getDevSettings, isDevMode } from './utils/dev-mode';
+import Settings from './schema';
+import { useProduct } from './hooks/useProduct';
+
+interface AppState {
+  client: PhyHubClient | null;
+  settings: Settings | null;
+  signals: PhyHubClient['signals'] | null;
+}
+
+const initialState: AppState = {
+  client: null,
+  settings: null,
+  signals: null,
+};
+
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const pulse = keyframes`
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+`;
+
+function App() {
+  const [state, setState] = useState<AppState>(initialState);
+  const { productData, loading, error } = useProduct(state.settings);
+
+  useEffect(() => {
+    if (productData?.image) {
+      const img = new Image();
+      img.onload = () => console.log('Background image loaded successfully');
+      img.onerror = () => console.error('Background image failed to load');
+      img.src = productData.image;
+    }
+  }, [productData?.image]);
+
+  const initializeDevMode = useCallback(() => {
+    setState(prev => ({
+      ...prev,
+      settings: getDevSettings()
+    }));
+  }, []);
+
+  const initializeClient = useCallback(async () => {
+    try {
+      const client = await connectPhyClient();
+      const signals = await client.initializeSignals();
+      const settings = await client.getSettings() as Settings;
+
+      setState({ client, settings, signals });
+    } catch (err) {
+      console.error('Error initializing client:', err);
+    }
+  }, []);
+
+  useEffect(() => {
+    const initialize = async () => {
+      if (isDevMode()) {
+        initializeDevMode();
+        return;
+      }
+      await initializeClient();
+    };
+
+    initialize();
+  }, [initializeDevMode, initializeClient]);
+
+  if (!state.settings) {
+    return <Container>Loading gridapp settings...</Container>;
+  }
 
   if (loading) {
-    return <div>Loading products...</div>
+    return <Container>Loading product data...</Container>;
+  }
+
+  if (error) {
+    return <Container>Error: {error}</Container>;
   }
 
   return (
-    <div className={`product-grid ${settings.displayMode}`}>
-      {products.map(product => (
-        <div key={product.id} className="product-card">
-          {product.images.length > 0 && (
-            <img src={product.images[0]} alt={product.title} />
-          )}
-          <h3>{product.title}</h3>
-          <p>{product.description}</p>
-          {settings.showPricing && (
-            <div className="price">${product.price.toFixed(2)}</div>
-          )}
-          <div className="category">{product.category}</div>
-        </div>
-      ))}
-    </div>
-  )
+    <Container 
+      style={{ 
+        backgroundImage: productData?.image ? `url(${productData.image})` : undefined,
+        backgroundColor: productData?.image ? 'transparent' : '#000000'
+      }}
+    >
+      <ProductPrice>
+        {productData?.price ? `${productData.currency} ${productData.price.toFixed(2)}` : 'Price not available'}
+      </ProductPrice>
+      
+      <ProductName>
+        {productData?.name || 'Product Name'}
+      </ProductName>
+    </Container>
+  );
 }
 
-export default ProductDisplay
+const Container = styled.div`
+  text-align: center;
+  background-color: #000000;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  width: 100%;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 1.5vmin);
+  position: relative;
+  overflow: hidden;
+`;
+
+const ProductPrice = styled.div`
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 20px 30px;
+  border-radius: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  animation: ${fadeInUp} 1s ease-out, ${pulse} 2s ease-in-out infinite;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+`;
+
+const ProductName = styled.div`
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  right: 40px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 20px 30px;
+  border-radius: 15px;
+  font-size: 20px;
+  font-weight: 600;
+  animation: ${fadeInUp} 1s ease-out 0.5s both;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+`;
+
+export default App;
 ```
 
-## 🔌 API-Based Integration
+Now you can deploy a new version and connect either [a PhyOS browser or PhyOS Physical/VM device.](/tutorials/build-your-first-screen-app/#-deploying-the-app-to-a-phyos-device-or-vm)
 
-For more advanced use cases, you can use the Products API directly to create, update, and manage products programmatically.
+Update the version in `package.json` to `1.0.0`, then run the following command:
 
-### Example Flow for Integration End-to-End
-
-Here's a complete example of how to integrate products using the API:
-
-```typescript
-import { HubClient } from "@phygrid/hub-client"
-
-class ProductManager {
-  private hubClient: HubClient
-
-  constructor() {
-    this.hubClient = new HubClient()
-  }
-
-  // Create a new product
-  async createProduct(productData: {
-    title: string
-    description: string
-    price: number
-    category: string
-    images?: string[]
-  }) {
-    try {
-      const product = await this.hubClient.products.create({
-        ...productData,
-        environment: "production",
-        language: "en",
-        space: "default",
-      })
-
-      console.log("Product created:", product.id)
-      return product
-    } catch (error) {
-      console.error("Failed to create product:", error)
-      throw error
-    }
-  }
-
-  // Update existing product
-  async updateProduct(productId: string, updates: Partial<Product>) {
-    try {
-      const updatedProduct = await this.hubClient.products.update(
-        productId,
-        updates
-      )
-      console.log("Product updated:", productId)
-      return updatedProduct
-    } catch (error) {
-      console.error("Failed to update product:", error)
-      throw error
-    }
-  }
-
-  // Get products with filtering
-  async getProducts(filters?: {
-    category?: string
-    tags?: string[]
-    priceRange?: { min: number; max: number }
-  }) {
-    try {
-      let products = await this.hubClient.products.list()
-
-      // Apply filters
-      if (filters?.category) {
-        products = products.filter(p => p.category === filters.category)
-      }
-
-      if (filters?.tags) {
-        products = products.filter(p =>
-          filters.tags!.some(tag => p.tags.includes(tag))
-        )
-      }
-
-      if (filters?.priceRange) {
-        products = products.filter(
-          p =>
-            p.price >= filters.priceRange!.min &&
-            p.price <= filters.priceRange!.max
-        )
-      }
-
-      return products
-    } catch (error) {
-      console.error("Failed to get products:", error)
-      throw error
-    }
-  }
-
-  // Delete a product
-  async deleteProduct(productId: string) {
-    try {
-      await this.hubClient.products.delete(productId)
-      console.log("Product deleted:", productId)
-    } catch (error) {
-      console.error("Failed to delete product:", error)
-      throw error
-    }
-  }
-}
-
-// Usage example
-const productManager = new ProductManager()
-
-// Create a product
-const newProduct = await productManager.createProduct({
-  title: "Wireless Headphones",
-  description: "High-quality wireless headphones with noise cancellation",
-  price: 199.99,
-  category: "Electronics",
-  images: ["https://example.com/headphones.jpg"],
-})
-
-// Get all electronics products
-const electronics = await productManager.getProducts({
-  category: "Electronics",
-})
+```bash
+yarn run build && yarn run pub
 ```
 
-For detailed API reference and advanced usage patterns, see the [Products API Reference](/api-reference/products) (to be added later).
+![PhyOS browsers](https://api.phygrid.com/regions/eu/media/v1/assets/media/676514e0adc52b0008c4ddb8/2048038e-9616-4c07-b2b7-abb01b7c5471)
 
-## 📊 GPF-Based Integration
-
-Google Product Feed integration provides a streamlined way to import and manage products using Google's standardized format.
-
-### Example Flow for Integration End-to-End
-
-1. **Set up GPF Integration in Console**:
-
-   - Navigate to **Content → Products**
-   - In the **Integrations** tab, click **New Integration**
-   - Select **Google Product Feed**
-   - Name your integration (e.g., "Main Product Feed")
-   - Set the sync schedule (e.g., every 6 hours)
-   - Select your environment
-   - Provide the feed URL for each language
-   - Save the integration
-
-2. **Configure Feed URL**:
-   Your Google Product Feed URL should follow this format:
-
-   ```
-   https://your-domain.com/feed.xml
-   ```
-
-3. **Monitor Integration**:
-
-   - Check the integration status in the Console
-   - Review sync logs for any errors
-   - Verify products are appearing correctly
-
-4. **Use Products in Your App**:
-
-   ```typescript
-   import { HubClient } from "@phygrid/hub-client"
-
-   const hubClient = new HubClient()
-
-   // Products from GPF will be available through the standard API
-   const products = await hubClient.products.list()
-
-   // Filter by source if needed
-   const gpfProducts = products.filter(p => p.source === "gpf")
-   ```
-
-## 🎮 Products SDK Usage in Apps
-
-The Products SDK provides various methods to interact with products in your applications. Here are common scenarios and use cases:
-
-### Different Scenarios and Use Cases
-
-#### 1. Product Catalog Display
-
-```typescript
-// Display all products in a grid
-const ProductCatalog = () => {
-  const [products, setProducts] = useState([])
-
-  useEffect(() => {
-    const loadProducts = async () => {
-      const hubClient = new HubClient()
-      const allProducts = await hubClient.products.list()
-      setProducts(allProducts)
-    }
-    loadProducts()
-  }, [])
-
-  return (
-    <div className="catalog">
-      {products.map(product => (
-        <ProductCard key={product.id} product={product} />
-      ))}
-    </div>
-  )
-}
-```
-
-#### 2. Category-Based Filtering
-
-```typescript
-// Filter products by category
-const CategoryFilter = ({ selectedCategory }: { selectedCategory: string }) => {
-  const [products, setProducts] = useState([])
-
-  useEffect(() => {
-    const loadProducts = async () => {
-      const hubClient = new HubClient()
-      const allProducts = await hubClient.products.list()
-      const filtered = allProducts.filter(p => p.category === selectedCategory)
-      setProducts(filtered)
-    }
-    loadProducts()
-  }, [selectedCategory])
-
-  return <ProductGrid products={products} />
-}
-```
-
-#### 3. Search Functionality
-
-```typescript
-// Search products by title or description
-const ProductSearch = ({ query }: { query: string }) => {
-  const [results, setResults] = useState([])
-
-  useEffect(() => {
-    const searchProducts = async () => {
-      const hubClient = new HubClient()
-      const allProducts = await hubClient.products.list()
-      const searchResults = allProducts.filter(
-        product =>
-          product.title.toLowerCase().includes(query.toLowerCase()) ||
-          product.description.toLowerCase().includes(query.toLowerCase())
-      )
-      setResults(searchResults)
-    }
-
-    if (query.length > 2) {
-      searchProducts()
-    }
-  }, [query])
-
-  return <ProductList products={results} />
-}
-```
-
-#### 4. Price Range Filtering
-
-```typescript
-// Filter products by price range
-const PriceFilter = ({
-  minPrice,
-  maxPrice,
-}: {
-  minPrice: number
-  maxPrice: number
-}) => {
-  const [products, setProducts] = useState([])
-
-  useEffect(() => {
-    const filterByPrice = async () => {
-      const hubClient = new HubClient()
-      const allProducts = await hubClient.products.list()
-      const filtered = allProducts.filter(
-        product => product.price >= minPrice && product.price <= maxPrice
-      )
-      setProducts(filtered)
-    }
-    filterByPrice()
-  }, [minPrice, maxPrice])
-
-  return <ProductGrid products={products} />
-}
-```
-
-#### 5. Real-time Product Updates
-
-```typescript
-// Listen for product changes
-const ProductMonitor = () => {
-  const [products, setProducts] = useState([])
-
-  useEffect(() => {
-    const hubClient = new HubClient()
-
-    // Initial load
-    const loadProducts = async () => {
-      const allProducts = await hubClient.products.list()
-      setProducts(allProducts)
-    }
-    loadProducts()
-
-    // Set up real-time updates (if supported)
-    const interval = setInterval(loadProducts, 30000) // Refresh every 30 seconds
-
-    return () => clearInterval(interval)
-  }, [])
-
-  return <ProductDashboard products={products} />
-}
-```
-
-### Focus on Examples and Outcomes
-
-The Products SDK enables you to create rich, interactive experiences:
-
-- **Dynamic Pricing Displays**: Show real-time pricing updates across multiple locations
-- **Inventory Management**: Display stock levels and availability status
-- **Personalized Recommendations**: Filter and sort products based on user preferences
-- **Multi-language Support**: Display products in different languages based on location
-- **Category Navigation**: Create hierarchical product browsing experiences
-
-> **Note:** This guide focuses on practical usage examples. For complete SDK reference documentation covering all available methods and options, see the [Products SDK Reference](/toolkit-reference/products-sdk) (to be added later).
+Now you can change the app settings, select a different product, and save the settings.
+The changes will be deployed to the device, and you can easily see the updates.
 
 ## 🚀 Next Steps
 
@@ -786,8 +721,6 @@ Now that you understand the basics of Products integration, you can:
 
 - [Create settings schemas](/how-to/settings-schemas/) to configure your product displays
 - [Use Signals](/how-to/signals/) to track product interactions and user behavior
-- [Integrate with peripherals](/how-to/peripherals-and-descriptors/) to create interactive product experiences
+- [Integrate with peripherals](/how-to/peripherals-and-descriptors/) to 
+    create interactive product experiences
 - [Set up checkout integration](/how-to/checkout-integration/) to enable purchases
-- [Generate reports](/how-to/reports/) on product performance and user engagement
-
-For advanced product management and automation, consider exploring the API reference documentation for complete programmatic control over your product ecosystem.
