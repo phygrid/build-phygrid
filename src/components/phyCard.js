@@ -117,11 +117,25 @@ const ImageWrapper = styled.div`
   gap: var(--ant-margin-md);
   width: 100%;
   height: 100%;
+
+  .ant-image {
+    position: sticky;
+    top: var(--ant-padding-md);
+  }
 `
 
 const Content = styled.div`
   position: sticky;
   top: var(--ant-padding-md);
+
+  ul,
+  p,
+  ol {
+    color: var(--ant-color-text-secondary);
+  }
+
+  ul {
+  }
 `
 
 const PhyCard = styled(Card)`

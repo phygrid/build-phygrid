@@ -4,6 +4,7 @@ import { graphql } from "gatsby"
 import styled from "@emotion/styled"
 import { MDXProvider } from "@mdx-js/react"
 import * as Icons from "@ant-design/icons"
+import * as Antd from "antd"
 import { getImage, GatsbyImage } from "gatsby-plugin-image"
 import { Typography } from "antd"
 
@@ -12,25 +13,29 @@ import Layout from "../components/layout"
 import Accordion from "../components/accordion"
 import TableOfContents from "../components/tableOfContents"
 import PhyCard from "../components/phyCard"
+import StepImage from "../components/stepImage"
 import ResponsivePlayer from "../components/responsivePlayer"
-import { Alert } from "antd"
 import InfoBox from "../components/info"
+import Overview from "../components/overview"
 
 import { markdownStyles } from "../styles/markdownStyles"
 
 const components = {
   Accordion,
   Icons,
-  Alert,
   PhyCard,
+  StepImage,
   InfoBox,
   GatsbyImage,
   getImage,
   ResponsivePlayer,
+  Antd,
+  Overview,
 }
 
 const DocTemplate = ({ data, children }) => {
-  const { title, icon, images } = data.mdx.frontmatter
+  const { title, icon, images, category, access, overview } =
+    data.mdx.frontmatter
   const { tableOfContents } = data.mdx
   const { slug } = data.mdx.fields
 
@@ -66,6 +71,7 @@ const DocTemplate = ({ data, children }) => {
           <MDXProvider components={components}>
             {React.cloneElement(children, {
               images: images || [], // Pass images as props to MDX
+              overview: overview || [], // Pass overview as props to MDX
             })}
           </MDXProvider>
         </Article>
@@ -90,6 +96,11 @@ export const query = graphql`
             gatsbyImageData(layout: FULL_WIDTH)
           }
         }
+        overview {
+          childImageSharp {
+            gatsbyImageData(layout: FULL_WIDTH)
+          }
+        }
       }
       fields {
         slug
@@ -104,7 +115,6 @@ export default DocTemplate
 
 const Title = styled(Typography.Title)`
   margin: 0 var(--ant-padding-lg) var(--ant-padding-md) var(--ant-padding-lg);
-  width: 100%;
   display: flex;
   align-items: center;
   gap: var(--ant-margin-xs);
