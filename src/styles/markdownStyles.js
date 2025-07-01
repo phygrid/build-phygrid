@@ -336,52 +336,36 @@ export const markdownStyles = css`
   table {
     border-spacing: 0;
     border-collapse: collapse;
-    display: block;
-    width: max-content;
     max-width: 100%;
     overflow: auto;
-    font-variant: tabular-nums;
-    border: 1px solid var(--borderColor-default);
+    border-radius: var(--ant-border-radius);
   }
 
   table th,
   table td {
     padding: var(--ant-padding-xs) var(--ant-padding-sm);
-    border: 1px solid var(--borderColor-default);
+    border: 1px solid var(--ant-color-border-secondary);
+    background-color: var(--ant-color-bg-container);
   }
 
   table th {
-    font-weight: var(--base-text-weight-semibold, 600);
+    font-weight: normal;
     text-align: left;
-    color: var(--fgColor-default);
-    border-bottom: 1px solid var(--borderColor-default);
+    color: var(--ant-color-text);
+    background: var(--ant-color-fill-secondary);
   }
 
-  table td {
-    border-bottom: 1px solid var(--borderColor-default);
+  table.center td {
+    text-align: center;
   }
 
   table td > :last-child {
     margin-bottom: 0;
   }
 
-  table tr {
-    background-color: var(--bgColor-default);
-    border-top: 1px solid var(--borderColor-muted);
-  }
-
-  table tr:nth-child(2n) {
-    background-color: var(--bgColor-muted);
-  }
-
-  table img {
-    background-color: transparent;
-  }
-
   code,
   tt {
     padding: 0.2em 0.4em;
-    margin: 0;
     font-size: 85%;
     white-space: break-spaces;
     background-color: var(--bgColor-neutral-muted);
@@ -591,8 +575,10 @@ export const markdownStyles = css`
   }
 
   .gatsby-highlight pre {
-    margin: 0;
     width: 100%;
     overflow-x: auto;
+    background: var(--ant-color-bg-container);
+    border-radius: var(--ant-border-radius-lg);
+    border: 1px solid var(--ant-color-border-secondary);
   }
 `
