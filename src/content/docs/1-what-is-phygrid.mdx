@@ -6,307 +6,107 @@ images:
   - img/phyos.png
 ---
 
-## 🚀 Designed for speed, scale, & simplicity
+## What is Phygrid?
 
-**Phygrid is the operating system for physical-world AI.**
+**The operating system for physical-world AI.**
 
-We believe the next digital frontier isn't in the cloud. It's in the real world, where life happens. From intersections and warehouses to farmlands and ports, building for the physical world has been messy, fragmented, and slow. We're fixing it.
+Run apps and AI at the edge, stream data, manage devices, and build interactive real-world experiences. From warehouses to streets we make edge + cloud + AI work together, at scale.
 
-Phygrid is the infrastructure layer for real-world intelligence, turning edge devices into scalable systems, empowering developers to ship AI solutions in days, and making proof-of-concept to production a repeatable, capital-efficient playbook.
+<GatsbyImage
+  image={props.images[1]?.childImageSharp?.gatsbyImageData}
+  alt="PhyOS"
+/>
 
-![PhyOS](./img/phyos.png)
+## 🧱 Why build on Phygrid?
 
-<PhyCard cover={<GatsbyImage src={props.images[1]} alt="PhyOS" />}>
- <Antd.Row gutter={[24,16]} style={{ width: "100%", marginTop: 'var(--ant-margin-md)', marginBottom: 'var(--ant-margin-md)' }} >
+Traditional IoT stacks are fragmented. AI at the edge is messy.
 
-<Antd.Col xs={24} lg={12} xl={8}>
-  <p>
-    <strong>Edge Native OS</strong>
-    <br />
-    Hardened Linux-based operating system built specifically for edge
-    deployments.
-  </p>
-</Antd.Col>
+**We fix that with:**
 
-<Antd.Col xs={24} lg={12} xl={8}>
-  <p>
-    <strong>Centralized Management</strong>
-    <br />
-    Seamlessly manage and monitor edge devices, AI models, peripherals &
-    solutions from a single platform.
-  </p>
-</Antd.Col>
+1. ✅ Edge-native OS (PhyOS) with OTA + GPU
+2. ✅ Digital twins + MCP for real-world context
+3. ✅ One CLI, API, and Console to manage it all
+4. ✅ Built-in MLOps + signals + remote ops
+5. ✅ Secure, compliant, multi-region data
 
-<Antd.Col xs={24} lg={12} xl={8}>
-  <p>
-    <strong>Seamless Integrations</strong>
-    <br />
-    Connect with existing services like Stripe, Google Workspace, CMS platforms,
-    or custom APIs to unify your workflows and extend platform capabilities.
-  </p>
-</Antd.Col>
+## 🔍 Core concepts
 
-<Antd.Col xs={24} lg={12} xl={8}>
-  <p>
-    <strong>Data-Driven Insights</strong>
-    <br />
-    Consolidate data from all sources to unlock actionable intelligence and
-    fine-tune models to increase accuracy.
-  </p>
-</Antd.Col>
+Phygrid is everything you need to build for the real world. As easily as you build for the web.
 
-<Antd.Col xs={24} lg={12} xl={8}>
-  <p>
-    <strong>Developer-Centric Tooling</strong>
-    <br />
-    Build with ease using well-documented APIs, SDKs, and workflows
-  </p>
-</Antd.Col>
+<PhyCard images={[props.images[0]]} stickyImage style={{ marginBottom: "var(--ant-margin-md)" }}>
 
-<Antd.Col xs={24} lg={12} xl={8}>
-  <p>
-    <strong>Pre-built solutions & AI models</strong>
-  </p>
-  <p>
-    Accelerate development with a growing marketplace of ready-to-use
-    components, integrations, and models.
-  </p>
-</Antd.Col>
+**PhyOS** runs on Intel, ARM, or custom hardware. It’s a secure, GPU-accelerated container OS with OTA updates and built-in failover. Perfect for edge AI, high-performance logic, and hardware control.
 
-</Antd.Row>
-</PhyCard>
+**Phyhub** is your cloud-native backend. It manages digital twins, streams real-time data, powers ML pipelines, and handles everything from identity to products, checkout, and media.
 
-⚙️ **Edge Native OS:** Hardened Linux-based operating system built specifically
-for edge deployments.
+**Signals** track every event, drive analytics, and fine-tune your models. Spaces map your environment from region to room, so you can target content, apply permissions, and generate rich reporting.
 
-🚀 **Centralized Management:** Seamlessly manage and monitor edge devices,
-AI models, peripherals & solutions from a single platform.
+**Peripherals** — doors, cameras, printers, sensors — all become controllable through simple APIs and digital twin models. Your apps interact with them just like software objects.
 
-🔌 **Seamless Integrations:** Connect with existing services like Stripe, Google Workspace, CMS platforms, or custom APIs to unify your workflows and extend platform capabilities.
-
-📊 **Data-Driven Insights:** Consolidate data from all sources to unlock actionable intelligence and fine-tune models to increase accuracy.
-
-👨‍💻 **Developer-Centric Tooling:** Build with ease using well-documented APIs, SDKs, and workflows
-
-🛍️ **Prebuilt Solutions & AI Models:** Accelerate development with a growing marketplace of ready-to-use components, integrations, and models.
-
-## 👩‍💻👨‍💻 Developer-first experience
-
-<PhyCard style={{ marginBottom: "var(--ant-margin-md)" }} images={[props.images[0]]} stickyImage>
-
-<h3>
-  <strong>1. 🧰 Dev toolkit</strong>
-</h3>
-
-Use CLI, API, SDKs, or the Console to configure, deploy, and monitor everything—from infrastructure to user-facing experiences.
-
-- **CLI**: One-command deployment, device provisioning, live log access
-- **API & SDKs**: Automate everything with Node.js, Python, and direct API access
-- **Console**: Configure apps, devices, media, users, and billing via GUI
-
-<h3 style={{ marginTop: "2em" }}>
-  <strong>2. 🧱 Powerful backend stack</strong>
-</h3>
-
-A powerful backend stack with built-in services for orchestration, identity, content, and data.
-
-- **Core API**: Unified interface for managing all backend services
-- **Digital Twin Engine**: Model and control devices, apps, and peripherals
-- **Signals + ML Ops**: Real-time data collection, model tuning, and automation
-- **Products, Media, Checkout, ID Provider**: Support commerce, content, and identity workflows
-
-<h3 style={{ marginTop: "2em" }}>
-  <strong>3. 🛍️ Solutions marketplace</strong>
-</h3>
-
-Browse ready-to-use integrations, AI models, and edge workflows to accelerate development.
-
-- Use prebuilt agents, hardware descriptors, and templates to deploy faster
-- Build your own private or public listings for your organization or customers
-
-<h3 style={{ marginTop: "2em" }}>
-  <strong>4. 🧠 Edge native OS</strong>
-</h3>
-
-**PhyOS** is a hardened Linux-based OS for edge devices—container-ready, secure, and built for scale.
-
-- Zero-touch provisioning and OTA updates
-- GPU-accelerated container runtime
-- Operational alerting and rollback support
-- Runs on Intel, ARM, and custom hardware
-
-<h3 style={{ marginTop: "2em" }}>
-  <strong>5. 🗺️ Spaces</strong>
-</h3>
-
-Organize devices and apps by real-world hierarchy: region → building → floor → room
-
-- Used to scope permissions, content targeting, analytics, and alerts
-- Spaces are not digital twins themselves, but help structure how twins are deployed
-
-<h3 style={{ marginTop: "2em" }}>
-  <strong>6. 🔌 Peripherals</strong>
-</h3>
-
-Connect external hardware (scanners, doors, printers, etc.) via digital twin mapping.
-
-- Control peripherals from apps, agents, or Console
-- Supports bidirectional interaction, real-time data, and monitoring
-- Works across screen-based and headless environments
+And it's all tied together by a **complete toolkit for developers**: use the CLI, REST API, drop-in SDKs, the intuitive Console UI, or connect agentic workflows via the MCP server.
 
 </PhyCard>
 
-## ⚡️ What Phygrid solves
+## ⚡️ Quickstart for developers
 
-Phygrid solves the complexity of building real-world applications that run across edge devices, screens, sensors, and connected environments. Without stitching together fragile stacks or managing infrastructure manually. Whether you're orchestrating devices, collecting signals, integrating peripherals, or deploying AI at the edge, Phygrid handles the hard parts so you can focus on building.
+Build your first edge app in **less than 10 minutes:**
 
-### ✅ Set up and maintain edge devices
+Want the full walkthrough? 👉 Check out the complete [Edge App tutorial](../tutorials/build-your-first-edge-app).
 
-Use **PhyOS** to skip manual setup, driver mess, flaky updates, and unresponsive devices.
+```bash
+# Scaffold your edge app
+phy app create
 
-<PhyCard style={{ marginBottom: "var(--ant-margin-md)" }}>
+# Deploy to a local VM for testing (or connect a device)
+phy app vm create
+phy vm start <vm-name>
 
-💡 **Zero-Touch Provisioning & Remote Management:** Provision using a 6 digit code (like a chromecast) or using device serial numbers for provisioning multiple devices at scale. Manage devices via intuitive Web UI, secure shell access, or full Remote Desktop control.
+# Push and register your app
+phy app deploy
 
-🧠 **Hardware-Accelerated Container Runtime:** Native support for GPU-acceleration (Nvidia, AMD and Intel) for high-performance, low-latency applications and agentic workflows making decisions directly at the edge.
+# Connect to your device or VM shell
+phy dev shell <device-name>
 
-🖥️ **Cross-Platform Hardware Support:** Runs reliably on both Intel and ARM-based hardware, making it suitable for a wide range of embedded and commercial-grade computing devices.
+# Check your container
+docker ps
+docker logs <container-id> -f
 
-🔄 **OTA Updates With Rollback:** Robust over-the-air update system with version control and rollback support to ensure safe and reliable updates in production environments.
+```
 
-🚨 **Operational Alerts:** Define alert conditions and recipient groups. Trigger based on connectivity, event sequences (or lack thereof) and alert different recipients depending on physical location.
+From here, you can iterate, publish new versions, and deploy at scale. All from the CLI or Console.
 
-</PhyCard>
+## 🧠 Edge AI Marketplace
 
-### ✅ Manage devices at scale
+1. **Deploy from Hugging Face with one command.** Go from prototype to live edge inference in minutes.
+2. **Fine-tune, run inference, and stream analytics.** Manage your entire model lifecycle right from Phygrid.
+3. **CLI and SDK support.** Automate deployments, scaffold apps, upload models, and bind to devices with Node or Python.
+4. **Roll out to thousands of devices.** Phygrid handles orchestration, health checks, rollbacks, and fleet scaling.
+5. **Build adaptive edge apps.** Use MCP to make your models environment-aware and responsive to real-world signals.
+6. **Install and manage via Console or CLI.** Keep full control over where and how your apps run.
 
-At the heart of Phygrid is **Phyhub**. The high-performance, cloud-native Digital Twin backend that powers intelligent device orchestration, real-time communication, and secure remote control at scale.
+## 🔒 Data, security & compliance
 
-<PhyCard style={{ marginBottom: "var(--ant-margin-md)" }}>
+1. End-to-end encrypted. Data is secure in transit and at rest (WSS, HTTPS).
+2. Anonymized user IDs. Easy consent management and withdrawals.
+3. Global data residency. Choose where your data lives: EU, US, AU, IN, UAE.
+4. Signed containers with RBAC. Secure deployments and role-based access.
+5. CLI and SDK level control. Encrypt, deploy, and audit with Node and Python.
+6. ISO 27001 & 27701 certified. Enterprise-grade security and privacy.
+7. Firewall and threat detection. Azure WAF, IDPS, and Sentinel SIEM.
+8. Outbound-only networking. One port to whitelist, secure by default.
 
-🧭 **Digital Twins:** Track and manage devices, apps, peripherals and physical spaces using digital twins for full visibility and control.
+## 🚀 Why teams love Phygrid
 
-🔔 **Real-Time Messaging:** Facilitate low-latency communication between apps, devices & peripherals, both locally and across the cloud.
+1. ✅ Edge + cloud unified
+2. ✅ GPU + container-native
+3. ✅ Easy OTA & rollback
+4. ✅ Works with any infra (WiFi, 4G, 5G, Ethernet)
+5. ✅ Build with Node, Python, or raw API
+6. ✅ Massive fleet management out of the box
 
-🔐 **Perform Secure, Full Remote Management:** Access logs, update configurations, restart services, and more. All remotely, securely, and instantly.
+## 🥇 Phygrid vs the rest
 
-🧬 **Custom Descriptors:** Create descriptors for your bespoke digital twins to make your applications and agents understand and interact with your unique physical environment.
-
-🧠 **Model Context Protocol:** By exposing all Phyhub digital twins using MCP, you enable agentic workflows across all your physical spaces.
-
-</PhyCard>
-
-### ✅ Deploy, monitor, and control from one place
-
-Use the **Phygrid Console** to manage your entire environment through a single UI.
-
-<PhyCard style={{ marginBottom: "var(--ant-margin-md)" }}>
-
-🚀 **App Management:** Install your own applications or applications from the marketplace to a single or thousand devices. Set a global configuration and overrides per physical location or device.
-
-🖥️ **Device Management:** Configure, group, and control physical devices, from screens and sensors to any kind of peripheral.
-
-🗺️ **Spaces & Physical Mapping:** Map devices to real-world locations and organize them into logical spaces for easier control and reporting.
-
-📊 **Analytics & Data Collection:** Explore insights from edge-generated data, including system usage, performance, and user behavior.
-
-🎞️ **Media & Content:** Organize and distribute media assets and contextual information for digital experiences on screens or mobile devices.
-
-👨‍💼 **User & Role Management:** Manage your users, create custom roles, manage access to applications and physical spaces.
-
-💳 **Usage & Billing:** Track platform usage and manage billing plans, quotas, and allowances.
-
-</PhyCard>
-
-### ✅ Track events and power automation
-
-**Signals** is the data layer of the Phygrid platform. Powering insights, analytics, and adaptive experiences across all connected apps and environments.
-
-<PhyCard style={{ marginBottom: "var(--ant-margin-md)" }}>
-
-📈 **Historical Event Logging:** Log and analyze events from all connected devices and applications.
-
-🧪 **ML Ops Support:** Use real-world data to measure outcomes, fine-tune models, and improve behavior over time.
-
-🔄 **Real-Time Feeds & Integrations:** Stream data to external dashboards or subscribe to feeds for custom workflows.
-
-</PhyCard>
-
-### ✅ Automate and integrate with code
-
-Use the CLI, API, and SDKs to deploy apps, manage devices, and automate your workflows.
-
-<PhyCard style={{ marginBottom: "var(--ant-margin-md)" }}>
-
-⚙️ **CLI with One-Command Deploys:** Deploy containers, apps, or config updates to thousands of devices at once.
-
-📦 **SDKs for Node.js and Python:** Build native integrations or apps using familiar tooling.
-
-🧪 **Test & Simulate Locally:** Develop against local emulators or staged devices before rolling out.
-
-</PhyCard>
-
-### ✅ Networking made easy
-
-Phygrid-powered devices support flexible and secure networking options, designed for reliable deployment across diverse environments and enterprise networks.
-
-<PhyCard style={{ marginBottom: "var(--ant-margin-md)" }}>
-
-🛜 **Wired or Wireless Connectivity:** Depending on the hardware and deployment context, devices can connect via Ethernet, Wi-Fi or 4G/5G networks.
-
-📤 **Outbound-Only Communication:** Devices initiate only outbound connections. Only a single IP and port needs whitelisting to streamline deployment to enterprise networks.
-
-🔒 **Secure Protocols Only:** All communication is encrypted using industry-standard protocols WSS and HTTPS.
-
-⚙️ **Flexible IP Configuration:** Supports both DHCP and Static IP address configurations, allowing seamless adaptation to existing network setups.
-
-</PhyCard>
-
-### ✅ Build end-to-end applications
-
-Use **Phygrid's app framework** to connect logic, UI, and automation across your entire environment.
-
-<PhyCard style={{ marginBottom: "var(--ant-margin-md)" }}>
-
-🧠 **Edge Apps:** Run containers on devices for low-latency, hardware-integrated logic.
-
-🖥️ **Screen Apps:** Build UIs with HTML5 and React for kiosk or signage deployments.
-
-📱 **Progressive Web Apps (PWA):** Deliver mobile-friendly experiences through QR code or NFC—no installation needed.
-
-☁️ **Cloud Apps:** Orchestrate and integrate from the cloud with access to all your device and space context.
-
-</PhyCard>
-
-### ✅ Data privacy
-
-Phygrid is built with privacy and regulatory compliance at its core, ensuring trust and transparency across all deployments.
-
-<PhyCard style={{ marginBottom: "var(--ant-margin-md)" }}   >
-
-🛡️ Data Controller/Processor Model: Clients act as the Data Controller, while Phygrid operates as the Data Processor.
-
-🆔 **Single Unified Record with Anonymized Contact ID:** All apps use a shared anonymized identifier, allowing for centralized consent management and easy withdrawal of consent.
-
-🌍 **Global Data Residency Options:** Choose where your data is stored and processed — currently supported regions include EU, US, AU, IN, and UAE.
-
-🔐 **End-to-End Encryption:** All data is encrypted in transit and at rest, ensuring protection across the entire lifecycle.
-
-</PhyCard>
-
-This model gives organizations the flexibility to meet local regulations, uphold user trust, and maintain full data governance across their solutions.
-
-## 🏆 Why Phygrid?
-
-✅ Cloud/Edge based
-✅ AI Enhanced
-✅ Composable
-✅ Secure & compliant
-✅ Great developer experience
-
-One platform for everything physical in digital spaces. No one else comes close.
-
-### 🔍 Us vs them
+No one else combines edge-native GPUs, OTA rollback, digital twins, live ML ops, and app UX in a single platform.
 
 <table>
   <thead>
@@ -419,16 +219,21 @@ One platform for everything physical in digital spaces. No one else comes close.
   </tbody>
 </table>
 
-## 🧰 Start building
+## 👩‍💻 Ready to build?
 
-- One-command deployments to thousands of devices
-- Support for Node.js, Python, and containerized apps
-- Tools for testing, alerts, remote access, and live debugging
-- Open-source templates to get started fast
-- Everything accessible via CLI, API, or Console
+It only takes a few steps to get up and running with Phygrid.
 
-Head to the **Getting started** section to:
+1. **[Set up your tenant](../getting-started/tenant-setup)** Create your organization, configure your environments, and get your API keys.
+2. **[Prepare your local environment](../getting-started/local-environment-setup)** Install the CLI, SDKs, and connect to your tenant.
+3. **[Provision your first device](../getting-started/device-setup)** Flash PhyOS, register it with a 6-digit code, and verify connectivity.
 
-1. [Set up your tenant](../getting-started/tenant-setup)
-2. [Set up your local environment](../getting-started/local-environment-setup)
-3. [Deploy your first device](../getting-started/device-setup)
+Now head to our tutorials to deploy your first edge app, screen app, or connect them into a complete real-world experience.
+
+## 📚 Learn more
+
+1. Check out our guide to using [Phygrid Console](https://learn.phygrid.com/console).
+2. Follow Phygrid on social media: [X](https://x.com/phygridcom), [LinkedIn](https://www.linkedin.com/company/phygrid), [YouTube](https://www.youtube.com/@phygrid), [Instagram](https://www.instagram.com/phygridcom), [Facebook](https://www.facebook.com/phygrid).
+
+## 💬 Contact us
+
+If you have any questions, please contact us at [hello@phygrid.com](mailto:hello@phygrid.com).

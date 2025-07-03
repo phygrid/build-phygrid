@@ -93,12 +93,22 @@ export const query = graphql`
         access
         images {
           childImageSharp {
-            gatsbyImageData(layout: FULL_WIDTH)
+            gatsbyImageData(
+              layout: FULL_WIDTH
+              quality: 95
+              formats: [AUTO, WEBP]
+              placeholder: BLURRED
+            )
           }
         }
         overview {
           childImageSharp {
-            gatsbyImageData(layout: FULL_WIDTH)
+            gatsbyImageData(
+              layout: FULL_WIDTH
+              quality: 95
+              formats: [AUTO, WEBP]
+              placeholder: BLURRED
+            )
           }
         }
       }
