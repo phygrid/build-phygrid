@@ -67,6 +67,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       access: String
       icon: String
       images: [File] @fileByRelativePath
+      overview: [File] @fileByRelativePath
     }
   `)
 }

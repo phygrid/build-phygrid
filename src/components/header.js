@@ -30,11 +30,9 @@ const Header = ({ siteTitle, onToggleSidebar, sidebarCollapsed }) => {
         </Space> */}
 
         <Space size="small">
-          <NavLink href="https://build.phygrid.com">Build</NavLink>
-          <NavLink href="https://learn.phygrid.com">Learn</NavLink>
-          <Button type="primary" href="https://console.phygrid.com">
-            Login
-          </Button>
+          {/* <NavLink href="https://build.phygrid.com">Build</NavLink>
+          <NavLink href="https://learn.phygrid.com">Learn</NavLink> */}
+          <Button href="https://console.phygrid.com">Login</Button>
           <Button
             type="text"
             icon={<MenuOutlined />}
