@@ -3,4 +3,120 @@ title: "Device Setup"
 icon: "Cpu"
 ---
 
-Hello world
+import { Alert } from 'antd';
+
+## Overview
+
+Phygrid supports the following hardware platforms:
+- **x86-64**: PC based devices running Intel and AMD processors
+- **arm64**: DN74 media player
+- **Tizen**: Samsung Tizen TVs running Tizen version 4.5, 6.0, and 7.0
+
+To successfully connect your device to the Phygrid platform and to run your application on it, the device needs to be properly configured and it needs to be online. Installing PhyOS is a requirement for x86-64 and arm64 devices, as well as virtual machines. 
+
+You can test your applications by setting up VMware and Hyper-V virtual machine devices, or by setting up a web browser device.
+
+
+## Install PhyOS on your device
+
+### Install PhyOS on an x86-64 device
+
+1. [Download the latest PhyOS for x86-64 devices](https://qr.run/phyos-bundle-amd64-latest)
+2. Write the downloaded PhyOS image file to a USB flash drive using [Balena Etcher](https://www.balena.io/etcher/)
+3. Insert the USB flash drive with PhyOS to the device, make sure no other USB storage devices are inserted
+4. Make sure you have a keyboard connected and power up the device
+5. Press the F10 key (may differ on some platforms) while BIOS is loading in order to enter the boot menu, then select your USB drive
+6. Follow the on-screen instructions to install PhyOS
+7. Reboot the device when prompted and remove the installation media
+8. Device will now boot into PhyOS
+
+### Install PhyOS on a DN74 media player
+
+1. [Download the latest PhyOS for DN74 devices](https://qr.run/phyos-bundle-arm64-latest)
+2. Write the downloaded PhyOS image file to a microSD card using [Balena Etcher](https://www.balena.io/etcher/)
+3. Make sure the device is powered off and power cable is disconnected, then insert the SD card
+4. Make sure you have a keyboard connected to the black USB port below the blue USB port
+5. Cold boot the device (insert the power cable to power on and boot from SD card)
+5. Follow the on-screen instructions to flash the internal drive with PhyOS
+6. After installation is complete, use the Poweroff Installer option to turn off the device, disconnect the power cable and remove the SD card
+8. Connect the power cable, device will now boot into PhyOS
+
+Note: When connecting your DN74 media player to a display, make sure you use HDMI 2 port (HDMI port next to the Ethernet port)
+
+## Connect your device to the internet
+
+Note: Make sure your firewall is properly configured to allow your devices to connect to the Phygrid platform: [Network Infrastucture Requirements](https://learn.phygrid.com/networking/network-infrastructure-requirements/)
+
+### Wired connection
+
+Note: Wired connections should work out of the box, you only need to connect the cable to the ethernet port
+
+### Wireless connection
+
+1. Boot the device
+2. From the PhyOS info screen, press Enter to open main menu
+3. Select Networking
+4. Select WiFi
+5. Select your wireless network adapter
+6. Select the wireless network you wish to connect to, and enter the network password
+7. Exit the menu
+
+### Device network configuration
+
+If necessary, you can configure DHCP or Static IP settings for your network connection
+
+1. Boot the device
+2. From the PhyOS info screen, press Enter to open main menu
+3. Select Networking
+4. Select Ethernet or WiFi
+5. Select your network adapter
+6. Configure DHCP or Static IP settings and save changes
+7. Exit the menu
+
+## Create a test device in a virtual machine
+
+1. Download the latest PhyOS for your virtual machine software: [VMware](https://qr.run/phyos-bundle-vmware-latest) or [Hyper-V](https://qr.run/phyos-bundle-hyperv-latest)
+2. Create a virtual machine with the following hardware specifications: 
+   - 2GB of RAM or more
+   - 2 processor cores or more
+   - at least 16GB of internal storage
+3. Insert the PhyOS image file to the bootable drive in your virtual machine
+4. Adjust the virtual machine settings to set the proper boot order
+5. Start the virtual machine
+6. Follow the on-screen instructions to install PhyOS
+7. Reboot the device when prompted and remove the installation media
+8. Virtual machine will now boot into PhyOS
+
+## Connect the device to your application
+
+### Connect a physical or virtual machine device to your application
+
+1. Upload a build of the application to your tenant
+2. Install the application
+3. Configure the installation
+4. [Connect your device to the installation](https://learn.phygrid.com/installations/connect-a-new-device-to-an-installation/)
+
+### Connect a web browser device to your installation
+
+Note: Web browser devices do not require installing PhyOS
+
+1. Open your installation and go to the Devices tab
+2. Click Connect a device
+3. Click Setup a new device
+4. For the device type, select Web browser
+5. Open https://screen.phygrid.com/browser/4.2.470/ in a new browser window
+6. Enter the six-letter code from your screen into the Six letter code field in the form
+7. Click Connect the device
+
+### Connect a Samsung Tizen TV device to your application
+
+Note: Tizen devices do not require installing PhyOS
+
+[Connect a Tizen device to an installation](https://learn.phygrid.com/installations/connect-a-new-device-to-an-installation/)
+
+
+## What next?
+
+→ “Build your first screen app”
+
+→ “Build your first edge app
