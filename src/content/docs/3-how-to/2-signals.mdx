@@ -1046,32 +1046,64 @@ Tracks when a QR code is scanned.
 await signals.sendQrScan()
 ```
 
-### **State Management**
+## **🔍 Signal Verification**
 
-Methods for managing application state and configuration.
+To ensure signals are being generated correctly, you can use the following commands to inspect whether signals are being generated and examine their payload contents.
 
-#### **`setState(params: { key: string; value: string | number; expiryDuration: number })`**
+#### **Event Signals**
 
-Sets a state key, value, and expiry duration for the current session.
-
-**Parameters:**
-
-- `params`: `object` - State parameters
-  - `key`: `string` - State key identifier
-  - `value`: `string | number` - State value to store
-  - `expiryDuration`: `number` - Expiry duration in milliseconds
-
-**Returns:** `Promise&lt;void&gt;` - Resolves when state is successfully set
-
-**Example:**
-
-```typescript
-await signals.setState({
-  key: "user_preferences",
-  value: { theme: "dark", language: "en" },
-  expiryDuration: 3600000, // 1 hour in milliseconds
-})
+```bash
+journalctl -u phydevice -o cat | awk '/sendEventSignal/,/^\}/'
 ```
+
+#### **Session Signals**
+
+```bash
+journalctl -u phydevice -o cat | awk '/sendSessionSignal/,/^\}/'
+```
+
+#### **Client Signals**
+
+```bash
+journalctl -u phydevice -o cat | awk '/sendClientSignal/,/^\}/'
+```
+
+### **Expected Output**
+
+You should be able to see output similar to the following example:
+
+```javascript
+sendEventSignal(): sending Event Signal from device xxxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxx {
+  deviceId: 'xxxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxx',
+  data: {
+    g: 'UAE',
+    b: 'xxxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxx',
+    t: '2025-06-20T07:47:29.348',
+    s: 'MONITOR_CONTAINER_CRASH',
+    u: false,
+    h: 'xxxxxxxxxxxxxxxxxxxxxxx',
+    ac: undefined,
+    ad: 'xxxxxx-xxxx-xxxx-xxxxx-xxxxxxxxxxx',
+    c: 'xxxxxxxxxxxxxxxxxxxxxxx'
+  }
+}
+```
+
+### **Verification Checklist**
+
+When verifying signal generation, ensure:
+
+1. **Signal appears in logs** - The appropriate signal type is being logged
+2. **Device ID is correct** - The device identifier matches your expected device
+3. **Timestamp is current** - The timestamp reflects when the signal was generated
+4. **Event type is valid** - The signal type matches your intended event
+5. **Data structure is complete** - All required fields are populated with valid data
+
+### **Common Verification Issues**
+
+- **No signal output:** Check if the application is properly initialized and the signal methods are being called
+- **Missing data fields:** Verify that all required parameters are provided when calling signal methods
+- **Incorrect timestamps:** Ensure system clock is synchronized and timezone is configured correctly
 
 ## **📈 Best Practices**
 
@@ -1116,6 +1148,7 @@ Common issues and solutions for signal implementation and transmission.
 ### **Connection Issues**
 
 **Symptoms:** Signals not being transmitted, timeout errors
+
 **Solutions:**
 
 - Verify network connectivity to Phygrid services
@@ -1126,6 +1159,7 @@ Common issues and solutions for signal implementation and transmission.
 ### **Data Transmission Problems**
 
 **Symptoms:** Incomplete or missing signal data
+
 **Solutions:**
 
 - Validate signal payload structure and required fields
@@ -1136,6 +1170,7 @@ Common issues and solutions for signal implementation and transmission.
 ### **Performance Issues**
 
 **Symptoms:** Slow signal transmission, application lag
+
 **Solutions:**
 
 - Implement signal batching and rate limiting
@@ -1146,6 +1181,7 @@ Common issues and solutions for signal implementation and transmission.
 ### **Analytics Dashboard Issues**
 
 **Symptoms:** Signals not appearing in console analytics
+
 **Solutions:**
 
 - Verify signal format and data structure
@@ -1171,7 +1207,6 @@ You now have a comprehensive understanding of signals in the Phygrid platform. T
 
 **🔧 Advanced Features:**
 
-- **State management** - Techniques for managing application state and configuration
 - **Error handling** - Robust error handling and recovery mechanisms
 - **Performance optimization** - Strategies for efficient signal transmission
 
