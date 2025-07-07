@@ -12,9 +12,12 @@ Phygrid supports the following hardware platforms:
 - **arm64**: DN74 media player
 - **Tizen**: Samsung Tizen TVs running Tizen version 4.5, 6.0, and 7.0
 
+VMWare and Hyper-V are the supported virtualization platforms. 
+
+You can also preview and test your applications in a browser, using web browser devices. 
+
 To successfully connect your device to the Phygrid platform and to run your application on it, the device needs to be properly configured and it needs to be online. Installing PhyOS is a requirement for x86-64 and arm64 devices, as well as virtual machines. 
 
-You can test your applications by setting up VMware and Hyper-V virtual machine devices, or by setting up a web browser device.
 
 
 ## Install PhyOS on your device
@@ -75,21 +78,11 @@ If necessary, you can configure DHCP or Static IP settings for your network conn
 
 ## Create a device in a virtual machine
 
-1. Download the latest PhyOS for your virtual machine software: [VMware](https://qr.run/phyos-bundle-vmware-latest) or [Hyper-V](https://qr.run/phyos-bundle-hyperv-latest)
-2. Create a virtual machine with the following hardware specifications: 
-   - 2GB of RAM or more
-   - 2 processor cores or more
-   - at least 16GB of internal storage
-3. Insert the PhyOS image file to the bootable drive in your virtual machine
-4. Adjust the virtual machine settings to set the proper boot order
-5. Start the virtual machine
-6. Follow the on-screen instructions to install PhyOS
-7. Reboot the device when prompted and remove the installation media
-8. Virtual machine will now boot into PhyOS
+[How to set up virtual machines using phy cli](#)
 
-## Connect the device to your application
+## Connect the device to your installation
 
-### Connect a physical or virtual machine device to your application
+### Connect a physical or virtual machine device to your installation
 
 1. Upload a build of the application to your tenant
 2. Install the application
