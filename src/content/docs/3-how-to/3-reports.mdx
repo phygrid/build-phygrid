@@ -85,7 +85,7 @@ enum SessionInteractionType {
 
 #### **Events List Card**
 
-Displays a chronological list of recent events with filtering capabilities.
+Displays a chronological list of recent events.
 
 ```ts
 interface EventsListCard extends BaseCard {
@@ -132,8 +132,8 @@ interface EventsCount extends BaseCard {
 ```ts
 {
   type: CardType.EventsCount,
-  title: "Button Clicks",
-  eventType: "BUTTON_CLICK",
+  title: "Ratings Count",
+  eventType: "RATING",
 }
 ```
 
@@ -187,7 +187,7 @@ interface EventsFunnelCard extends BaseCard {
 {
   type: CardType.EventsFunnel,
   title: "Purchase Funnel",
-  events: ["VIEW_PRODUCT", "ADD_TO_CART", "CHECKOUT", "PURCHASE"],
+  events: ["CART_ADD", "CART_REMOVE", "CART_VIEW"],
 }
 ```
 
@@ -229,10 +229,10 @@ interface WeekHeatmapDataSourceEvents extends WeekHeatmapDataSource {
 ```ts
 {
   type: CardType.WeekHeatmap,
-  title: "User Activity Heatmap",
+  title: "Content View Heatmap",
   dataSource: {
     type: WeekHeatmapDataSourceType.Events,
-    eventType: "USER_INTERACTION",
+    eventType: "CONTENT_VIEW",
   },
 }
 ```
@@ -598,7 +598,7 @@ Include the rating interface in your app's main component by adding the followin
 <RatingSection>
   <p>Rate this product:</p>
   <StarRating>
-    {[1, 2, 3, 4, 5].map(star => (
+    {([1, 2, 3, 4, 5] as const).map(star => (
       <Star
         key={star}
         filled={star <= selectedRating}
