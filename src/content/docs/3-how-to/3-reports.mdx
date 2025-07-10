@@ -600,7 +600,8 @@ const analyticsSchema: AnalyticsSchema = {
 
 ## 🛠️ How to Implement Analytics
 
-This section demonstrates how to implement analytics for events using a product rating system as an example. You'll learn how to create user interface elements, emit events, and configure analytics to display the tracked data.
+This section demonstrates how to create reports for [signals](/how-to/signals/) using a product rating system as an example.
+You'll learn how to create user interface elements, emit events, and configure analytics to display the tracked data.
 
 ### **Step 1: Create User Interface Components**
 
@@ -644,7 +645,7 @@ Include the rating interface in your app's main component by adding the followin
     ))}
   </StarRating>
   <StyledButton onClick={handleSendRating}>
-    Send Rating ({selectedRating} star{selectedRating !== 1 ? "s" : ""})
+    Send Rating ({selectedRating} star)
   </StyledButton>
 </RatingSection>
 ```
@@ -998,11 +999,3 @@ Now that you understand reports and analytics, you can:
 - [Learn about Signals for advanced event tracking](/how-to/signals/)
 - [Explore Products Integration for e-commerce analytics](/how-to/products-integration/)
 - [Implement Checkout Integration for transaction tracking](/how-to/checkout-integration/)
-- [Review the API Reference for advanced reporting capabilities](/api-reference/reports-api/)
-
-## 📚 Additional Resources
-
-- **Analytics Schema Types:** Explore all available card types and configuration options
-- **Event Processing:** Learn about event lifecycle and processing timelines
-- **Performance Optimization:** Best practices for efficient event tracking
-- **Troubleshooting:** Common issues and solutions for analytics implementation
