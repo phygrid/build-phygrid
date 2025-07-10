@@ -15,29 +15,99 @@ Reports and analytics provide valuable insights into user interactions, app perf
 - Best practices for creating meaningful analytics dashboards
 - How to visualize custom events in the Console's reporting interface
 
-## 🎯 Analytics Schema Overview
+## 📊 Analytics Aggregation Levels
 
-The **analytics schema** defines the structure and types of data visualizations displayed in your application's dashboard. Screen Apps include a default analytics schema that can be customized to track specific events and metrics relevant to your business needs.
+The Phygrid platform provides analytics and reports at four distinct organizational levels, enabling you to analyze data from different perspectives and scopes:
 
-**Default Analytics Configuration:**
+### 1. Installation Level Reports
 
-All new Screen Apps and Edge Apps include a basic analytics schema located in `src/analytics-schema.ts`. The default configuration provides session tracking:
+View analytics specific to individual app installations, providing detailed insights of signals captured from all the devices connected to the installation. Here you can fully customize the reports based on the `analytics-schema.ts` definition of your installation.
 
-```ts
-const analyticsSchema: AnalyticsSchema = {
-  groups: [
-    {
-      name: "Overview",
-      cards: [
-        {
-          type: CardType.Sessions,
-          interactionType: SessionInteractionType.Interactive,
-        },
-      ],
-    },
-  ],
-}
-```
+![Installation Level Reports](../../../images/3-reports/installation-level-reports.png)
+
+**Use Cases:**
+
+- Monitor performance of specific app deployments
+- Track user engagement for individual installations
+- Analyze installation-specific metrics and events
+
+### 2. Device Level Reports
+
+Access comprehensive analytics for individual devices, providing consolidated insights and aggregated data from all apps, services, and user interactions occurring on a specific device.
+Here you have three tabs available for analytics.
+
+- 1. Overview
+  - Sessions
+  - Top events
+  - Product views
+  - Media performance
+  - NPS responses
+  - Sales conversions funnel
+  - Category views
+  - Media performance by tag
+- 2. Events flow
+- 3. Sessions week heatmap
+
+![Device Level Reports](../../../images/3-reports/device-level-reports.png)
+
+**Use Cases:**
+
+- Monitor device performance and health
+- Track cross-app interactions on single devices
+- Analyze device-specific usage patterns
+
+### 3. Space Level Reports
+
+Access comprehensive analytics aggregated across all devices and installations within a specific space or location, providing consolidated insights into location-based performance metrics, user engagement patterns, and cross-device interactions within the physical environment.
+
+- 1. Overview
+  - Sessions
+  - Top events
+  - Product views
+  - Media performance by device
+  - NPS responses
+  - Sales conversions funnel
+  - Category views
+  - Media performance
+  - Performance by device
+- 2. Events flow
+- 3. Sessions week heatmap
+
+![Space Level Reports](../../../images/3-reports/space-level-reports.png)
+
+**Use Cases:**
+
+- Monitor location-based performance metrics
+- Track foot traffic and engagement across spaces
+- Analyze space-wide user behavior patterns
+
+### 4. Tenant Level Reports
+
+Access comprehensive analytics aggregated across all devices, installations, and spaces within your entire tenant, providing organization-wide insights that enable executive-level decision making, strategic planning, and comprehensive performance monitoring across your entire Phygrid ecosystem.
+
+Here you have three tabs available for analytics covering your complete organizational scope.
+
+- 1. Overview
+  - Sessions
+  - Top events
+  - Product views
+  - Media performance
+  - NPS responses
+  - Sales conversions funnel
+  - Category views
+  - Media performance by tag
+  - Performance by location
+  - Performance by installation
+- 2. Events flow
+- 3. Sessions week heatmap
+
+![Tenant Level Reports](../../../images/3-reports/tenant-level-reports.png)
+
+**Use Cases:**
+
+- Monitor organization-wide performance metrics
+- Track global user engagement and trends
+- Generate executive-level reporting and insights
 
 ## 📋 Available Card Types
 
@@ -504,99 +574,29 @@ interface GridStyles {
 }
 ```
 
-## 📊 Report Aggregation Levels
+## 🎯 Analytics Schema Overview
 
-The Phygrid platform provides analytics and reports at four distinct organizational levels, enabling you to analyze data from different perspectives and scopes:
+The **analytics schema** defines the structure and types of data visualizations displayed in your application's dashboard. Screen Apps include a default analytics schema that can be customized to track specific events and metrics relevant to your business needs.
 
-### 1. Installation Level Reports
+**Default Analytics Configuration:**
 
-View analytics specific to individual app installations, providing detailed insights of signals captured from all the devices connected to the installation. Here you can fully customize the reports based on the `analytics-schema.ts` definition of your installation.
+All new Screen Apps and Edge Apps include a basic analytics schema located in `src/analytics-schema.ts`. The default configuration provides session tracking:
 
-![Installation Level Reports](../../../images/3-reports/installation-level-reports.png)
-
-**Use Cases:**
-
-- Monitor performance of specific app deployments
-- Track user engagement for individual installations
-- Analyze installation-specific metrics and events
-
-### 2. Device Level Reports
-
-Access comprehensive analytics for individual devices, providing consolidated insights and aggregated data from all apps, services, and user interactions occurring on a specific device.
-Here you have three tabs available for analytics.
-
-- 1. Overview
-  - Sessions
-  - Top events
-  - Product views
-  - Media performance
-  - NPS responses
-  - Sales conversions funnel
-  - Category views
-  - Media performance by tag
-- 2. Events flow
-- 3. Sessions week heatmap
-
-![Device Level Reports](../../../images/3-reports/device-level-reports.png)
-
-**Use Cases:**
-
-- Monitor device performance and health
-- Track cross-app interactions on single devices
-- Analyze device-specific usage patterns
-
-### 3. Space Level Reports
-
-Access comprehensive analytics aggregated across all devices and installations within a specific space or location, providing consolidated insights into location-based performance metrics, user engagement patterns, and cross-device interactions within the physical environment.
-
-- 1. Overview
-  - Sessions
-  - Top events
-  - Product views
-  - Media performance by device
-  - NPS responses
-  - Sales conversions funnel
-  - Category views
-  - Media performance
-  - Performance by device
-- 2. Events flow
-- 3. Sessions week heatmap
-
-![Space Level Reports](../../../images/3-reports/space-level-reports.png)
-
-**Use Cases:**
-
-- Monitor location-based performance metrics
-- Track foot traffic and engagement across spaces
-- Analyze space-wide user behavior patterns
-
-### 4. Tenant Level Reports
-
-Access comprehensive analytics aggregated across all devices, installations, and spaces within your entire tenant, providing organization-wide insights that enable executive-level decision making, strategic planning, and comprehensive performance monitoring across your entire Phygrid ecosystem.
-
-Here you have three tabs available for analytics covering your complete organizational scope.
-
-- 1. Overview
-  - Sessions
-  - Top events
-  - Product views
-  - Media performance
-  - NPS responses
-  - Sales conversions funnel
-  - Category views
-  - Media performance by tag
-  - Performance by location
-  - Performance by installation
-- 2. Events flow
-- 3. Sessions week heatmap
-
-![Tenant Level Reports](../../../images/3-reports/tenant-level-reports.png)
-
-**Use Cases:**
-
-- Monitor organization-wide performance metrics
-- Track global user engagement and trends
-- Generate executive-level reporting and insights
+```ts
+const analyticsSchema: AnalyticsSchema = {
+  groups: [
+    {
+      name: "Overview",
+      cards: [
+        {
+          type: CardType.Sessions,
+          interactionType: SessionInteractionType.Interactive,
+        },
+      ],
+    },
+  ],
+}
+```
 
 ## 🛠️ How to Implement Analytics
 
@@ -763,7 +763,7 @@ After implementing the custom event tracking, follow these steps to deploy and v
 
 ---
 
-## 🛠️ Advanced Example: Real-time Status Monitoring
+## 🛠️ Advanced Example: Real-time Events Monitoring
 
 This advanced example demonstrates how to implement real-time events analytics by creating a dedicated analytics tab for monitoring events. You'll learn how to emit monitoring events, configure real-time status cards, and organize analytics into multiple tabs for better data organization.
 
@@ -901,6 +901,7 @@ Complete the deployment process to activate your real-time monitoring dashboard:
 4. **Verify Real-time Monitoring:**
    - Access your Screen App on the device
    - Click the status reporting buttons to generate events
+     ![Status reporting buttons](../../../images/3-reports/screen-app-report-status.png)
    - Monitor the new "Monitor Status" tab in the analytics dashboard
 
 ![Monitor Status Tab](../../../images/3-reports/screen-app-monitor-tab.png)
@@ -920,6 +921,75 @@ Complete the deployment process to activate your real-time monitoring dashboard:
 - **Service Availability:** Track uptime and availability of critical services
 - **Alert Generation:** Identify when systems require attention or maintenance
 - **Performance Optimization:** Analyze status patterns to improve system reliability
+
+## 📅 Filter Analytics by Date
+
+All analytics dashboards in the Phygrid platform include powerful date filtering capabilities that allow you to analyze data across specific time periods. The date range selector provides flexible options to view historical trends, compare performance across different periods, and focus on specific timeframes for detailed analysis.
+
+**Available Date Range Options:**
+
+- **Last 24 Hours:** View real-time and recent activity patterns
+- **Last 7 Days:** Analyze weekly trends and patterns
+- **Last 30 Days:** Monitor monthly performance metrics
+- **Last 3 Months:** Track quarterly trends and seasonal patterns
+- **Last 6 Months:** Analyze medium-term performance trends
+- **Custom Range:** Select specific start and end dates for targeted analysis
+
+**How to Use Date Filtering:**
+
+1. **Locate the Date Range Selector:** Available at the top of all analytics dashboards
+2. **Select Your Time Period:** Choose from predefined ranges or set a custom date range
+3. **Apply the Filter:** Analytics cards automatically update to reflect the selected period
+4. **Compare Time Periods:** Use different date ranges to identify trends and patterns
+
+![Date Range Selector](../../../images/3-reports/screen-app-report-date-range.png)
+
+**Best Practices for Date Filtering:**
+
+- **Daily Analysis:** Use 24-hour or 7-day ranges for operational monitoring
+- **Weekly Reviews:** Apply 7-day or 30-day ranges for performance assessments
+- **Monthly Reports:** Utilize 30-day or 3-month ranges for strategic planning
+- **Seasonal Analysis:** Use 6-month ranges to identify seasonal trends
+- **Custom Periods:** Set specific date ranges for campaign analysis or incident investigation
+
+## 📊 Report Exporting
+
+The Phygrid platform provides comprehensive data export capabilities that allow you to download analytics reports in Excel format for offline analysis, sharing with stakeholders, and integration with external business intelligence tools. The export functionality is available across all four analytics aggregation levels and includes all data from your selected date range.
+
+**Export Features:**
+
+- **Universal Availability:** Export functionality works across all 4 analytics levels (Installation, Device, Space, and Tenant)
+- **Date Range Respect:** Exported data matches your selected date range filter
+- **Excel Format:** Reports are exported as `.xlsx` files for easy integration with Microsoft Excel and other spreadsheet applications
+- **Comprehensive Data:** Includes all visible analytics cards and their underlying data
+- **Structured Format:** Data is organized in a logical, easy-to-analyze spreadsheet structure
+
+**How to Export Reports:**
+
+1. **Navigate to Analytics Dashboard:** Access any of the four analytics levels
+2. **Set Date Range:** Use the date range selector to choose your desired time period
+3. **Configure View:** Ensure all relevant analytics cards are visible and configured
+4. **Click 'Download Report':** Locate and click the download button in the dashboard
+5. **Save File:** Choose your preferred location to save the Excel file
+
+![Report Export Button](../../../images/3-reports/screen-app-report-export.png)
+
+**Use Cases for Exported Reports:**
+
+- **Executive Reporting:** Create presentation-ready reports for leadership meetings
+- **Compliance Documentation:** Maintain records for regulatory or audit requirements
+- **Data Analysis:** Perform advanced analytics using external tools like Excel, Power BI, or Tableau
+- **Performance Reviews:** Support periodic business reviews with historical data
+- **Stakeholder Sharing:** Distribute analytics insights to team members or clients
+- **Backup and Archiving:** Maintain historical records of performance metrics
+
+**Export Data Includes:**
+
+- **Session Analytics:** User engagement and interaction data
+- **Event Metrics:** Custom event counts, flows, and funnels
+- **Performance Data:** Media performance, device metrics, and system health
+- **Business Intelligence:** NPS scores, product views, and conversion metrics
+- **Temporal Data:** Time-based patterns and trends within the selected date range
 
 ## 🔄 Next Steps
 
