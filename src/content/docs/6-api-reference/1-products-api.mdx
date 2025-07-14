@@ -656,10 +656,52 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
     Please ensure that the `productGroupId` is always included in the payload. You have the flexibility to send either a single product field, multiple fields, or the entire product in your payload.
 
-    **Key behaviors:**
-    - **Replace operations**: Fields like `productName`, `productDescription`, `productType` will be completely replaced
-    - **Merge operations**: Arrays like `variants`, `productPriceList`, `productStatus` will be merged based on key fields
-    - **Limitations**: 100 products per batch
+    **Field Update Behavior:**
+
+    **Replace Operations:** Fields like `productName`, `productDescription`, `productType`
+     will be completely replaced with new values.
+    - `productName` - The product name will be updated with the new value
+    - `productShortDescription` - Product short description will be updated
+    with the new value
+    - `productInternalName` - Product internal name will be updated with
+    the new value
+    - `storageInstructions` - Product storage instructions will be updated
+    with the new value
+    - `consumerStorageInstruction` - Product consumer storage instructions
+     will be updated with the new value
+    - `productShippingInstruction` - Product shipping instructions will be
+    updated with the new value
+    - `productType` - Array of product type UUIDs will be updated with the
+    new value
+    - `productLabel` - Product label will be updated with the new value
+    - `productTags` - Product tags will be updated with the new value
+    - `brand` - Product brand will be updated with the new value
+    - `productVendor` - Product vendor will be updated with the new value
+    - `productDescription` - Product description will be replaced with the
+     new value
+    - `spaceIds` - Array of space IDs where the product is available
+
+    **Merge Operations:** Arrays will be merged based on key fields:
+    - `variants` - Will merge and update product variants array based on
+     productId and productGroupId
+    - `productFeature` - Will merge and update product features array based
+     on productId
+    - `productPriceList` - Will merge and update product prices array based
+     on productId and spaceId
+    - `productStatus` - Will merge and update product status array based
+    on spaceId
+    - `catalogPageLocationProduct` - Will merge and update product catalogue
+     array based on productId and productGroupId
+    - `customProperties` - Will merge and update product custom properties
+    array based on key and spaceId
+    - `productItemQuantity` - Will merge and update product quantity array
+    based on productId and spaceId
+
+    **Note:** The `spaceIds` array can be included in the request payload
+    and will also be automatically populated based on the values of
+    `productPriceList`, `productStatus`, and `productItemQuantity`.
+
+    **Limitations:** 100 products per batch
 
     Reference: [GridProduct](#)
 
@@ -671,7 +713,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
       <h4>Request</h4>
       
       ```bash
-      # Example 1: Update product name and description (replace operation)
+      # Example 1: Create/Update product with basic information (replace operation)
       curl -X POST \
         '{base-url}/{tenant-id}/{environment}/products/push' \
         -H 'Content-Type: application/json' \
@@ -679,30 +721,41 @@ Core endpoints for managing your product catalog, including creation, retrieval,
         -d '{
           "data": [
             {
-              "productGroupId": "12345",
+              "productGroupId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+              "productType": [
+                "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+              ],
               "productName": [
                 {
-                  "isoLanguageId": "en-GB",
-                  "productName": "Executive Office Chair"
-                },
-                {
                   "isoLanguageId": "en-US",
-                  "productName": "Executive Office Chair"
+                  "productName": "Cool product"
                 }
               ],
               "productDescription": [
                 {
-                  "isoLanguageId": "en-GB",
-                  "productDescription": "Premium executive chair with leather upholstery"
+                  "isoLanguageId": "en-US",
+                  "productDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
                 }
-              ]
+              ],
+              "productStatus": [
+                {
+                  "productStatus": "Active",
+                  "spaceId": "xxxxxxxxxxxxxxxxxxxxxxxx"
+                }
+              ],
+              "spaceIds": [
+                "xxxxxxxxxxxxxxxxxxxxxxxx"
+              ],
+              "catalogPageLocationProduct": [],
+              "variants": []
             }
           ]
         }'
       ```
 
       ```bash
-      # Example 2: Update price and quantity (merge operation)
+      # Example 2: Complete product with pricing and inventory (merge operation)
+      # productPriceList and productItemQuantity will be merged using productId and spaceId as key parameters
       curl -X POST \
         '{base-url}/{tenant-id}/{environment}/products/push' \
         -H 'Content-Type: application/json' \
@@ -710,22 +763,61 @@ Core endpoints for managing your product catalog, including creation, retrieval,
         -d '{
           "data": [
             {
-              "productGroupId": "12345",
+              "productGroupId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+              "productType": [
+                "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+              ],
+              "productName": [
+                {
+                  "isoLanguageId": "en-US",
+                  "productName": "Cool product"
+                }
+              ],
+              "productDescription": [
+                {
+                  "isoLanguageId": "en-US",
+                  "productDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                }
+              ],
+              "productStatus": [
+                {
+                  "productStatus": "Active",
+                  "spaceId": "xxxxxxxxxxxxxxxxxxxxxxxx"
+                }
+              ],
+              "spaceIds": [
+                "xxxxxxxxxxxxxxxxxxxxxxxx"
+              ],
+              "catalogPageLocationProduct": [],
               "productPriceList": [
                 {
                   "isoLanguageId": "en-GB",
-                  "productId": "12345-001",
+                  "productId": "xxx",
                   "isoCurrencyCode": "EUR",
                   "listPrice": 1140,
                   "priceListType": "Standard",
-                  "spaceId": "space-001"
+                  "spaceId": "xxxxxxxxxxxxxxxxxxxxxxxx"
+                },
+                {
+                  "isoLanguageId": "en-GB",
+                  "productId": "xxx",
+                  "isoCurrencyCode": "USD",
+                  "listPrice": 11401,
+                  "priceListType": "Standard",
+                  "spaceId": "xxxxxxxxxxxxxxxxxxxxxxxx"
                 }
               ],
+              "variants": [],
               "productItemQuantity": [
                 {
-                  "productId": "12345-001",
+                  "productId": "xxx",
                   "productItemQuantity": 90,
-                  "spaceId": "space-001"
+                  "spaceId": "xxxxxxxxxxxxxxxxxxxxxxxx"
+                },
+                {
+                  "productId": "xxx",
+                  "productItemQuantity": 910,
+                  "spaceId": "xxxxxxxxxxxxxxxxxxxxxxxx"
                 }
               ]
             }
@@ -741,7 +833,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
       {
         "data": [
           {
-            "productGroupId": "12345",
+            "productGroupId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
             "status": 200,
             "message": "Product updated successfully"
           }
