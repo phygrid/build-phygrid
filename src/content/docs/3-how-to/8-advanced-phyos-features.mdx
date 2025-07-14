@@ -5,9 +5,6 @@ icon: "Cpu"
 
 This guide explores some of advanced PhyOS features that address real-world challenges developers face when building edge-based solutions and digital experiences.
 
-## 🛜 Advanced Network Configuration
-
-
 ## 🧑‍💻 Enabling Developer Mode
 
 Developer Mode allows you to directly deploy and test your Edge Apps and Screen Apps on the device without building and publishing them to the Console first. This feature significantly accelerates the development workflow by enabling rapid iteration and real-time debugging capabilities.
@@ -81,3 +78,166 @@ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 # Display the public key to copy
 cat ~/.ssh/id_rsa.pub
 ```
+
+## 🌐 Proxy Settings
+
+Proxy servers act as intermediaries between your device and the internet, providing enhanced security, network monitoring, and access control. In enterprise environments, custom proxy configurations are often required to comply with corporate network policies and security requirements.
+
+**When to Use Custom Proxy:**
+
+- Corporate environments with mandatory proxy requirements
+- Networks with restricted internet access
+- Enhanced security and traffic monitoring needs
+- Compliance with organizational network policies
+
+### Setting Up Custom Proxy
+
+To configure a custom proxy on your PhyOS device:
+
+```shell
+phy dev shell <device-name>
+```
+
+Once connected to the device:
+
+1. Press `Enter` to bring up the interactive menu
+2. Select `Advanced` and press `Enter`
+3. Select `Set Custom Proxy` and press `Enter`
+4. Select `Set proxy settings` and press `Enter`
+5. Provide the following proxy configuration details:
+   - **Hostname**: Enter the proxy server hostname or IP address
+   - **Port**: Enter the proxy server port number (typically 8080, 3128, or 8888)
+   - **Username**: Enter your proxy authentication username
+   - **Password**: Enter your proxy authentication password
+
+**Important Considerations:**
+
+- Ensure your proxy server supports HTTP/HTTPS traffic
+- Verify authentication credentials with your network administrator
+- Some proxy configurations may require additional security certificates
+
+### Verifying Proxy Configuration
+
+After setting up your custom proxy, verify the configuration is working correctly:
+
+```shell
+curl -v https://ifconfig.me
+```
+
+This command will display your external IP address and connection details, confirming that traffic is routing through the proxy server.
+
+**What to look for:**
+
+```bash
+* Uses proxy env variable https_proxy == 'http://proxy_username:proxy_password@<hostname>:<port>'
+```
+
+This output line confirms that your proxy configuration is active and being used by the system. Here's what each part means:
+
+- **`Uses proxy env variable`**: Indicates that the system is recognizing and using the proxy environment variable
+- **`https_proxy`**: The environment variable name used for HTTPS connections
+- **`proxy_username:proxy_password`**: Your authentication credentials (will show as configured)
+- **`<hostname>:<port>`**: The proxy server address and port number you specified
+
+**Successful Proxy Indicators:**
+
+- The command completes without connection errors
+- You see the proxy environment variable being used
+- The returned IP address differs from your device's direct internet IP
+- Connection is established through the specified proxy server
+
+If you see this output, your custom proxy configuration is working correctly and all HTTPS traffic from your PhyOS device will route through the specified proxy server.
+
+**Troubleshooting:**
+
+If the proxy is not working correctly, you may see:
+
+- Connection timeouts or refused connections
+- Authentication failures (407 Proxy Authentication Required)
+- Certificate errors for HTTPS connections
+
+### Clearing Proxy Settings
+
+To remove custom proxy settings and restore direct internet connection:
+
+1. In the interactive menu, select `Advanced`
+2. Select `Set Custom Proxy` and press `Enter`
+3. Select `Clear proxy settings` and press `Enter`
+
+> **💡 Tip:** Always test your proxy configuration in a development environment before deploying to production devices. Incorrect proxy settings can prevent your device from connecting to PhyGrid services.
+
+## 🔐 Certificate Authority (CA) Configuration
+
+Certificate Authorities (CAs) are trusted entities that issue digital certificates to verify the identity of websites and services. In enterprise environments, organizations often use custom or internal CAs to secure their network communications. Adding these CA certificates to your PhyOS device ensures secure connections to internal services and prevents certificate validation errors.
+
+**When to Configure Custom CA Certificates:**
+
+- Connecting to internal enterprise services with custom certificates
+- Working with self-signed certificates in development environments
+- Compliance with organizational security policies
+- Establishing trust for internal Certificate Authorities
+
+### Adding CA Certificates
+
+To configure custom Certificate Authority certificates on your PhyOS device:
+
+```shell
+phy dev shell <device-name>
+```
+
+Once connected to the device:
+
+1. Press `Enter` to bring up the interactive menu
+2. Select `Advanced` and press `Enter`
+3. Select `CA (add certificate authority trust)` and press `Enter`
+4. Enter the URL of the CA certificates when prompted
+5. Specify whether you need to use a proxy to download the certificate:
+
+   **Option 1: Direct Download (No Proxy)**
+
+   - Enter `n` when asked "Do you need to use a proxy to download the certificate?"
+   - The system will download and install the CA certificates directly
+
+   **Option 2: Proxy-Assisted Download**
+
+   - Enter `y` when asked "Do you need to use a proxy to download the certificate?"
+   - Provide the following proxy configuration details:
+     - **Hostname**: Enter the proxy server hostname or IP address for certificate download
+     - **Port**: Enter the proxy server port number (typically 8080, 3128, or 8888)
+     - **Username**: Enter your proxy authentication username (optional)
+     - **Password**: Enter your proxy authentication password (optional)
+
+### Certificate URL Formats
+
+The CA certificate URL should point to a valid certificate file or certificate bundle. Common formats include:
+
+- **PEM Format**: `https://your-ca-server.com/ca-certificate.pem`
+- **CRT Format**: `https://your-ca-server.com/ca-certificate.crt`
+- **Certificate Bundle**: `https://your-ca-server.com/ca-bundle.crt`
+
+### Verification and Troubleshooting
+
+After adding CA certificates, verify they are properly installed:
+
+```shell
+# Test connection to a service using the custom CA
+curl -v https://internal-service.company.com
+```
+
+**Common Issues:**
+
+- **Invalid URL**: Ensure the certificate URL is accessible and returns a valid certificate file
+- **Network Connectivity**: Verify the device can reach the certificate URL
+- **Certificate Format**: Ensure the certificate is in a supported format (PEM, CRT, or DER)
+- **Proxy Configuration**: If using a proxy, verify the proxy settings are correct
+
+> **⚠️ Security Note:** Only add CA certificates from trusted sources. Adding untrusted certificates can compromise the security of your device and network communications.
+
+## 🔄 Next Steps
+
+Now that you've learned about advanced PhyOS features, you can:
+
+- [Learn to troubleshoot and debug your applications](/how-to/troubleshoot-and-debug/) to leverage these features for problem-solving
+- [Explore settings schemas](/how-to/settings-schemas/) to configure your apps with custom parameters
+- [Integrate with peripheral twins](/how-to/peripherals-and-descriptors/) to connect external hardware and sensors
+- [Use Signals for event tracking](/how-to/signals/) to monitor your edge applications and device activity
