@@ -181,7 +181,7 @@ const ParameterName = styled.code`
 
 const RequiredBadge = styled.span`
   padding: 2px 6px;
-  background: var(--ant-color-error);
+  background: var(--ant-color-warning);
   color: white;
   border-radius: var(--ant-border-radius);
   font-size: var(--ant-font-size-xs);
@@ -250,5 +250,15 @@ const ResponseContainer = styled.div`
   }
 `
 
-export { ApiDocLayout, ApiSection, ApiEndpoint, ParameterList, Parameter, ParameterTable, ResponseContainer }
+const AuthBadge = styled.span`
+  background-color: var(--ant-color-info);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  margin-left: 8px;
+`
+
+export { ApiDocLayout, ApiSection, ApiEndpoint, ParameterList, Parameter, ParameterTable, ResponseContainer, AuthBadge }
 export default ApiDocLayout 
