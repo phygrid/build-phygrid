@@ -122,11 +122,11 @@ const MethodBadge = styled.span`
   color: white;
   background: ${props => {
     switch (props.method) {
-      case 'GET': return '#52c41a'
-      case 'POST': return '#1890ff'
-      case 'PATCH': return '#fa8c16'
-      case 'DELETE': return '#f5222d'
-      default: return '#666'
+      case 'GET': return 'var(--ant-color-success)'
+      case 'POST': return 'var(--ant-color-info)'
+      case 'PATCH': return 'var(--ant-color-warning)'
+      case 'DELETE': return 'var(--ant-color-error)'
+      default: return 'var(--ant-color-text-secondary)'
     }
   }};
 `
