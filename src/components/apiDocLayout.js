@@ -257,7 +257,6 @@ const AuthBadge = styled.span`
   border-radius: 4px;
   font-size: 11px;
   font-weight: 500;
-  margin-left: 8px;
 `
 
 export { ApiDocLayout, ApiSection, ApiEndpoint, ParameterList, Parameter, ParameterTable, ResponseContainer, AuthBadge }

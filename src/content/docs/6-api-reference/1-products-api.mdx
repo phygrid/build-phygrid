@@ -294,9 +294,9 @@ Core endpoints for managing your product catalog, including creation, retrieval,
   </ApiSection>
 
   <ApiSection type="right">
-    <h4>Endpoint</h4>
+    <h4>Endpoints</h4>
     <ApiEndpoint method="GET" endpoint="{base-url}/{tenant-id}/{environment}/products">
-      <h4>Request</h4>
+      <h4>GET Request (Recommended for small requests)</h4>
       
       ```bash
       curl -X GET \
@@ -304,9 +304,12 @@ Core endpoints for managing your product catalog, including creation, retrieval,
         -H 'Content-Type: application/json' \
         -H 'x-api-key: your-access-token-here'
       ```
+    </ApiEndpoint>
+
+    <ApiEndpoint method="POST" endpoint="{base-url}/{tenant-id}/{environment}/products">
+      <h4>POST Request (Recommended for large requests >2k characters)</h4>
 
       ```bash
-      # Alternative POST method for large requests
       curl -X POST \
         '{base-url}/{tenant-id}/{environment}/products' \
         -H 'Content-Type: application/json' \
@@ -314,7 +317,10 @@ Core endpoints for managing your product catalog, including creation, retrieval,
         -d '{
           "search": "Desks",
           "limit": 10,
-          "page": 1
+          "page": 1,
+          "filter": {"gt": ["price", 10]},
+          "sort": "price asc",
+          "select": "productName,productPrice"
         }'
       ```
     </ApiEndpoint>
@@ -362,7 +368,8 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### Get Product by ID <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### Get Product by ID
+    <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Retrieve a specific product by its ID.
 
@@ -437,7 +444,8 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### Get Product By Barcode <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### Get Product By Barcode
+    <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Retrieves a specific product by barcode ID. **Variants checked:**
 
@@ -513,7 +521,8 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### GET Search <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### GET Search
+    <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Searches products or product types by keyword.
 
@@ -578,7 +587,8 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### Get Product Recommendations by ID <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### Get Product Recommendations by ID
+    <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Retrieves a list of product recommendations taken from RelatedProductGroups
 
@@ -639,7 +649,8 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### Create Products <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### Create Products
+    <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     This API allows you to upload or merge products following the `GridProduct` format. The only required field is `productGroupId`, while other fields are optional.
 
@@ -941,7 +952,8 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### DELETE Products <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### DELETE Products
+    <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Removes products from the Grid Products database based on specified IDs
 
@@ -985,7 +997,8 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### PATCH (Update) Products <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### PATCH (Update) Products
+    <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Updates products with the fields specified in the data object. Shallow-update is performed. Fields not passed in this call will remain the same. Fields containing Arrays or Objects will be completely overwritten.
 
@@ -1052,7 +1065,8 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### Get Product Variant <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### Get Product Variant
+    <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Retrieves a specific variant by ID
 
@@ -1110,7 +1124,8 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### PATCH (Update) Variants <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### PATCH (Update) Variants
+    <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Updates variants with the fields specified in the data object without requiring the product's `productGroupId`. Shallow-update is performed. Fields not passed in this call stay the same. Fields containing Arrays or Objects (`productPriceList` and `productItemQuantity`) with the matching specified variant's `productId` and `spaceId` only will be upserted.
 
@@ -1185,7 +1200,8 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### Get Product Types List <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### Get Product Types List
+    <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Returns list of product types associated with the tenant id and environment
 
@@ -1240,7 +1256,8 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### Get Product Type Details <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### Get Product Type Details
+    <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Returns details of a specific product type
 
@@ -1289,7 +1306,8 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### POST Product Types <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### POST Product Types
+    <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Update or insert product types to database
 
@@ -1345,7 +1363,8 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### DELETE Product Types <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### DELETE Product Types
+    <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Removes product types from the Grid Products database based on specified ids
 
