@@ -254,7 +254,8 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### Fetch Products <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### Get All Products
+    <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Retrieve products with a `GET` request. For large requests (>2k characters) we recommend performing the same call using POST method instead to avoid URL-length limitations.
 
@@ -361,7 +362,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### GET Product by ID <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### Get Product by ID <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Retrieve a specific product by its ID.
 
@@ -436,7 +437,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### GET Product By Barcode <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### Get Product By Barcode <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Retrieves a specific product by barcode ID. **Variants checked:**
 
@@ -577,7 +578,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### GET Product Recommendations by ID <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### Get Product Recommendations by ID <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Retrieves a list of product recommendations taken from RelatedProductGroups
 
@@ -638,7 +639,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### POST Push Products <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### Create Products <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     This API allows you to upload or merge products following the `GridProduct` format. The only required field is `productGroupId`, while other fields are optional.
 
@@ -713,116 +714,209 @@ Core endpoints for managing your product catalog, including creation, retrieval,
       <h4>Request</h4>
       
       ```bash
-      # Example 1: Create/Update product with basic information (replace operation)
       curl -X POST \
         '{base-url}/{tenant-id}/{environment}/products/push' \
         -H 'Content-Type: application/json' \
         -H 'x-api-key: your-access-token-here' \
         -d '{
-          "data": [
-            {
-              "productGroupId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-              "productType": [
-                "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-              ],
+  "data": [
+    {
+      "productGroupId": "PARENT_SKU_TEST",
               "productName": [
-                {
-                  "isoLanguageId": "en-US",
-                  "productName": "Cool product"
-                }
-              ],
-              "productDescription": [
-                {
-                  "isoLanguageId": "en-US",
-                  "productDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-                }
-              ],
-              "productStatus": [
-                {
-                  "productStatus": "Active",
-                  "spaceId": "xxxxxxxxxxxxxxxxxxxxxxxx"
-                }
-              ],
-              "spaceIds": [
-                "xxxxxxxxxxxxxxxxxxxxxxxx"
-              ],
-              "catalogPageLocationProduct": [],
-              "variants": []
-            }
-          ]
-        }'
-      ```
-
-      ```bash
-      # Example 2: Complete product with pricing and inventory (merge operation)
-      # productPriceList and productItemQuantity will be merged using productId and spaceId as key parameters
-      curl -X POST \
-        '{base-url}/{tenant-id}/{environment}/products/push' \
-        -H 'Content-Type: application/json' \
-        -H 'x-api-key: your-access-token-here' \
-        -d '{
-          "data": [
-            {
-              "productGroupId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-              "productType": [
-                "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-              ],
-              "productName": [
-                {
-                  "isoLanguageId": "en-US",
-                  "productName": "Cool product"
-                }
-              ],
-              "productDescription": [
-                {
-                  "isoLanguageId": "en-US",
-                  "productDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-                }
-              ],
-              "productStatus": [
-                {
-                  "productStatus": "Active",
-                  "spaceId": "xxxxxxxxxxxxxxxxxxxxxxxx"
-                }
-              ],
-              "spaceIds": [
-                "xxxxxxxxxxxxxxxxxxxxxxxx"
-              ],
-              "catalogPageLocationProduct": [],
-              "productPriceList": [
-                {
-                  "isoLanguageId": "en-GB",
-                  "productId": "xxx",
-                  "isoCurrencyCode": "EUR",
-                  "listPrice": 1140,
-                  "priceListType": "Standard",
-                  "spaceId": "xxxxxxxxxxxxxxxxxxxxxxxx"
-                },
-                {
-                  "isoLanguageId": "en-GB",
-                  "productId": "xxx",
-                  "isoCurrencyCode": "USD",
-                  "listPrice": 11401,
-                  "priceListType": "Standard",
-                  "spaceId": "xxxxxxxxxxxxxxxxxxxxxxxx"
-                }
-              ],
-              "variants": [],
-              "productItemQuantity": [
-                {
-                  "productId": "xxx",
-                  "productItemQuantity": 90,
-                  "spaceId": "xxxxxxxxxxxxxxxxxxxxxxxx"
-                },
-                {
-                  "productId": "xxx",
-                  "productItemQuantity": 910,
-                  "spaceId": "xxxxxxxxxxxxxxxxxxxxxxxx"
-                }
-              ]
-            }
-          ]
-        }'
+          {
+            "isoLanguageId": "en-US",
+            "productName": "Sample Product Name"
+          }
+        ],
+        "productDescription": [
+          {
+            "isoLanguageId": "en-US",
+            "productDescription": "<p>Sample product description with features and benefits.</p><ul><li>Feature 1</li><li>Feature 2</li><li>Feature 3</li></ul>"
+          }
+        ],
+      "variants": [
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_01",
+          "color": "Black",
+          "size": "",
+          "style": "",
+          "europeanArticleNumber": ["BARCODE_VALUE"],
+          "globalTradeItemNumber": [],
+          "universalProductCode": [],
+                     "productName": [
+             {
+               "isoLanguageId": "en-US",
+               "productName": "Sample Product Name - Black"
+             }
+           ],
+           "originalEuropeanArticleNumber": [],
+           "originalGlobalTradeItemNumber": [],
+           "originalUniversalProductCode": [],
+           "colorImageUrl": "https://example.com/sample-image-black.jpg"
+        },
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_02",
+          "color": "White",
+          "size": "",
+          "style": "",
+          "europeanArticleNumber": ["BARCODE_VALUE"],
+          "globalTradeItemNumber": [],
+          "universalProductCode": [],
+                     "productName": [
+             {
+               "isoLanguageId": "en-US",
+               "productName": "Sample Product Name - White"
+             }
+           ],
+           "originalEuropeanArticleNumber": [],
+           "originalGlobalTradeItemNumber": [],
+           "originalUniversalProductCode": [],
+           "colorImageUrl": "https://example.com/sample-image-white.jpg"
+        }
+      ],
+             "brand": [
+         {
+           "isoLanguageId": "en-US",
+           "brandName": "Sample Brand"
+         }
+       ],
+      "productFeature": [
+        {
+          "productId": "PARENT_SKU_TEST_01",
+          "isoLanguageId": "en-US",
+          "productFeatureType": "Color",
+          "productFeatureValue": "Black"
+        },
+                 {
+           "productId": "PARENT_SKU_TEST_01",
+           "isoLanguageId": "en-US",
+           "productFeatureType": "Brand",
+           "productFeatureValue": "Sample Brand"
+         },
+         {
+           "productId": "PARENT_SKU_TEST_01",
+           "isoLanguageId": "en-US",
+           "productFeatureType": "Tag",
+           "productFeatureValue": "Sample Category"
+         },
+        {
+          "productId": "PARENT_SKU_TEST_01",
+          "productFeatureType": "Make",
+          "productFeatureValue": "Universal",
+          "isoLanguageId": "en-US"
+        },
+        {
+          "productId": "PARENT_SKU_TEST_02",
+          "isoLanguageId": "en-US",
+          "productFeatureType": "Color",
+          "productFeatureValue": "White"
+        },
+                 {
+           "productId": "PARENT_SKU_TEST_02",
+           "isoLanguageId": "en-US",
+           "productFeatureType": "Brand",
+           "productFeatureValue": "Sample Brand"
+         },
+         {
+           "productId": "PARENT_SKU_TEST_02",
+           "isoLanguageId": "en-US",
+           "productFeatureType": "Tag",
+           "productFeatureValue": "Sample Category"
+         },
+        {
+          "productId": "PARENT_SKU_TEST_02",
+          "productFeatureType": "Make",
+          "productFeatureValue": "Universal",
+          "isoLanguageId": "en-US"
+        }
+      ],
+      "catalogPageLocationProduct": [
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_01",
+          "catalogType": "image/jpg",
+                     "catalogPageLocationProduct": "https://api.phygrid.com/regions/us/products/v1/assets/tenant-id/asset-id-1",
+           "catalogPageLocation": "https://api.phygrid.com/regions/us/products/v1/assets/tenant-id/asset-id-1"
+        },
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_02",
+          "catalogType": "image/jpg",
+          "catalogPageLocationProduct": "https://api.phygrid.com/regions/us/products/v1/assets/tenant-id/asset-id-2",
+          "catalogPageLocation": "https://api.phygrid.com/regions/us/products/v1/assets/tenant-id/asset-id-2"
+        },
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_01",
+          "catalogType": "image/jpg",
+          "catalogPageLocationProduct": "https://api.phygrid.com/regions/us/products/v1/assets/tenant-id/asset-id-3",
+          "catalogPageLocation": "https://api.phygrid.com/regions/us/products/v1/assets/tenant-id/asset-id-3"
+        },
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_01",
+          "catalogType": "image/jpg",
+          "catalogPageLocationProduct": "https://api.phygrid.com/regions/us/products/v1/assets/tenant-id/asset-id-4",
+          "catalogPageLocation": "https://api.phygrid.com/regions/us/products/v1/assets/tenant-id/asset-id-4"
+        },
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_02",
+          "catalogType": "image/jpg",
+          "catalogPageLocationProduct": "https://example.com/sample-image-5.jpg",
+          "catalogPageLocation": "https://example.com/sample-image-5.jpg"
+        },
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_02",
+          "catalogType": "image/jpg",
+          "catalogPageLocationProduct": "https://api.phygrid.com/regions/us/products/v1/assets/tenant-id/asset-id-6",
+          "catalogPageLocation": "https://api.phygrid.com/regions/us/products/v1/assets/tenant-id/asset-id-6"
+        },
+        {
+          "productGroupId": "PARENT_SKU_TEST",
+          "productId": "PARENT_SKU_TEST_02",
+          "catalogType": "image/jpg",
+          "catalogPageLocationProduct": "https://api.phygrid.com/regions/us/products/v1/assets/tenant-id/asset-id-7",
+          "catalogPageLocation": "https://api.phygrid.com/regions/us/products/v1/assets/tenant-id/asset-id-7"
+        }
+      ],
+      "productType": ["ALL_PRODUCTS"],
+      "productItemQuantity": [
+        {
+          "productId": "PARENT_SKU_TEST_01",
+          "spaceId": "<Space-ID>",
+          "productItemQuantity": 20
+        },
+        {
+          "productId": "PARENT_SKU_TEST_02",
+          "spaceId": "<Space-ID>",
+          "productItemQuantity": 20
+        }
+      ],
+      "productPriceList": [
+        {
+          "productId": "PARENT_SKU_TEST_01",
+          "priceListType": "Standard",
+          "isoLanguageId": "en-US",
+          "isoCurrencyCode": "USD",
+          "spaceId": "<Space-ID>",
+          "listPrice": 2900
+        },
+        {
+          "productId": "PARENT_SKU_TEST_02",
+          "priceListType": "Standard",
+          "isoLanguageId": "en-US",
+          "isoCurrencyCode": "USD",
+          "spaceId": "<Space-ID>",
+          "listPrice": 2900
+        }
+      ]
+    }
+  ]
+}'
       ```
     </ApiEndpoint>
 
@@ -833,7 +927,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
       {
         "data": [
           {
-            "productGroupId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+            "productGroupId": "PARENT_SKU_TEST",
             "status": 200,
             "message": "Product updated successfully"
           }
@@ -958,7 +1052,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### GET Product Variant <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### Get Product Variant <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Retrieves a specific variant by ID
 
@@ -1091,7 +1185,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### GET Product Types List <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### Get Product Types List <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Returns list of product types associated with the tenant id and environment
 
@@ -1146,7 +1240,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
 <ApiDocLayout>
   <ApiSection type="left">
-    ### GET Product Type Details <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
+    ### Get Product Type Details <AuthBadge>🔒 AUTH REQUIRED</AuthBadge>
 
     Returns details of a specific product type
 
