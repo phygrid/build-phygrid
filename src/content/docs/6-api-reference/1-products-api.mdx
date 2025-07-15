@@ -347,10 +347,8 @@ interface VariantUpdateFields {
 
 Represents product category information used for classification and organization.
 
-<InfoBox>
-  **Note:** ProductTypeId field should be used as value for a products
-  ProductType field
-</InfoBox>
+**Note:** ProductTypeId field should be used as value for a products
+ProductType field
 
 ```json
 type ProductType = {
@@ -620,7 +618,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
     Returns a response object with the following structure:
 
-    Reference: [GridProduct](#)
+    Reference: [GridProduct](#gridproduct)
 
   </ApiSection>
 
@@ -804,7 +802,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
     #### Response
 
-    Reference: [GridProduct](#)
+    Reference: [GridProduct](#gridproduct)
 
   </ApiSection>
 
@@ -869,7 +867,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
     #### Response
 
-    Reference: [GridProduct](#), [ProductType](#)
+    Reference: [GridProduct](#gridproduct), [ProductType](#producttype)
 
   </ApiSection>
 
@@ -1046,7 +1044,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
     **Limitations:** 100 products per batch
 
-    Reference: [GridProduct](#)
+    Reference: [GridProduct](#gridproduct)
 
   </ApiSection>
 
@@ -1409,7 +1407,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
     #### Response
 
-    Returns [VariantInfo](data-model)
+    Returns [VariantInfo](#variantinfo)
 
   </ApiSection>
 
@@ -1470,7 +1468,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
       </Parameter>
     </ParameterList>
 
-    Reference: `[VariantUpdateFields](data-model)`
+    Reference: [VariantUpdateFields](#variantupdatefields)
 
   </ApiSection>
 
@@ -1600,7 +1598,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
     #### Response
 
-    Returns [ProductType](data-model)
+    Returns [ProductType](#producttype)
 
   </ApiSection>
 
@@ -1644,7 +1642,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
 
     **Limitations:** 100 product types documents per batch
 
-    Reference: [ProductType](data-model)
+    Reference: [ProductType](#producttype)
 
     #### Response
 
@@ -1705,7 +1703,7 @@ Core endpoints for managing your product catalog, including creation, retrieval,
       </Parameter>
     </ParameterList>
 
-    Reference: [ProductType](data-model)
+    Reference: [ProductType](#producttype)
 
     #### Response
 
