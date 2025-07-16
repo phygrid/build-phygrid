@@ -1,6 +1,985 @@
 ---
-title: "PhyCLI"
+title: "PhyCLI Reference"
 icon: "Terminal"
 ---
 
-Hello world
+# PhyCLI Reference
+
+**PhyCLI** (`phy`) is the official command-line tool for Phygrid development. It helps you create, build, deploy, and manage applications on the Phygrid platform.
+
+## Installation
+
+```bash
+npm install -g @phygrid/cli
+```
+
+## Commands
+
+### Authentication
+
+#### `phy login`
+
+Authenticate with Phygrid. Opens your browser to complete the login process.
+
+```bash
+phy login [options]
+```
+
+**Options:**
+- `--use-device-code` - Use device code authentication (for headless environments)
+- `--use-developer-token` - Use developer token authentication (for CI/CD)
+
+**Examples:**
+```bash
+# Browser-based login (recommended)
+phy login
+
+# Device code for headless environments
+phy login --use-device-code
+
+# Developer token authentication
+phy login --use-developer-token
+```
+
+#### `phy logout`
+
+Sign out and clear your authentication tokens.
+
+```bash
+phy logout
+```
+
+### Applications
+
+#### `phy app create`
+
+Create a new Phygrid application. This command will guide you through the setup process.
+
+```bash
+phy app create [name] [options]
+```
+
+**Arguments:**
+- `name` - Application name (optional, will prompt if not provided)
+
+**Options:**
+- `-t, --type <type>` - Application type: `react`, `basic`, `mobile`, `edgenode`
+
+**Examples:**
+```bash
+# Interactive setup
+phy app create
+
+# Create with specific name and type
+phy app create myapp -t react
+
+# Create in specific organization
+phy app create myorg.myapp
+```
+
+**What it does:**
+- Creates a new application directory
+- Sets up the project structure
+- Configures build settings
+- Optionally selects a device for emulation
+
+#### `phy app build`
+
+Build your application into a deployable package.
+
+```bash
+phy app build [source] [output] [options]
+```
+
+**Arguments:**
+- `source` - Source directory (default: current directory)
+- `output` - Output directory (default: `./build`)
+
+**Options:**
+- `-t, --tag <name:version>` - Set package name and version
+- `--arch <architecture>` - Target architecture (`amd64`, `arm64`)
+- `--file <filename>` - Save as local file instead of pushing to registry
+
+**Examples:**
+```bash
+# Build from current directory
+phy app build
+
+# Build with custom name and version
+phy app build . ./dist -t myapp:1.0.0
+
+# Build for specific architecture
+phy app build --arch arm64
+```
+
+#### `phy app deploy`
+
+Deploy your application to a device.
+
+```bash
+phy app deploy [device] [options]
+```
+
+**Arguments:**
+- `device` - Device hostname or IP address
+
+**Examples:**
+```bash
+# Deploy to local device
+phy app deploy mydevice.local
+
+# Deploy to remote device
+phy app deploy 192.168.1.100
+```
+
+#### `phy app publish`
+
+Publish your application to the Phygrid marketplace.
+
+```bash
+phy app publish [app-id] [options]
+```
+
+**Arguments:**
+- `app-id` - Application identifier (e.g., `myorg.myapp`)
+
+**Options:**
+- `--file <path>` - Path to the application file
+- `--appDir <directory>` - Application directory
+- `--overwrite` - Overwrite existing release
+
+**Examples:**
+```bash
+# Publish current application
+phy app publish
+
+# Publish specific file
+phy app publish myorg.myapp --file ./build/myapp.gridapp
+```
+
+#### `phy app list`
+
+List your applications.
+
+```bash
+phy app list [search] [options]
+```
+
+**Arguments:**
+- `search` - Filter applications by name
+
+**Options:**
+- `-phyhub` - List from PhyHub
+
+**Examples:**
+```bash
+# List all applications
+phy app list
+
+# Search for specific app
+phy app list myapp
+```
+
+#### `phy app import`
+
+Import an existing HTML project as a Phygrid application.
+
+```bash
+phy app import [source] [output] [options]
+```
+
+**Arguments:**
+- `source` - Source HTML project directory
+- `output` - Output directory
+
+**Options:**
+- `-t, --tag <name:version>` - Set package name and version
+- `--arch <architecture>` - Target architecture
+
+**Examples:**
+```bash
+# Import HTML project
+phy app import ./my-html-app ./build -t myapp:1.0.0
+```
+
+#### `phy app settings`
+
+Download settings from an installed application.
+
+```bash
+phy app settings <app> [destination]
+```
+
+**Arguments:**
+- `app` - Application identifier (required)
+- `destination` - Output directory (default: current directory)
+
+**Examples:**
+```bash
+# Download settings
+phy app settings myorg.myapp
+
+# Download to specific directory
+phy app settings myorg.myapp ./settings
+```
+
+#### `phy app upload-settings`
+
+Upload settings to an application installation.
+
+```bash
+phy app upload-settings <app> <settings-dir>
+```
+
+**Arguments:**
+- `app` - Application identifier (required)
+- `settings-dir` - Settings directory to upload (required)
+
+**Examples:**
+```bash
+# Upload settings
+phy app upload-settings myorg.myapp ./settings
+```
+
+#### `phy app upload-description`
+
+Upload a description for your application.
+
+```bash
+phy app upload-description [app-id] [options]
+```
+
+**Arguments:**
+- `app-id` - Application identifier
+
+**Options:**
+- `--filepath <file>` - Description markdown file
+
+**Examples:**
+```bash
+# Upload description
+phy app upload-description myorg.myapp --filepath ./description.md
+```
+
+### Virtual Machines
+
+#### `phy vm create`
+
+Create a PhyOS virtual machine for development and testing.
+
+```bash
+phy vm create [name] [options]
+```
+
+**Arguments:**
+- `name` - VM name (optional, will prompt if not provided)
+
+**Options:**
+- `--phyos-version <version>` - PhyOS version (e.g., `5.0.127`)
+- `--arch <architecture>` - Architecture (`amd64`, `arm64`)
+- `--memory <mb>` - Memory allocation in MB (default: 2048)
+- `--headless` - Run without display
+- `--count <number>` - Number of VMs to create (default: 1)
+- `--storage <gb>` - Disk size in GB (default: 10)
+
+**Examples:**
+```bash
+# Interactive setup
+phy vm create
+
+# Create with specific configuration
+phy vm create dev-vm --phyos-version 5.0.127 --arch amd64 --memory 4096
+```
+
+#### `phy vm list`
+
+List all virtual machines.
+
+```bash
+phy vm list
+```
+
+#### `phy vm start`
+
+Start one or more virtual machines.
+
+```bash
+phy vm start <names...> [options]
+```
+
+**Arguments:**
+- `names` - VM names to start
+
+**Options:**
+- `--memory <mb>` - Override memory allocation
+
+**Examples:**
+```bash
+# Start single VM
+phy vm start dev-vm
+
+# Start multiple VMs
+phy vm start vm1 vm2 vm3
+```
+
+#### `phy vm stop`
+
+Stop running virtual machines.
+
+```bash
+phy vm stop <names...> [options]
+```
+
+**Arguments:**
+- `names` - VM names to stop
+
+**Options:**
+- `--force` - Force termination
+
+**Examples:**
+```bash
+# Stop VM gracefully
+phy vm stop dev-vm
+
+# Force stop
+phy vm stop dev-vm --force
+```
+
+#### `phy vm logs`
+
+View VM logs.
+
+```bash
+phy vm logs <name> [options]
+```
+
+**Arguments:**
+- `name` - VM name
+
+**Options:**
+- `-f, --follow` - Follow log output
+
+**Examples:**
+```bash
+# View logs
+phy vm logs dev-vm
+
+# Follow logs in real-time
+phy vm logs dev-vm -f
+```
+
+#### `phy vm shell`
+
+Connect to VM console.
+
+```bash
+phy vm shell <name>
+```
+
+**Arguments:**
+- `name` - VM name
+
+**Examples:**
+```bash
+# Connect to VM
+phy vm shell dev-vm
+```
+
+#### `phy vm remove`
+
+Remove virtual machines.
+
+```bash
+phy vm remove <names...> [options]
+```
+
+**Arguments:**
+- `names` - VM names to remove
+
+**Options:**
+- `--force` - Force removal without confirmation
+
+**Examples:**
+```bash
+# Remove VM
+phy vm remove dev-vm
+
+# Force remove
+phy vm remove dev-vm --force
+```
+
+### Development Tools
+
+#### `phy dev shell`
+
+Open a shell session to a device via PhyHub.
+
+```bash
+phy dev shell <device> [options]
+```
+
+**Arguments:**
+- `device` - Device identifier
+
+**Options:**
+- `-L <ip>:<port>` - Forward remote port to local machine
+
+**Examples:**
+```bash
+# Open shell to device
+phy dev shell mydevice
+
+# Open shell with port forwarding
+phy dev shell -L 8080:80 mydevice
+```
+
+#### `phy dev vnc`
+
+Open a VNC session to a device via PhyHub.
+
+```bash
+phy dev vnc <device>
+```
+
+**Arguments:**
+- `device` - Device identifier
+
+**Examples:**
+```bash
+# Open VNC session
+phy dev vnc mydevice
+```
+
+#### `phy dev forward`
+
+Access a URL from device's local network via PhyHub.
+
+```bash
+phy dev forward <device> <url>
+```
+
+**Arguments:**
+- `device` - Device identifier
+- `url` - URL to access
+
+**Examples:**
+```bash
+# Forward local network URL
+phy dev forward mydevice http://192.168.1.100:8080
+```
+
+#### `phy dev screen-devtools`
+
+Open Chrome/Chromium DevTools debugging session to a device.
+
+```bash
+phy dev screen-devtools <device> [options]
+```
+
+**Arguments:**
+- `device` - Device identifier
+
+**Options:**
+- `-u, --url <url>` - URL to navigate to after connecting
+- `-p, --port <port>` - Port to forward to
+
+**Examples:**
+```bash
+# Open DevTools
+phy dev screen-devtools mydevice
+
+# Open DevTools with specific URL
+phy dev screen-devtools mydevice -u http://localhost:3000
+```
+
+#### `phy dev list`
+
+List devices from PhyHub.
+
+```bash
+phy dev list [searchQuery] [options]
+```
+
+**Arguments:**
+- `searchQuery` - Search term to filter devices
+
+**Options:**
+- `-j, --json` - Output in JSON format
+- `--limit <number>` - Maximum number of devices to fetch
+- `--page <number>` - Page number for pagination
+- `--search <term>` - Search term to filter devices (deprecated)
+
+**Examples:**
+```bash
+# List all devices
+phy dev list
+
+# Search for devices
+phy dev list mydevice
+
+# List with JSON output
+phy dev list --json
+```
+
+#### `phy dev select`
+
+Select a device for screen app emulation.
+
+```bash
+phy dev select [options]
+```
+
+**Options:**
+- `--clear` - Clear saved device
+
+**Examples:**
+```bash
+# Select device interactively
+phy dev select
+
+# Clear saved device
+phy dev select --clear
+```
+
+#### `phy dev develop`
+
+Set environment variables for local development.
+
+```bash
+phy dev develop [command] [options]
+```
+
+**Arguments:**
+- `command` - Command to run with device environment
+
+**Options:**
+- `--no-shell` - Disable shell mode when running the command
+- `--export` - Output export commands for bash/zsh shells
+- `--export-powershell` - Output export commands for PowerShell
+
+**Examples:**
+```bash
+# Set environment variables
+phy dev develop
+
+# Run command with device environment
+phy dev develop npm start
+
+# Export environment variables
+phy dev develop --export
+```
+
+### Installations
+
+#### `phy inst list`
+
+List installations.
+
+```bash
+phy inst list [search]
+```
+
+**Arguments:**
+- `search` - Filter installations by name
+
+**Examples:**
+```bash
+# List all installations
+phy inst list
+
+# Search for specific installation
+phy inst list myapp
+```
+
+### Descriptors
+
+#### `phy descriptor create`
+
+Create a new descriptor project.
+
+```bash
+phy descriptor create [projectName]
+```
+
+**Arguments:**
+- `projectName` - Project name (optional)
+
+**Examples:**
+```bash
+# Create descriptor project
+phy descriptor create my-descriptor
+```
+
+#### `phy descriptor publish`
+
+Publish a descriptor to the marketplace.
+
+```bash
+phy descriptor publish [descriptorName] [options]
+```
+
+**Arguments:**
+- `descriptorName` - Descriptor name
+
+**Options:**
+- `--packageJsonPath <path>` - Path to package.json file (default: ./package.json)
+- `--buildDir <path>` - Path to build directory (default: ./build/&lt;version&gt;)
+
+**Examples:**
+```bash
+# Publish descriptor
+phy descriptor publish my-descriptor
+
+# Publish with custom paths
+phy descriptor publish my-descriptor --packageJsonPath ./pkg.json --buildDir ./dist
+```
+
+#### `phy descriptor list`
+
+List descriptors in the currently selected tenant.
+
+```bash
+phy descriptor list [search]
+```
+
+**Arguments:**
+- `search` - Filter descriptors by name
+
+**Examples:**
+```bash
+# List all descriptors
+phy descriptor list
+
+# Search for specific descriptor
+phy descriptor list my-descriptor
+```
+
+#### `phy descriptor show`
+
+Show details of a descriptor.
+
+```bash
+phy descriptor show <descriptorName>
+```
+
+**Arguments:**
+- `descriptorName` - Descriptor name (required)
+
+**Examples:**
+```bash
+# Show descriptor details
+phy descriptor show my-descriptor
+```
+
+### Flashing
+
+#### `phy flash`
+
+Flash a PhyOS image to a USB drive or SD card.
+
+```bash
+phy flash [image] [options]
+```
+
+**Arguments:**
+- `image` - Image filename (optional, will prompt for architecture if not provided)
+
+**Options:**
+- `--raw` - Show all disks including system disks (use with caution)
+
+**Examples:**
+```bash
+# Flash with architecture selection
+phy flash
+
+# Flash specific image
+phy flash phyos.5.0.127.img.gz
+
+# Flash with raw disk mode
+phy flash phyos-latest.img.gz --raw
+```
+
+**What it does:**
+- Downloads PhyOS images from https://os.phygrid.com/ if not cached
+- Detects removable drives on macOS and Linux
+- Supports compressed images (gzip, xz)
+- Performs safety checks to avoid flashing system disks
+- Shows progress during flashing
+
+### Tenants
+
+#### `phy tenant list`
+
+List available tenants.
+
+```bash
+phy tenant list [search]
+```
+
+**Arguments:**
+- `search` - Filter tenants by name
+
+**Examples:**
+```bash
+# List all tenants
+phy tenant list
+
+# Search for tenant
+phy tenant list mytenant
+```
+
+#### `phy tenant select`
+
+Select the default tenant for CLI operations.
+
+```bash
+phy tenant select [options]
+```
+
+**Options:**
+- `--clear` - Clear saved tenant
+
+**Examples:**
+```bash
+# Select tenant interactively
+phy tenant select
+
+# Clear saved tenant
+phy tenant select --clear
+```
+
+### Devices
+
+#### `phy device select`
+
+Select a device for screen app emulation.
+
+```bash
+phy device select [options]
+```
+
+**Options:**
+- `--clear` - Clear saved device
+
+**Examples:**
+```bash
+# Select device interactively
+phy device select
+
+# Clear saved device
+phy device select --clear
+```
+
+### Utilities
+
+#### `phy update`
+
+Update PhyCLI to the latest version.
+
+```bash
+phy update
+```
+
+#### `phy --help`
+
+Show help information.
+
+```bash
+phy --help
+```
+
+## Getting Help
+
+Every command supports the `--help` flag to show detailed information:
+
+```bash
+phy app create --help
+phy vm create --help
+phy dev shell --help
+```
+
+## Common Patterns
+
+### Interactive vs Non-interactive
+
+Most commands work in both interactive and non-interactive modes:
+
+```bash
+# Interactive (will prompt for missing information)
+phy app create
+
+# Non-interactive (all parameters provided)
+phy app create myapp -t react
+```
+
+### Organization Prefix
+
+When creating applications, you can specify the organization:
+
+```bash
+# Create in current organization (will prompt)
+phy app create myapp
+
+# Create in specific organization
+phy app create myorg.myapp
+```
+
+### File Paths
+
+Commands accept both relative and absolute paths:
+
+```bash
+# Relative paths
+phy app build . ./build
+
+# Absolute paths
+phy app build /path/to/app /path/to/output
+```
+
+## Error Handling
+
+PhyCLI provides clear error messages and suggestions:
+
+```bash
+$ phy app deploy
+Error: No device specified. Use 'phy device select' to choose a device first.
+
+$ phy app build
+Error: No package.json found. Run this command from an application directory.
+```
+
+## Configuration
+
+PhyCLI stores configuration in:
+- User settings: `~/.phygrid/config.json`
+- Project settings: `./.phygrid/config.json`
+
+Environment variables:
+- `PHYGRID_API_URL` - Override API endpoint
+- `PHYGRID_DEBUG` - Enable debug output
+- `NO_COLOR` - Disable colored output
+
+## Quick Start
+
+1. **Authenticate** with your Phygrid account:
+   ```bash
+   phy login
+   ```
+
+2. **Create** your first app:
+   ```bash
+   phy app create myapp
+   ```
+
+3. **Build** and **deploy**:
+   ```bash
+   phy app build
+   phy app deploy
+   ```
+
+## Examples
+
+### Complete Application Workflow
+
+```bash
+# 1. Authenticate
+phy login
+
+# 2. Create application
+phy app create myapp -t react
+
+# 3. Navigate to app directory
+cd myapp
+
+# 4. Build application
+phy app build
+
+# 5. Deploy to device
+phy app deploy mydevice.local
+
+# 6. Publish to marketplace
+phy app publish myorg.myapp
+```
+
+### VM Development
+
+```bash
+# 1. Create VM for testing
+phy vm create test-vm --phyos-version 5.0.127 --headless
+
+# 2. Start VM
+phy vm start test-vm
+
+# 3. Connect to VM
+phy vm shell test-vm
+
+# 4. View logs
+phy vm logs test-vm -f
+
+# 5. Stop VM
+phy vm stop test-vm
+```
+
+### Device Development
+
+```bash
+# 1. List available devices
+phy dev list
+
+# 2. Select device for development
+phy dev select
+
+# 3. Open shell to device
+phy dev shell mydevice
+
+# 4. Open DevTools for debugging
+phy dev screen-devtools mydevice
+
+# 5. Forward local network URL
+phy dev forward mydevice http://192.168.1.100:8080
+```
+
+### Descriptor Development
+
+```bash
+# 1. Create descriptor project
+phy descriptor create my-descriptor
+
+# 2. Build descriptor
+npm run build
+
+# 3. Publish descriptor
+phy descriptor publish my-descriptor
+
+# 4. List descriptors
+phy descriptor list
+
+# 5. Show descriptor details
+phy descriptor show my-descriptor
+```
+
+### Multi-tenant Setup
+
+```bash
+# 1. List available tenants
+phy tenant list
+
+# 2. Select tenant
+phy tenant select
+
+# 3. Create app in selected tenant
+phy app create myapp
+```
+
+### Flashing PhyOS
+
+```bash
+# 1. Flash PhyOS image (interactive)
+phy flash
+
+# 2. Flash specific image
+phy flash phyos.5.0.127.img.gz
+
+# 3. Flash with raw disk mode (advanced)
+phy flash phyos-latest.img.gz --raw
+```
