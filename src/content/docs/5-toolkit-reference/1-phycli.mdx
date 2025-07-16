@@ -15,7 +15,7 @@ npm install -g @phygrid/cli
 
 ## Commands
 
-### Version
+## Version
 
 #### `phy -V, --version`
 
@@ -145,11 +145,10 @@ phy tenant list aus
 When you provide a partial search string, the command returns all tenants whose names contain that pattern. For example:
 - `phy tenant list foo` returns all tenants with "foo" in their name
 - `phy tenant list aus` returns all tenants with "aus" in their name
-- This is particularly useful for organizations with multiple environments (dev, test, prod) that share a common prefix
-```bash
+
 
 ```bash
-phy tenant list [search]
+phy tenant select
 ```
 
 **Arguments:**
@@ -241,9 +240,9 @@ Using tenant: Phyhub QA - EU (ombori-stockholm-test)
 ? What kind of app do you want to create? Screen Application (React)
 Loaded emulated device: cli-doc (ID: b71e393a-224d-4887-913e-850ef5011461, Serial: PHY27B1ACA3B2904AE7BEC0519A4A37783B)
 Using saved emulated device: cli-doc (b71e393a-224d-4887-913e-850ef5011461)
-Creating a new react app in /Users/zahid/build-phygrid/my-test-app1
+Creating a new react app in /Users/<username>/build-phygrid/my-test-app1
 Updating package.json with app name, version, and description
-✓ App cloned and description uploaded at /Users/zahid/build-phygrid/my-test-app1
+✓ App cloned and description uploaded at /Users/<username>/build-phygrid/my-test-app1
 Registering app ombori-stockholm-test.my-test-app1 in your private marketplace
 Looking for an application ombori-stockholm-test.my-test-app1
 App NOT FOUND in Phyhub QA - EU organisation, attempting to create it
@@ -252,7 +251,7 @@ App my-test-app1 created successfully
 Creating a sample installation
 ✓ Successfully created installation. Check it here: https://console.phygrid.com/organisations/6151adcfba90fc00068b847b/apps/installations/68775e6209f9fe0009754f33
 Fetching default app settings
-✓ Successfully applied settings. It can be found in /Users/zahid/build-phygrid/my-test-app1/src/settings
+✓ Successfully applied settings. It can be found in /Users/<username>/build-phygrid/my-test-app1/src/settings
 Installing template dependencies and building the project. This may take a while...
 Installing packages through yarn install
 yarn run v1.22.21
@@ -267,11 +266,11 @@ Schema written to: build/schema.json
 Meta-schema written to: build/meta-schema.json
 ✓ Template files are valid
 Creating gridapp file...
-✓ Build successful: /Users/zahid/build-phygrid/my-test-app1/build/build/ombori-stockholm-test.my-test-app1-0.1.0.gridapp
+✓ Build successful: /Users/<username>/build-phygrid/my-test-app1/build/build/ombori-stockholm-test.my-test-app1-0.1.0.gridapp
 ✨  Done in 53.52s.
 Publishing gridapp
 Looking for an application ombori-stockholm-test.my-test-app1
-Looking for a bundle: /Users/zahid/build-phygrid/my-test-app1/build/build/ombori-stockholm-test.my-test-app1-0.1.0.gridapp
+Looking for a bundle: /Users/<username>/build-phygrid/my-test-app1/build/build/ombori-stockholm-test.my-test-app1-0.1.0.gridapp
 Checking release version 0.1.0
 Obtaining upload token
 Uploading...100.0
@@ -280,9 +279,9 @@ Waiting for build....
 Release created: ombori-stockholm-test.my-test-app1@0.1.0
 Obtaining upload token
 Uploading screenshots
-Uploading /Users/zahid/build-phygrid/my-test-app1/meta/screen1.png...ok
-Uploading /Users/zahid/build-phygrid/my-test-app1/meta/screen2.png...ok
-Uploading /Users/zahid/build-phygrid/my-test-app1/meta/screen3.png...ok
+Uploading /Users/<username>/build-phygrid/my-test-app1/meta/screen1.png...ok
+Uploading /Users/<username>/build-phygrid/my-test-app1/meta/screen2.png...ok
+Uploading /Users/<username>/build-phygrid/my-test-app1/meta/screen3.png...ok
 Uploading description
 Description updated
 ```
@@ -363,14 +362,14 @@ Using metadata
  license: UNLICENSED
  version: 0.1.0
  applicationType: screen
-Validating template files in /Users/zahid/build-phygrid/my-test-app1/build...
+Validating template files in /Users/<username>/build-phygrid/my-test-app1/build...
 ✓ Template files are valid
 Creating gridapp file...
-✓ Build successful: /Users/zahid/build-phygrid/my-test-app1/build/build/ombori-stockholm-test.my-test-app1-0.1.0.gridapp
+✓ Build successful: /Users/<username>/build-phygrid/my-test-app1/build/build/ombori-stockholm-test.my-test-app1-0.1.0.gridapp
 ```
 
-#### `phy app deploy`
 
+#### `phy app deploy`
 Deploy your application to a device.
 
 ```bash
@@ -438,7 +437,7 @@ App NOT FOUND in Phyhub QA - EU organisation, attempting to create it
 Creating app with metadata: {"packageName":"my-test-app1-1","type":"screen","access":"private","organizationId":"6151adcfba90fc00068b847b","description":"no description","displayName":"my-test-app1-1","appContainerGridappId":"app-container"}
 Creating gridapp call with metadata: {"packageName":"my-test-app1-1","type":"screen","displayName":"my-test-app1-1","description":"no description","organizationId":"6151adcfba90fc00068b847b","access":"private"}
 App my-test-app1-1 created successfully
-Looking for a bundle: /Users/zahid/build-phygrid/my-test-app1/build/build/ombori-stockholm-test.my-test-app1-0.1.0.gridapp
+Looking for a bundle: /Users/<username>/build-phygrid/my-test-app1/build/build/ombori-stockholm-test.my-test-app1-0.1.0.gridapp
 Checking release version 0.1.0
 Obtaining upload token
 Uploading...100.0
@@ -469,7 +468,7 @@ phy app list [search] [options]
 - `search` - Filter applications by name
 
 **Options:**
-- `-phyhub` - List from PhyHub
+- `-phyhub` - List applications from PhyHub
 
 **What it shows:**
 - Application names and versions
@@ -484,6 +483,9 @@ phy app list
 
 # Search for specific app
 phy app list myapp
+
+# List applications from PhyHub
+phy app list -phyhub
 ```
 
 #### `phy app import`
@@ -1017,6 +1019,26 @@ phy dev screen-devtools mydevice
 phy dev screen-devtools mydevice -u http://localhost:3000
 ```
 
+**DevTools Output Example:**
+```bash
+$ phy dev screen-devtools cli-doc
+Starting Chrome DevTools session on port 13236...
+Opening stream
+Opening Chrome DevTools inspector...
+
+To debug the remote target:
+1. Click "Configure..." next to "Discover network targets" in Chrome DevTools
+2. Add "localhost:13236" to the target discovery settings
+3. Wait for the target to appear under "Remote Target"
+```
+
+**Setup Steps:**
+1. **Open Chrome DevTools**: The command will automatically open Chrome DevTools in your browser
+2. **Configure Network Targets**: Click "Configure..." next to "Discover network targets"
+3. **Add Target**: Enter `localhost:13236` (or the port shown in output) in the target discovery settings
+4. **Connect**: Wait for the remote target to appear under "Remote Target" section
+5. **Debug**: Click on the target to start debugging the device's browser session
+
 #### `phy dev list`
 
 List devices from PhyHub.
@@ -1303,10 +1325,10 @@ phy flash [image] [options]
 phy flash
 
 # Flash specific image
-phy flash phyos.5.0.127.img.gz
+phy flash griddevice.5.0.163.arm64-dn74.img.xz
 
 # Flash with raw disk mode
-phy flash phyos-latest.img.gz --raw
+phy flash griddevice.5.0.163.arm64-dn74.img.xz --raw
 ```
 
 **What it does:**
@@ -1322,29 +1344,60 @@ The `phy device` command group allows you to manage device emulation and selecti
 
 #### `phy device select`
 
-Select a device for screen app emulation.
+Select a real device from your organization for screen app emulation during development.
 
 ```bash
 phy device select [options]
 ```
 
 **Options:**
-- `--clear` - Clear saved device
+- `--clear` - Clear saved emulated device
 
 **What it does:**
-- Lists available devices for emulation
-- Stores selected device configuration
-- Sets device context for screen app development
-- Enables local testing with real device characteristics
+- Fetches devices from your selected organization via PhyHub
+- Provides interactive device selection with autocomplete
+- Stores selected device information locally for emulation
+- Sets device context for screen app development and testing
+- Enables local development with real device characteristics
+
+**Device Information Stored:**
+- Device ID and name
+- Access key for authentication
+- Display name and serial number
+- Organization context
+
+**Storage Location:**
+Device information is saved to `~/.config/phygrid-cli/device.json`
+
+**Interactive Process:**
+1. **Organization Selection**: Choose from your available organizations
+2. **Device Fetching**: Retrieves all devices from the selected organization
+3. **Device Selection**: Interactive autocomplete interface to select a device
+4. **Confirmation**: Shows selected device details and saves configuration
 
 **Examples:**
 ```bash
 # Select device interactively
 phy device select
 
-# Clear saved device
+# Clear saved emulated device
 phy device select --clear
 ```
+
+**Output Example:**
+```bash
+$ phy device select
+Current emulated device: cli-doc (ID: b71e393a-224d-4887-913e-850ef5011461, Serial: PHY27B1ACA3B2904AE7BEC0519A4A37783B)
+? Would you like to select a different device? Yes
+? Select an organization to find devices: Phyhub QA - EU (ombori-stockholm-test)
+Fetching devices for this organization. Please wait...
+? Select a device to associate with your app: cli-doc (b71e393a-224d-4887-913e-850ef5011461)
+Selected device: cli-doc (ID: b71e393a-224d-4887-913e-850ef5011461, Serial: PHY27B1ACA3B2904AE7BEC0519A4A37783B)
+Successfully selected device: cli-doc (ID: b71e393a-224d-4887-913e-850ef5011461, Serial: PHY27B1ACA3B2904AE7BEC0519A4A37783B)
+This device will be used for emulation in all screen applications.
+```
+
+**Note**: This command is for **device emulation** during screen app development. For direct device access and development tools, use `phy dev select` instead.
 
 ## Utilities
 
