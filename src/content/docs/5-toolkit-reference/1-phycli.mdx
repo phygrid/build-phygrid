@@ -160,7 +160,7 @@ phy tenant select
 **What it does:**
 - Sets the default tenant for all subsequent CLI operations
 - Stores the selection in local configuration
-- Required for most app and resource management commands
+- <span className="text-red">Required for most app and resource management commands</span>
 
 **Examples:**
 ```bash
@@ -1421,6 +1421,30 @@ phy update
 - Preserves user configuration
 - Ensures compatibility with latest features
 
+**Update Output Example:**
+```bash
+$ phy --version
+4.4.13
+
+$ phy update
+npm warn deprecated har-validator@5.1.5: this library is no longer supported
+npm warn deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+npm warn deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+npm warn deprecated request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+npm warn deprecated azure-storage@2.10.7: Please note: newer packages @azure/storage-blob, @azure/storage-queue and @azure/storage-file are available as of November 2019 and @azure/data-tables is available as of June 2021. While the legacy azure-storage package will continue to receive critical bug fixes, we strongly encourage you to upgrade. Migration guide can be found: https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/storage/MigrationGuide.md
+
+changed 288 packages in 3s
+
+64 packages are looking for funding
+  run `npm fund` for details
+
+$ phy --version
+4.4.15
+```
+
+**Note**: The update process may show deprecation warnings for some dependencies, which is normal and doesn't affect functionality. The CLI will continue to work properly despite these warnings.
+
 #### `phy --help`
 
 Show help information.
@@ -1554,7 +1578,7 @@ phy app publish myorg.myapp
 
 ```bash
 # 1. Create VM for testing
-phy vm create test-vm --phyos-version 5.0.127 --headless --storage 20
+phy vm create test-vm --phyos-version 5.0.165 --storage 20 --memory 4096 --arch amd64
 
 # 2. Start VM
 phy vm start test-vm
