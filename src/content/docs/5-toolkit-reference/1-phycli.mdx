@@ -3,7 +3,7 @@ title: "PhyCLI Reference"
 icon: "Terminal"
 ---
 
-# PhyCLI Reference
+# PhyCLI
 
 **PhyCLI** (`phy`) is the official command-line tool for Phygrid development. It helps you create, build, deploy, and manage applications on the Phygrid platform.
 
@@ -14,6 +14,26 @@ npm install -g @phygrid/cli
 ```
 
 ## Commands
+
+### Version
+
+#### `phy -V, --version`
+
+Display the current version of PhyCLI.
+
+```bash
+phy -V
+phy --version
+```
+
+**Examples:**
+```bash
+# Check CLI version
+phy -V
+
+# Alternative version flag
+phy --version
+```
 
 ### Authentication
 
@@ -47,6 +67,79 @@ Sign out and clear your authentication tokens.
 
 ```bash
 phy logout
+```
+
+### Getting Help
+
+#### `phy --help`
+
+Display comprehensive help information and list all available commands.
+
+```bash
+phy --help
+```
+
+**What it shows:**
+- List of all available command groups (app, vm, dev, etc.)
+- Brief description of each command group
+- Global options and flags
+- Usage examples
+
+**Examples:**
+```bash
+# Show main help
+phy --help
+
+# Show help for specific command group
+phy app --help
+phy vm --help
+phy dev --help
+
+# Show help for specific command
+phy app create --help
+phy vm create --help
+```
+
+### Tenants
+
+#### `phy tenant list`
+
+List available tenants.
+
+```bash
+phy tenant list [search]
+```
+
+**Arguments:**
+- `search` - Filter tenants by name
+
+**Examples:**
+```bash
+# List all tenants
+phy tenant list
+
+# Search for tenant
+phy tenant list mytenant
+```
+
+#### `phy tenant select`
+
+Select the default tenant for CLI operations.
+
+```bash
+phy tenant select [options]
+```
+
+**Options:**
+- `--clear` - Clear saved tenant
+
+**Examples:**
+```bash
+# Select tenant interactively
+phy tenant select
+
+# Clear saved tenant
+phy tenant select --clear
 ```
 
 ### Applications
@@ -110,6 +203,9 @@ phy app build . ./dist -t myapp:1.0.0
 
 # Build for specific architecture
 phy app build --arch arm64
+
+# Build and save to local file
+phy app build --file myapp.oci
 ```
 
 #### `phy app deploy`
@@ -277,10 +373,10 @@ phy vm create [name] [options]
 **Options:**
 - `--phyos-version <version>` - PhyOS version (e.g., `5.0.127`)
 - `--arch <architecture>` - Architecture (`amd64`, `arm64`)
-- `--memory <mb>` - Memory allocation in MB (default: 2048)
+- `--memory <memory>` - Memory allocation in MB (default: 2048)
+- `--storage <storage>` - Storage allocation in GB (default: 10)
 - `--headless` - Run without display
-- `--count <number>` - Number of VMs to create (default: 1)
-- `--storage <gb>` - Disk size in GB (default: 10)
+- `--count <count>` - Number of VMs to create (default: 1)
 
 **Examples:**
 ```bash
@@ -288,7 +384,10 @@ phy vm create [name] [options]
 phy vm create
 
 # Create with specific configuration
-phy vm create dev-vm --phyos-version 5.0.127 --arch amd64 --memory 4096
+phy vm create dev-vm --phyos-version 5.0.127 --arch amd64 --memory 4096 --storage 20
+
+# Create headless VM
+phy vm create test-vm --headless --storage 15
 ```
 
 #### `phy vm list`
@@ -311,7 +410,8 @@ phy vm start <names...> [options]
 - `names` - VM names to start
 
 **Options:**
-- `--memory <mb>` - Override memory allocation
+- `--memory <memory>` - Override memory allocation
+- `--headless` - Run VMs without display
 
 **Examples:**
 ```bash
@@ -320,6 +420,9 @@ phy vm start dev-vm
 
 # Start multiple VMs
 phy vm start vm1 vm2 vm3
+
+# Start with custom memory
+phy vm start dev-vm --memory 4096
 ```
 
 #### `phy vm stop`
@@ -343,6 +446,31 @@ phy vm stop dev-vm
 
 # Force stop
 phy vm stop dev-vm --force
+```
+
+#### `phy vm restart`
+
+Restart a virtual machine.
+
+```bash
+phy vm restart <name> [options]
+```
+
+**Arguments:**
+- `name` - VM name to restart
+
+**Options:**
+- `--memory <memory>` - Memory allocation in MB
+- `--headless` - Run VM without display
+- `--force` - Force stop if graceful shutdown fails
+
+**Examples:**
+```bash
+# Restart VM
+phy vm restart dev-vm
+
+# Restart with custom memory
+phy vm restart dev-vm --memory 4096
 ```
 
 #### `phy vm logs`
@@ -706,48 +834,6 @@ phy flash phyos-latest.img.gz --raw
 - Performs safety checks to avoid flashing system disks
 - Shows progress during flashing
 
-### Tenants
-
-#### `phy tenant list`
-
-List available tenants.
-
-```bash
-phy tenant list [search]
-```
-
-**Arguments:**
-- `search` - Filter tenants by name
-
-**Examples:**
-```bash
-# List all tenants
-phy tenant list
-
-# Search for tenant
-phy tenant list mytenant
-```
-
-#### `phy tenant select`
-
-Select the default tenant for CLI operations.
-
-```bash
-phy tenant select [options]
-```
-
-**Options:**
-- `--clear` - Clear saved tenant
-
-**Examples:**
-```bash
-# Select tenant interactively
-phy tenant select
-
-# Clear saved tenant
-phy tenant select --clear
-```
-
 ### Devices
 
 #### `phy device select`
@@ -861,8 +947,9 @@ Environment variables:
 
 ## Quick Start
 
-1. **Authenticate** with your Phygrid account:
+1. **Check version** and **authenticate**:
    ```bash
+   phy -V
    phy login
    ```
 
@@ -882,7 +969,8 @@ Environment variables:
 ### Complete Application Workflow
 
 ```bash
-# 1. Authenticate
+# 1. Check version and authenticate
+phy -V
 phy login
 
 # 2. Create application
@@ -905,7 +993,7 @@ phy app publish myorg.myapp
 
 ```bash
 # 1. Create VM for testing
-phy vm create test-vm --phyos-version 5.0.127 --headless
+phy vm create test-vm --phyos-version 5.0.127 --headless --storage 20
 
 # 2. Start VM
 phy vm start test-vm
@@ -916,7 +1004,10 @@ phy vm shell test-vm
 # 4. View logs
 phy vm logs test-vm -f
 
-# 5. Stop VM
+# 5. Restart VM
+phy vm restart test-vm
+
+# 6. Stop VM
 phy vm stop test-vm
 ```
 
