@@ -52,4 +52,8 @@ export const markdownStyles = css`
       content: "#";
     }
   } */
+
+  .text-red {
+    color: #dc2626;
+  }
 `
