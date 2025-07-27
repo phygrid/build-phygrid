@@ -40,12 +40,11 @@ Official Phygrid templates and examples use Node with TypeScript, offering moder
 Before you begin, make sure the following are set up and ready to go:
 
 ### ✅ A Phygrid Tenant
-
-You'll need access to a Phygrid tenant — your organization's managed environment where apps and devices are registered, deployed, and monitored. If you don't yet have one, please refer to the [Tenant Setup](/getting-started/tenant-setup) here.
+You'll need access to a Phygrid tenant. If you don't yet have one, please refer to the [Tenant Setup](/getting-started/tenant-setup/) guide.
 
 ### ✅ Local Development Environment with PhyCLI Installed and Configured
 
-If you haven't set up CLI on your machine yet, refer to the [Local Environment Setup](/getting-started/local-environment-setup/) guide.
+If you haven't set up CLI on your machine yet, refer to the [Dev Environment Setup](/getting-started/dev-environment-setup/) guide.
 
 ### ✅ A Docker Hub Account
 
@@ -56,20 +55,13 @@ For the purpose of this tutorial, you'll need a Docker.io account to publish you
 - **Push credentials** (with read/write access): used locally for publishing your app image
 - **Pull credentials** (read-only): embedded in your app and used by devices to fetch the image
 
-### ✅ Docker Installed
+### ✅ Docker Installed & Configured
 
-Ensure you have Docker Desktop installed and running on your development machine.
+Ensure you have Docker Desktop installed and configured for Phygrid.
 
-You must enable the **containerd image store**, a requirement for proper image handling with Phygrid.
+You must enable the **containerd image store**, a requirement for proper edge apps image handling with Phygrid.
 
-To do this:
-
-1. Open Docker Desktop
-2. Go to **Settings → General**
-3. Enable the option **"Use containerd for pulling and storing images"**
-4. Click **Apply & Restart**
-
-> This feature is available in Docker Desktop ≥ 4.29
+ If you haven't set this up yet, refer to the Docker configuration section in the [Dev Environment Setup](/getting-started/dev-environment-setup/#3-configure-docker-for-edge-apps) guide.
 
 ## 🛠 Step-by-Step: Creating and Publishing an Edge App
 
@@ -169,8 +161,10 @@ Now that your app is ready, the next step is to create an installation and deplo
 
 ### 🔌 Connect a PhyOS Device
 
+TODO 2025-07-27: Restructure this to work with Device Setup article
+
 > **Note:** This step requires a freshly provisioned physical PhyOS device.
-> If you don't have a physical device available, skip to the [**Connect PhyOS VM**](#-connect-a-phyos-vm) section.
+> If you don't have a physical device available, skip to the [**Connect a PhyVM**](#-connect-a-phyvm) section.
 
 1. Navigate to the **Devices** tab on your Installation page
 2. Press the **Connect a device** button
@@ -181,7 +175,7 @@ Now that your app is ready, the next step is to create an installation and deplo
    - The serial number or provisioning code shown on your PhyOS device's screen
 6. Confirm by pressing the **Connect device** button 
 
-For additional details on creating installations and connecting devices, check out this comprehensive guide (KP TODO 2025-06-20: Input link here)
+For additional details on creating installations and connecting devices, check out this [comprehensive guide](https://learn.phygrid.com/installations/connect-a-new-device-to-an-installation/).
 
 Once the device is successfully connected, you should see:
 - The device name appear on the device screen
@@ -225,9 +219,9 @@ Settings: {
 
 If you run into issues at this stage, refer to the **[Troubleshoot & Debug](/how-to/troubleshoot-and-debug)** article of the documentation.
 
-### 💻 Connect a PhyOS VM
+### 💻 Connect a PhyVM
 
-VMs are a great option during development and for testing purposes. You can create a virtual PhyOS device using the Phy CLI. This is supported on macOS and Linux.
+PhyVMs are a great option during development and for testing purposes. You can create a virtual PhyOS device using the Phy CLI. This is supported on macOS and Linux.
 
 1. Run the following command:
 

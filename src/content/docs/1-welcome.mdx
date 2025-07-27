@@ -8,7 +8,7 @@ images:
 
 ## What is Phygrid?
 
-**The operating system for physical-world AI.**
+**The operating system for physical-world.**
 
 Run apps and AI at the edge, stream data, manage devices, and build interactive real-world experiences. From warehouses to streets we make edge + cloud + AI work together, at scale.
 
@@ -57,19 +57,21 @@ Want the full walkthrough? 👉 Check out the complete [Edge App tutorial](../tu
 # Scaffold your edge app
 phy app create
 
+..
+
 # Deploy to a local VM for testing (or connect a device)
 phy app vm create
 phy vm start <vm-name>
 
+..
+
 # Push and register your app
-phy app deploy
+phy app deploy <device-name>
+
+..
 
 # Connect to your device or VM shell
 phy dev shell <device-name>
-
-# Check your container
-docker ps
-docker logs <container-id> -f
 
 ```
 
@@ -214,9 +216,9 @@ No one else combines edge-native GPUs, OTA rollback, digital twins, live ML ops,
 
 It only takes a few steps to get up and running with Phygrid.
 
-1. **[Set up your tenant](../getting-started/tenant-setup)** Create your organization, configure your environments, and get your API keys.
-2. **[Prepare your local environment](../getting-started/local-environment-setup)** Install the CLI, SDKs, and connect to your tenant.
-3. **[Provision your first device](../getting-started/device-setup)** Flash PhyOS, register it with a 6-digit code, and verify connectivity.
+1. **[Set up your tenant](../getting-started/tenant-setup)** Register your tenant and create your user account.
+2. **[Prepare your dev environment](../getting-started/dev-environment-setup)** Install the CLI and connect to your tenant.
+3. **[Provision your first device](../getting-started/device-setup)** Install PhyOS on your hardware and connect your device.
 
 Now head to our tutorials to deploy your first edge app, screen app, or connect them into a complete real-world experience.
 
