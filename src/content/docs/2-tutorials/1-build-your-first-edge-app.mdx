@@ -251,27 +251,11 @@ phy vm start <vm-name>
 
 If dependencies are missing on your system, the CLI will prompt you to install them — confirm and wait for setup to complete.
 
-Once the VM is running, follow the same steps as in the physical device section to connect it to your installation.
-
-// TODO KP 2025-06-20: Finish this section
-
-### 🚧 Enable Development Mode
-
-Now let's deploy your app to the connected VM or physical device in development mode. Please note that this feature is intended for development and iteration, not for managing production devices.
-
-This is done using:
-
-```bash
-phy app deploy
-```
-
-Once deployed, your app will start running on the target device.
-
-// TODO KP 2025-06-20: How to verify this?
+Once the VM is running, follow the same steps as in the physical device section to connect it to your installation and verify the deployment.
 
 ### ✏️ Make Code Changes
 
-With your app now running on the device in development mode, let's make some changes to see the development workflow in action.
+Let's make some changes to see the development workflow in action.
 
 Open `src/app.ts` and update the code by adding an additional `console.log` statement:
 
@@ -284,14 +268,26 @@ setInterval(() => {
 }, 3000);
 ```
 
-Now deploy your changes directly to the device with deploy command:
+### 🚧 Enable Development Mode
+
+Now let's deploy your code to the connected VM in development mode. Please note that this feature is intended for development and iteration, not for managing production devices.
+
+Developer Mode allows you to directly deploy and test your edge apps on the device without building and publishing them to the Console first. This feature significantly accelerates the development workflow by enabling rapid iteration and real-time debugging capabilities.
+
+To enable development mode on the PhyOS VM, please follow this guide: [Enabling Developer Mode](/how-to/advanced-phyos-features/#-enabling-developer-mode).
+
+For the best experience, we recommend using the **SSH public key** authentication method.
+
+To deploy your local app changes directly to the VM running in development mode, use the deploy script:
 
 ```bash
-phy app deploy
+yarn deploy <device-name>
 ```
 
-This will rebuild and push the updated version to the device.
+**Note:** You can also enable developer mode on a physical PhyOS device using the same steps. Keep in mind that `phy app deploy` requires both the device and your host machine to be discoverable on the same network. 
 
+To verify that your changes were deployed successfully, access your PhyOS shell:
+ 
 // TODO KP 2025-06-20: How to verify this?
 
 ### 🚀 Publish an Updated Version
