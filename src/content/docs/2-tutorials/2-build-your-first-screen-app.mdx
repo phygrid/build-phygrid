@@ -124,14 +124,13 @@ Now that your app is ready, the next step is to create an installation and deplo
 ### 📦 Create an Installation
 
 1. Log in to **console.phygrid.com**
-// KP TODO 2025-06-20: Be more specific
-2. Navigate to the **Marketplace** and locate your app
+2. Navigate to **Apps > Developer** and locate your app in the list
 3. Press the **Install** button and provide a name for your new installation
 4. After confirmation, you will be redirected to the **Installation** page
 5. A build of your app will be created automatically as part of the installation
 
 
-### 💻 Connect a browser
+### 💻 Connect a browser device
 
 Browser devices provide a convenient way to test your screen app directly on your computer in an environment that simulates a real Phygrid device. This option is good for development and testing, but not intended for production deployments.
 
@@ -147,23 +146,25 @@ Browser devices provide a convenient way to test your screen app directly on you
 
 Once successfully connected, your app will load automatically in the browser window.
 
-For additional details on creating installations and connecting devices, check out this comprehensive guide (KP TODO 2025-06-20: Input link here)
+For additional details on connecting devices to installations, check out this [guide](https://learn.phygrid.com/installations/connect-a-new-device-to-an-installation/).
 
-### 🔌 Connect a PhyOS Device
+### 🔌 Connect a physical device
 
-TODO 2025-07-27: Restructure this to work with Device Setup article
+In this step, you can connect a physical device with a screen to your installation.
 
-> **Note:** This step requires a freshly provisioned physical PhyOS device.
-> If you don't have a physical device available, skip to the [**Connect a PhyVM**](#-connect-a-phyvm) section.
+For an overview of supported device types, refer to our [Device Setup](../../../getting-started/device-setup) guide.
+
+> If you don't have a physical device ready now, skip to the [**Connect a PhyVM**](#-connect-a-phyvm) section.
 
 1. Navigate to the **Devices** tab on your Installation page
 2. Press the **Connect a device** button
 3. In the modal that appears, click **Setup a new device**
-4. Select **x86-64** as the device type
-5. Enter:
+4. Choose your device type from the available options
+5. Follow the setup instructions displayed on the right side of the modal
+6. Enter:
    - A name for the device
-   - The serial number or provisioning code shown on your PhyOS device's screen
-6. Confirm by pressing the **Connect device** button 
+   - The serial number or provisioning code shown on your device's screen
+7. Confirm by pressing the **Connect device** button 
 
 Once the device is successfully connected, you should see your app appear on the device screen shortly after.
 
@@ -195,7 +196,8 @@ phy vm start <vm-name>
 
 If dependencies are missing on your system, the CLI will prompt you to install them — confirm and wait for setup to complete.
 
-Once the VM is running, follow the same steps as in the physical device section to connect it to your installation.
+Once the VM is running, follow the same steps as in the physical device section to connect it to your installation. 
+Select **x86-64** as the device type from the available options.
 
 ### ✏️ Make Code Changes
 
