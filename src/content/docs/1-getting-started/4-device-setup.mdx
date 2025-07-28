@@ -3,4 +3,163 @@ title: "Device Setup"
 icon: "Cpu"
 ---
 
-Hello world
+Phygrid runs on a wide variety of devices, from powerful edge computers to virtual environments and even web browsers. This flexibility lets you deploy exactly where you need — whether that's on-site hardware, cloud infrastructure, or development environments.
+
+Understanding your device options helps you choose the right platform for your specific use case, from production deployments to development and testing.
+
+## 🖥 Supported Device Types
+
+The table below shows what each device type supports and whether it's suitable for production use:
+
+<table>
+  <thead>
+    <tr>
+      <th>Device Type</th>
+      <th align="center">PhyOS</th>
+      <th align="center">Screen Apps</th>
+      <th align="center">Edge Apps</th>
+      <th align="center">Production Use</th>
+      <th align="center">Physical Device</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>x86-64</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td>Giada DN74</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td>Samsung Tizen TV</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td>VMware x86-64</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td>Hyper-V x86-64</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td>Red Hat KVM</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td>PhyVM</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td>Web Browser</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+  </tbody>
+</table>
+
+> **Note:** AI models with hardware acceleration are supported on physical devices that have CUDA-compatible GPUs available.
+
+## 💡 Choosing the Right Device
+
+**For Production:**
+- **Physical devices** for maximum control and performance
+- **Enterprise virtualization** for cloud-native edge deployments
+- **Samsung Tizen TVs** for digital signage and display scenarios
+
+**For Development:**
+- **PhyVM** for local development with full app support
+- **Web Browser** for quick screen app prototyping and testing
+
+**For AI Workloads:**
+- **x86-64 with CUDA GPU** for hardware-accelerated AI model inference
+- **Virtual platforms** for AI workloads that don't require GPU acceleration
+
+
+## 🖥️ Physical Devices
+
+### 🖥 Intel x86-64 and ARM-based Hardware
+
+Intel devices and ARM-based Giada DN74 are ideal for production deployments where you need full control and maximum performance. With PhyOS installed, they become completely managed Phygrid devices with:
+
+- **Full app support** — Both edge apps and screen apps when a display is connected
+- **Versatile deployment** — Use as edge computing devices, interactive kiosks, or complete user experiences
+- **Hardware acceleration** — Devices with CUDA-compatible GPUs can run AI models with hardware acceleration
+- **Production ready** — Suitable for on-site, enterprise deployments
+
+### 📺 Samsung Tizen TVs
+
+Samsung Tizen TVs support screen apps and are perfect for digital signage scenarios:
+
+- **Supported versions** — Tizen 4, 6.5, and 7
+- **Use cases** — Digital signage, information displays, content delivery
+- **Limitations** — Screen apps only; don't offer the same level of control as PhyOS-compatible devices
+
+You can learn more about [Tizen device support](https://learn.phygrid.com/installations/connect-a-tizen-device-to-an-installation/) on learn.phygrid.com.
+
+## ☁️ Virtual Devices
+
+Virtual environments provide flexibility for development, testing, and cloud deployments.
+
+### 🏢 Enterprise Virtualization
+
+Production-ready virtualization platforms support edge apps in headless environments:
+
+- **VMware x86-64** — Enterprise virtualization for edge computing workloads
+- **Hyper-V x86-64** — Microsoft's virtualization platform for Windows environments  
+- **Red Hat KVM** — Open-source virtualization for Linux-based infrastructure
+
+These platforms are ideal for running edge apps in environments where deploying physical devices isn't possible or desired.
+
+### 🛠 Development Platforms
+
+For development and testing, these virtual options provide easy setup and iteration:
+
+- **PhyVM** — PhyVMs, created and managed using PhyCLI, are a great option during development and for testing purposes
+- **Web Browser** — Quick testing environment for screen apps only
+
+## 🚀 Getting Started - Setup A Device
+
+For detailed device setup instructions, visit [learn.phygrid.com](https://learn.phygrid.com/installations/connect-a-new-device-to-an-installation/) and follow the guided setup in the Phygrid Console when connecting a device to an installation.
+
+PhyVMs are integrated into the development workflow and managed using PhyCLI. You will learn more about creating and using PhyVMs in our [edge app](../../tutorials/build-your-first-edge-app) and [screen app](../../tutorials/build-your-first-screen-app) tutorials.
+For more details, refer to CLI reference documentation.
+
+## 🔄 Next Steps
+
+Once you understand your device options:
+
+- **[Build your first edge app](../../tutorials/build-your-first-edge-app)**
+- **[Build your first screen app](../../tutorials/build-your-first-screen-app)**

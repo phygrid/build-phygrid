@@ -1,0 +1,232 @@
+---
+title: "🚀  Welcome to Phygrid"
+icon: "Star"
+images:
+  - img/overview.png
+  - img/phyos.png
+---
+
+## What is Phygrid?
+
+**The operating system for physical-world.**
+
+Run apps and AI at the edge, stream data, manage devices, and build interactive real-world experiences. From warehouses to streets we make edge + cloud + AI work together, at scale.
+
+<GatsbyImage
+  image={props.images[1]?.childImageSharp?.gatsbyImageData}
+  alt="PhyOS"
+/>
+
+## 🧱 Why build on Phygrid?
+
+Traditional IoT stacks are fragmented. AI at the edge is messy.
+
+**We fix that with:**
+
+1. ✅ Edge-native OS (PhyOS) with OTA + GPU
+2. ✅ Digital twins + MCP for real-world context
+3. ✅ One CLI, API, and Console to manage it all
+4. ✅ Built-in MLOps + signals + remote ops
+5. ✅ Secure, compliant, multi-region data
+
+## 🔍 Core concepts
+
+Phygrid is everything you need to build for the real world. As easily as you build for the web.
+
+<PhyCard images={[props.images[0]]} stickyImage style={{ marginBottom: "var(--ant-margin-md)" }}>
+
+**PhyOS** runs on Intel, ARM, or custom hardware. It’s a secure, GPU-accelerated container OS with OTA updates and built-in failover. Perfect for edge AI, high-performance logic, and hardware control.
+
+**Phyhub** is your cloud-native backend. It manages digital twins, streams real-time data, powers ML pipelines, and handles everything from identity to products, checkout, and media.
+
+**Signals** track every event, drive analytics, and fine-tune your models. Spaces map your environment from region to room, so you can target content, apply permissions, and generate rich reporting.
+
+**Peripherals** — doors, cameras, printers, sensors — all become controllable through simple APIs and digital twin models. Your apps interact with them just like software objects.
+
+And it's all tied together by a **complete toolkit for developers**: use the CLI, REST API, drop-in SDKs, the intuitive Console UI, or connect agentic workflows via the MCP server.
+
+</PhyCard>
+
+## ⚡️ Quickstart for developers
+
+Build your first edge app in **less than 10 minutes:**
+
+Want the full walkthrough? 👉 Check out the complete [Edge App tutorial](../tutorials/build-your-first-edge-app).
+
+```bash
+# Scaffold your edge app
+phy app create
+
+..
+
+# Deploy to a local VM for testing (or connect a device)
+phy app vm create
+phy vm start <vm-name>
+
+..
+
+# Push and register your app
+phy app deploy <device-name>
+
+..
+
+# Connect to your device or VM shell
+phy dev shell <device-name>
+
+```
+
+From here, you can iterate, publish new versions, and deploy at scale. All from the CLI or Console.
+
+## 🧠 Edge AI Marketplace
+
+1. **Deploy from Hugging Face with one command.** Go from prototype to live edge inference in minutes.
+2. **Fine-tune, run inference, and stream analytics.** Manage your entire model lifecycle right from Phygrid.
+3. **CLI and SDK support.** Automate deployments, scaffold apps, upload models, and bind to devices with Node or Python.
+4. **Roll out to thousands of devices.** Phygrid handles orchestration, health checks, rollbacks, and fleet scaling.
+5. **Build adaptive edge apps.** Use MCP to make your models environment-aware and responsive to real-world signals.
+6. **Install and manage via Console or CLI.** Keep full control over where and how your apps run.
+
+## 🔒 Data, security & compliance
+
+1. End-to-end encrypted. Data is secure in transit and at rest (WSS, HTTPS).
+2. Anonymized user IDs. Easy consent management and withdrawals.
+3. Global data residency. Choose where your data lives: EU, US, AU, IN, UAE.
+4. Signed containers with RBAC. Secure deployments and role-based access.
+5. CLI and SDK level control. Encrypt, deploy, and audit with Node and Python.
+6. ISO 27001 & 27701 certified. Enterprise-grade security and privacy.
+7. Firewall and threat detection. Azure WAF, IDPS, and Sentinel SIEM.
+8. Outbound-only networking. One port to whitelist, secure by default.
+
+## 🥇 Why developers love Phygrid
+
+No one else combines edge-native GPUs, OTA rollback, digital twins, live ML ops, and app UX in a single platform.
+
+<table>
+  <thead>
+    <tr>
+      <th>Feature</th>
+      <th align="center">Phygrid</th>
+      <th align="center">AWS Greengrass</th>
+      <th align="center">Azure IoT Edge</th>
+      <th align="center">Balena</th>
+      <th align="center">NVIDIA Fleet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Multi-arch support</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">🟡</td>
+    </tr>
+    <tr>
+      <td>GPU acceleration</td>
+      <td align="center">✅</td>
+      <td align="center">🟡</td>
+      <td align="center">🟡</td>
+      <td align="center">🟡</td>
+      <td align="center">🟡</td>
+    </tr>
+    <tr>
+      <td>ML framework support</td>
+      <td align="center">✅</td>
+      <td align="center">🟡</td>
+      <td align="center">🟡</td>
+      <td align="center">🟡</td>
+      <td align="center">🟡</td>
+    </tr>
+    <tr>
+      <td>OS &amp; device management</td>
+      <td align="center">✅</td>
+      <td align="center">🟡</td>
+      <td align="center">🟡</td>
+      <td align="center">✅</td>
+      <td align="center">🟡</td>
+    </tr>
+    <tr>
+      <td>Application management</td>
+      <td align="center">✅</td>
+      <td align="center">🟡</td>
+      <td align="center">🟡</td>
+      <td align="center">🟡</td>
+      <td align="center">🟡</td>
+    </tr>
+    <tr>
+      <td>Employee / visitor UI/UX</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td>MLOps</td>
+      <td align="center">✅</td>
+      <td align="center">🟡</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">🟡</td>
+    </tr>
+    <tr>
+      <td>Peripheral management</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">🟡</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td>MCP / LLMs environment interactions</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td>Analytics &amp; dashboards</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">🟡</td>
+    </tr>
+    <tr>
+      <td>Access management (location)</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td>Resilient Edge Network stack</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+  </tbody>
+</table>
+
+## 👩‍💻 Ready to build?
+
+It only takes a few steps to get up and running with Phygrid.
+
+1. **[Set up your tenant](../getting-started/tenant-setup)** Register your tenant and create your user account.
+2. **[Prepare your dev environment](../getting-started/dev-environment-setup)** Install the CLI and connect to your tenant.
+3. **[Provision your first device](../getting-started/device-setup)** Install PhyOS on your hardware and connect your device.
+
+Now head to our tutorials to deploy your first edge app, screen app, or connect them into a complete real-world experience.
+
+## 📚 Learn more
+
+1. Check out our guide to using [Phygrid Console](https://learn.phygrid.com/console).
+2. Follow Phygrid on social media: [X](https://x.com/phygridcom), [LinkedIn](https://www.linkedin.com/company/phygrid), [YouTube](https://www.youtube.com/@phygrid), [Instagram](https://www.instagram.com/phygridcom), [Facebook](https://www.facebook.com/phygrid).
+
+## 💬 Contact us
+
+If you have any questions, please contact us at [hello@phygrid.com](mailto:hello@phygrid.com).
