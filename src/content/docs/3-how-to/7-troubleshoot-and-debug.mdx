@@ -271,13 +271,13 @@ adduser <username>
 ifconfig
 ```
 
-8. **Download logs from another device** (e.g., your laptop) by running:
+8. **Download logs from another device** (e.g., your computer) by running:
 
 ```shell
 scp <username>@<ip>:/root/logs_backup.txt /path/to/local/destination
 ```
 
-9. **Access the backup logs** - you should now be able to access `logs_backup.txt` at `/path/to/local/destination` on your laptop
+9. **Access the backup logs** - you should now be able to access `logs_backup.txt` at `/path/to/local/destination` on your computer
 
 **Expected output:** The log export should complete without errors:
 
@@ -820,7 +820,7 @@ Remote debugging allows you to inspect and debug your Screen Apps in real-time u
 
 #### **Step 1: Set Up Port Forwarding**
 
-First, establish a port forwarding connection from your laptop to the device. Choose any available port (e.g., 12345):
+First, establish a port forwarding connection from your computer to the device. Choose any available port (e.g., 12345):
 
 ```shell
 phy dev screen-devtools -p 12345 <device_name>
@@ -851,7 +851,7 @@ Press Ctrl+C when done.
 
 #### **Step 2: Access Chrome DevTools**
 
-**Prerequisites:** Ensure Google Chrome is installed on your laptop.
+**Prerequisites:** Ensure Google Chrome is installed on your computer.
 
 1. **Note the localhost URL** from the CLI output (e.g., `localhost:12345`)
 2. **Open Google Chrome** and navigate to `chrome://inspect/#devices`
@@ -889,7 +889,7 @@ Once DevTools is connected, you can:
 - **Set breakpoints** in JavaScript code for step-by-step debugging
 - **Monitor performance** using the Performance tab for optimization
 
-**Important Note:** All interactions in DevTools will reflect on both the device and your laptop simultaneously, allowing you to see real-time changes and debug issues as they occur.
+**Important Note:** All interactions in DevTools will reflect on both the device and your computer simultaneously, allowing you to see real-time changes and debug issues as they occur.
 
 ### **🖥️ VNC Remote Access**
 
