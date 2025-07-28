@@ -81,18 +81,15 @@ cat ~/.ssh/id_rsa.pub
 
 ## 🌐 Proxy Settings
 
-Proxy servers act as intermediaries between your device and the internet, providing enhanced security, network monitoring, and access control. In enterprise environments, custom proxy configurations are often required to comply with corporate network policies and security requirements.
+All PhyOS devices connect to a regional platform proxy for security and simplified network configuration on-site. This default setup is recommended for optimal performance and ease of deployment. However, this may not be possible in corporate environments with mandatory proxy requirements or specific compliance and security policies.
 
-**When to Use Custom Proxy:**
+In these cases, you can configure PhyOS devices to connect to another proxy to maintain compliance with mandatory network policies.
 
-- Corporate environments with mandatory proxy requirements
-- Networks with restricted internet access
-- Enhanced security and traffic monitoring needs
-- Compliance with organizational network policies
+**Important:** Your custom proxy must allow traffic to the Phygrid platform. For specific network configuration requirements, contact **support@ombori.com**.
 
 ### Setting Up Custom Proxy
 
-To configure a custom proxy on your PhyOS device:
+To configure a custom proxy on your PhyOS device, connect to your device:
 
 ```shell
 phy dev shell <device-name>
@@ -112,19 +109,18 @@ Once connected to the device:
 
 **Important Considerations:**
 
-- Ensure your proxy server supports HTTP/HTTPS traffic
 - Verify authentication credentials with your network administrator
-- Some proxy configurations may require additional security certificates
+- Some proxy configurations may require additional certificates related configuration - see [Certificate Authority (CA) Configuration](#-certificate-authority-ca-configuration) section
 
 ### Verifying Proxy Configuration
 
-After setting up your custom proxy, verify the configuration is working correctly:
+To verify your custom proxy configuration is working correctly, test connectivity by running the following command in the device shell:
 
 ```shell
-curl -v https://ifconfig.me
+curl -v https://<hostname>
 ```
 
-This command will display your external IP address and connection details, confirming that traffic is routing through the proxy server.
+Choose a hostname that supports HTTPS and is accessible through your proxy configuration.
 
 **What to look for:**
 
@@ -132,50 +128,28 @@ This command will display your external IP address and connection details, confi
 * Uses proxy env variable https_proxy == 'http://proxy_username:proxy_password@<hostname>:<port>'
 ```
 
-This output line confirms that your proxy configuration is active and being used by the system. Here's what each part means:
-
-- **`Uses proxy env variable`**: Indicates that the system is recognizing and using the proxy environment variable
-- **`https_proxy`**: The environment variable name used for HTTPS connections
-- **`proxy_username:proxy_password`**: Your authentication credentials (will show as configured)
-- **`<hostname>:<port>`**: The proxy server address and port number you specified
+This output line confirms that your proxy configuration is active and being used by the system.
 
 **Successful Proxy Indicators:**
 
 - The command completes without connection errors
 - You see the proxy environment variable being used
-- The returned IP address differs from your device's direct internet IP
-- Connection is established through the specified proxy server
 
-If you see this output, your custom proxy configuration is working correctly and all HTTPS traffic from your PhyOS device will route through the specified proxy server.
+If you see this output, your custom proxy configuration is working correctly and all traffic from your PhyOS device will route through the specified proxy server.
 
-**Troubleshooting:**
+### Resetting Proxy Settings
 
-If the proxy is not working correctly, you may see:
-
-- Connection timeouts or refused connections
-- Authentication failures (407 Proxy Authentication Required)
-- Certificate errors for HTTPS connections
-
-### Clearing Proxy Settings
-
-To remove custom proxy settings and restore direct internet connection:
+To remove custom proxy settings and restore default proxy configuration:
 
 1. In the interactive menu, select `Advanced`
 2. Select `Set Custom Proxy` and press `Enter`
 3. Select `Clear proxy settings` and press `Enter`
 
-> **💡 Tip:** Always test your proxy configuration in a development environment before deploying to production devices. Incorrect proxy settings can prevent your device from connecting to PhyGrid services.
+> **💡 Tip:** Always test your proxy configuration in a development environment before deploying to production devices. Incorrect proxy settings can prevent your device from connecting to Phygrid services.
 
 ## 🔐 Certificate Authority (CA) Configuration
 
-Certificate Authorities (CAs) are trusted entities that issue digital certificates to verify the identity of websites and services. In enterprise environments, organizations often use custom or internal CAs to secure their network communications. Adding these CA certificates to your PhyOS device ensures secure connections to internal services and prevents certificate validation errors.
-
-**When to Configure Custom CA Certificates:**
-
-- Connecting to internal enterprise services with custom certificates
-- Working with self-signed certificates in development environments
-- Compliance with organizational security policies
-- Establishing trust for internal Certificate Authorities
+When using a [custom proxy](#-proxy-settings) that performs SSL/TLS inspection, you may need to install custom CA certificates on the device to ensure proper certificate validation for HTTPS connections.
 
 ### Adding CA Certificates
 
@@ -215,29 +189,14 @@ The CA certificate URL should point to a valid certificate file or certificate b
 - **CRT Format**: `https://your-ca-server.com/ca-certificate.crt`
 - **Certificate Bundle**: `https://your-ca-server.com/ca-bundle.crt`
 
-### Verification and Troubleshooting
+### Verification
 
-After adding CA certificates, verify they are properly installed:
+After adding CA certificates, verify they are working as expected:
 
 ```shell
-# Test connection to a service using the custom CA
-curl -v https://internal-service.company.com
+curl -v https://<hostname>
 ```
 
-**Common Issues:**
-
-- **Invalid URL**: Ensure the certificate URL is accessible and returns a valid certificate file
-- **Network Connectivity**: Verify the device can reach the certificate URL
-- **Certificate Format**: Ensure the certificate is in a supported format (PEM, CRT, or DER)
-- **Proxy Configuration**: If using a proxy, verify the proxy settings are correct
+Choose a hostname that supports HTTPS and is accessible through your proxy configuration.
 
 > **⚠️ Security Note:** Only add CA certificates from trusted sources. Adding untrusted certificates can compromise the security of your device and network communications.
-
-## 🔄 Next Steps
-
-Now that you've learned about advanced PhyOS features, you can:
-
-- [Learn to troubleshoot and debug your applications](/how-to/troubleshoot-and-debug/) to leverage these features for problem-solving
-- [Explore settings schemas](/how-to/settings-schemas/) to configure your apps with custom parameters
-- [Integrate with peripheral twins](/how-to/peripherals-and-descriptors/) to connect external hardware and sensors
-- [Use Signals for event tracking](/how-to/signals/) to monitor your edge applications and device activity
