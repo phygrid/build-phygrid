@@ -1,6 +1,288 @@
 ---
 title: "Build A Screen App"
-icon: "Monitor"
+icon: 💻
 ---
+## 💻 What Are Screen Apps?
 
-Hello world
+Screen Apps are web-based applications that run across multiple platforms, including PhyOS VMs and devices, Tizen devices, and modern browsers. They provide a graphical user interface, delivering user-facing experiences that function as control panels or client interfaces for interacting with the Phygrid services and connected devices in your ecosystem.
+
+Just like edge apps, screen apps are:
+
+- Published and managed via your Phygrid tenant
+- Deployed and configured using the Console
+- Integrated with platform features, including:
+  - App versioning
+  - Settings schemas
+  - Centralized configuration and content management
+  - Real-time event collection via Signals
+
+## 🔧 Common Use Cases for Screen Apps
+
+Screen Apps are ideal for creating interactive user experiences and visual interfaces that connect to the Phygrid platform. Common applications include:
+
+- Digital signage and content displays
+- Interactive kiosks for customer engagement and self-service
+- Product information displays with dynamic pricing
+- Interactive wayfinding and directory systems
+- Real-time dashboards displaying sensor data and device status
+- Control interfaces for managing connected hardware and peripherals
+- Queue management systems with live updates
+
+## ⚙️ How Screen Apps Work
+
+- **Runtime:** Powered by modern browser engines across all supported platforms
+- **Deployment:** Hosted and delivered by Phygrid's app hosting service
+- **Flexible Stack:** Often built with React + TypeScript, though any modern web framework is supported
+- **Offline Support:** Apps and media assets work offline on compatible platforms
+
+Apps are tightly integrated into the Phygrid ecosystem, meaning:
+
+- Updates and content management at scale through versioning
+- Event-driven UI updates using Signals and peripheral twins
+
+## 🧰 Prerequisites
+
+Official Phygrid templates and examples use React with TypeScript, offering modern tooling, strong typing, and native SDK support. This is the stack we'll be working with throughout this tutorial.
+
+Before you begin, make sure the following are set up and ready to go:
+
+### ✅ A Phygrid Tenant
+You'll need access to a Phygrid tenant. If you don't yet have one, please refer to the [Tenant Setup](/getting-started/tenant-setup/) guide.
+
+### ✅ Local Development Environment with PhyCLI Installed and Configured
+
+If you haven't set up CLI on your machine yet, refer to the [Dev Environment Setup](/getting-started/dev-environment-setup/) guide.
+
+## 🛠 Step-by-Step: Creating and Publishing a Screen App
+
+Once your environment is ready, you can create and publish your first screen app. This process involves generating a starter project, building the app, and finally uploading the app to your tenant.
+
+### 1. Scaffold the Screen App Project
+
+Run the following command to begin:
+
+```bash
+phy app create
+```
+
+You'll be prompted to provide a name for your application. If you don't specify one via CLI args, you'll be asked interactively.
+
+Then you'll select the app type - choose **❯ Screen Application (React)**
+
+You'll be asked if you want to create a device for emulation. Since we'll be setting up a device manually later in this tutorial, you can select "N" (or confirm the default, which is no).
+
+### 2. Build, Push & Register the App
+
+The CLI will now:
+
+1. Pull the screen app boilerplate to your local machine
+3. Build the boilerplate React project
+4. Create and upload the app to your Phygrid tenant
+
+Once complete, your app will be available in the Phygrid Console, ready to be installed and deployed to any capable device. We will cover this part later in the tutorial.
+
+You can explore your newly created project. In the directory with the project, you will find:
+
+- **React + TypeScript** project
+- Inside the src directory:
+  - `settings/index.json`: Contains the app's default settings for local development. You can customize these settings to suit your needs, but ensure they conform to the structure defined in schema.ts.
+  - `schema.ts`: Settings schema for your application with example settings (to learn more about settings schemas, check this how-to guide)
+  - `app.tsx`: Main React application component with example boilerplate logic
+- Other files commonly found in React projects, like `package.json` containing useful scripts, `tsconfig.json`, and more
+
+The `app.tsx` file demonstrates the usage of `@phygrid/hub-client` package for platform integration.
+
+The initialization logic in this project is designed to work both locally and on devices:
+- **Local development**: Uses local settings from `settings/index.json` for testing
+- **Device deployment**: Connects to the Phygrid platform to receive real settings and establish communication 
+
+The component also includes example initialization of Signals for event tracking. Signals are not covered in this tutorial, but you can learn more about them in our [dedicated Signals guide](/how-to/signals/).
+
+### 3. Configure & Run App Locally
+
+With your project now set up, you can run your screen application locally using the following command:
+
+```bash
+yarn run start
+```
+
+This runs a script that starts the development server with hot reloading enabled.
+
+Then, open your browser and navigate to http://localhost:3000. Changes to your code will be reflected in real time, allowing you to develop with live updates.
+
+### ✅ Checkpoint
+
+After completing this process, you'll have:
+
+- A working screen app project on your local machine built with React
+- A new app available in your tenant for installation
+
+## 🚀 Deploying the App to a PhyOS Device or VM
+
+Now that your app is ready, the next step is to create an installation and deploy it to a browser, PhyOS VM or a physical PhyOS device.
+
+### 📦 Create an Installation
+
+1. Log in to **console.phygrid.com**
+2. Navigate to **Apps > Developer** and locate your app in the list
+3. Press the **Install** button and provide a name for your new installation
+4. After confirmation, you will be redirected to the **Installation** page
+5. A build of your app will be created automatically as part of the installation
+
+
+### 💻 Connect a browser device
+
+Browser devices provide a convenient way to test your screen app directly on your computer in an environment that simulates a real Phygrid device. This option is good for development and testing, but not intended for production deployments.
+
+1. Navigate to the **Devices** tab on your Installation page
+2. Press the **Connect a device** button
+3. In the modal that appears, click **Setup a new device**
+4. Select **Web Browser** as the device type
+5. Open the browser URL, presented on the right
+5. Enter:
+   - A name for the device
+   - The provisioning code displayed in the browser window
+6. Confirm by pressing the **Connect device** button 
+
+Once successfully connected, your app will load automatically in the browser window.
+
+For additional details on connecting devices to installations, check out this [guide](https://learn.phygrid.com/installations/connect-a-new-device-to-an-installation/).
+
+### 🔌 Connect a physical device
+
+In this step, you can connect a physical device with a screen to your installation.
+
+For an overview of supported device types, refer to our [Device Setup](../../../getting-started/device-setup) guide.
+
+> If you don't have a physical device ready now, skip to the [**Connect a PhyVM**](#-connect-a-phyvm) section.
+
+1. Navigate to the **Devices** tab on your Installation page
+2. Press the **Connect a device** button
+3. In the modal that appears, click **Setup a new device**
+4. Choose your device type from the available options
+5. Follow the setup instructions displayed on the right side of the modal
+6. Enter:
+   - A name for the device
+   - The serial number or provisioning code shown on your device's screen
+7. Confirm by pressing the **Connect device** button 
+
+Once the device is successfully connected, you should see your app appear on the device screen shortly after.
+
+If you run into issues at this stage, refer to the **[Debugging & Troubleshooting](/how-to/debugging-troubleshooting)** article of the documentation.
+
+### 💻 Connect a PhyVM
+
+PhyVMs are a great option during development and for testing purposes. You can create a virtual PhyOS device using the Phy CLI. This is supported on macOS and Linux.
+
+1. Run the following command:
+
+```bash
+phy app vm create
+```
+
+2. Provide a name for the VM (this is how you'll identify it later)
+3. When prompted for VM architecture, confirm the default (host architecture)
+4. Confirm:
+   - Use of the latest PhyOS version
+   - The default memory allocation
+
+The CLI will now download the PhyOS image to your machine.
+
+After the process is completed, a message will appear with the command to start your VM:
+
+```bash
+phy vm start <vm-name>
+```
+
+If dependencies are missing on your system, the CLI will prompt you to install them — confirm and wait for setup to complete.
+
+Once the VM is running, follow the same steps as in the physical device section to connect it to your installation. 
+Select **x86-64** as the device type from the available options.
+
+### ✏️ Make Code Changes
+
+With your app now running locally and on the device, let's make some changes to see the development workflow in action.
+
+Open `src/app.tsx` and update the code by adding an additional header element:
+
+```ts
+...
+  return (
+    <Container>
+      <ProductInfo>
+        <h1>Hello Phygrid!</h1> // <-- added
+        <Logo src={logo} alt="logo" />
+        <p>Product name: {productName}</p>
+        <p>Product price: {productPrice}</p>
+        <button onClick={onAddToCart}>Add to Cart</button>
+      </ProductInfo>
+    </Container>
+  );
+...
+```
+
+After saving your changes, the app will automatically update and reflect the changes in your local browser. If you closed the local development server, simply run `yarn start` again.
+
+### 🚀 Publish an Updated Version
+
+Once your app is updated and working as expected, it's time to publish a new version and deploy it via the Console.
+
+1. Open your project in your IDE
+2. In `package.json`, increase the version number:
+
+```json
+"version": "0.2.0"
+```
+
+3. Run the build script:
+
+```bash
+yarn build
+```
+
+This builds and generates a new `.gridapp` file ready to be published.
+
+4. Publish the new version to your tenant:
+
+```bash
+yarn pub
+```
+
+### 🧪 Test the New Version in Console
+
+1. Go back to your installation in the Phygrid Console
+2. Open the **Settings** tab and press **Edit settings**
+3. Change the value of "Product name"
+4. In the **Version** dropdown, select the latest version that you have pushed.
+5. Press **Save all changes**
+
+When you access the Settings tab of your installation, you'll see that the settings defined in your app's `schema.ts` appear in the Console as an editable form.
+
+After a few moments, your app will be redeployed to connected devices with the new version.
+
+You should now see the newly added "Hello Phygrid!" heading and the updated product name from your settings on both the device screen and the connected browser window.
+
+## 🎉 Success!
+
+Your app is now running the updated version with modified code and updated settings.
+
+You've successfully gone from creation to deployment, iteration, and production publishing — all with full integration into the Phygrid platform.
+
+### ✅ Checkpoint
+
+After completing this part of the tutorial, you should have:
+
+- A functional screen app running on your connected browser and PhyOS device
+- An installation configured in your tenant
+
+## 🔄 Next Steps
+
+Now that your app is setup, you can:
+
+- [Create settings schema to manage your app's configuration](/how-to/settings-schemas/)
+- [Start integrating with peripheral twins](/how-to/peripherals-and-descriptors/)
+- [Use Signals to emit events and monitor edge activity](/how-to/signals/)
+
+
+
+
