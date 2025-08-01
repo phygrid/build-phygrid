@@ -12,7 +12,7 @@ import {
   Parameter,
   ResponseContainer,
   AuthBadge,
-} from "../../../components/apiDocLayout"
+} from "../../components/apiDocLayout"
 
 This is the API reference for integrating with Grid Products. It provides detailed information on endpoints, authentication, and examples for retrieving, updating, and managing your product data.
 
@@ -107,7 +107,6 @@ The core product model that represents a product group with all its variants and
 ```json
 interface GridProduct {
   productGroupId: string;
-  // spaceIds will hold the list of spaceId where item is visible
   spaceIds: Array<string>;
   productShortDescription?: Array<{
     isoLanguageId: IsoLanguageIds;
@@ -123,7 +122,7 @@ interface GridProduct {
     isoLanguageId: IsoLanguageIds;
     storageInstructions: string;
   }>;
-  shellLifeDays?: number; // int32
+  shellLifeDays?: number;
   consumerStorageInstruction?: Array<{
     isoLanguageId: IsoLanguageIds;
     consumerStorageInstruction: string;
@@ -144,31 +143,24 @@ interface GridProduct {
     relatedProductGroupId: string;
     productRelationshipType: ProductRelationshipTypes;
   }>;
-
-  // Variants
   variants: Array<{
-    productId: string; // Item variant Id
+    productId: string;
     productGroupId: string;
     globalTradeItemNumber?: Array<string>;
     gtinName?: Array<string>;
     europeanArticleNumber?: Array<string>;
     universalProductCode?: Array<string>;
-
-    // Item variant name (optional)
     productName?: Array<{
       isoLanguageId: IsoLanguageIds;
       productName: string;
     }>;
-
     periodStartDate?: string;
     periodEndDate?: string;
-
     color?: string;
     colorImageUrl?: string;
     style?: string;
     size?: string;
   }>;
-
   brand?: Array<{
     isoLanguageId: IsoLanguageIds;
     brandName: string;
@@ -177,7 +169,6 @@ interface GridProduct {
     brandTrademark?: string;
     brandLogo?: string;
   }>;
-
   productStatus: Array<{
     productStatus: ProductStatusEnum;
     isoLanguageId: IsoLanguageIds;
@@ -186,70 +177,55 @@ interface GridProduct {
     periodEndDate?: string;
     productStatusNote?: string;
   }>;
-
   productFeature?: Array<{
-    productId: string; // variant's productId
+    productId: string;
     isoLanguageId: IsoLanguageIds;
     productFeatureType: string;
     productFeatureValue: string;
   }>;
-
-  // Product Price based on type (Standard or Promotional)
   productPriceList: Array<{
-    productId: string; // variant's productId
-    priceListType: PriceListTypeEnum; // 'Standard' OR 'Promotional'
-    listPrice: number; // float32
+    productId: string;
+    priceListType: PriceListTypeEnum;
+    listPrice: number;
     spaceId: string;
     isoLanguageId: IsoLanguageIds;
     isoCurrencyCode: string;
     pricingUomId?: string;
     periodStartTimestamp?: string;
     periodEndTimestamp?: string;
-    suggestedRetailPrice?: number; // float32
+    suggestedRetailPrice?: number;
   }>;
-
-  // Images
   catalogPageLocationProduct: Array<{
-    productId: string; // variant's productId
+    productId: string;
     productGroupId: string;
-    catalogType: string; // Ex. "image/png", "video/mp4"
-    catalogPage?: string; // Ex. Root URL of client media site
-    catalogPageLocation?: string; // Ex. Product URL appended to root URL of client page
-    catalogPageLocationProduct: string; // Entire URL value
+    catalogType: string;
+    catalogPage?: string;
+    catalogPageLocation?: string;
+    catalogPageLocationProduct: string;
   }>;
-
-  // Product Type (referenced from ProductType's "ProductTypeId" database)
   productType: Array<string>;
-
-  // Product Labels - displayed like stickers
   productLabel?: Array<{
     isoLanguageId: IsoLanguageIds;
     spaceId: string;
-    productLabel: string; // Ex. Online Exclusive
+    productLabel: string;
   }>;
-
-  // Product Tags to increase searchability of a product
   productTags?: Array<{
     isoLanguageId: IsoLanguageIds;
     productTags: Array<string>;
   }>
-
-  // Product Quantity per variant
   productItemQuantity?: Array<{
-    productId: string; // variant's productId
+    productId: string;
     spaceId: string;
     productItemQuantityStartDate?: string;
     productItemQuantityEndDate?: string;
-    productItemQuantity: number; // int32
+    productItemQuantity: number;
   }>;
-
   productVendor?: Array<{
     vendorId: string;
     productVendor: string;
     periodStartDate?: string;
     periodEndDate?: string;
   }>;
-
   variantsGroupId?: string;
 }
 ```
@@ -266,22 +242,16 @@ interface VariantInfo {
   gtinName?: Array<string>;
   europeanArticleNumber?: Array<string>;
   universalProductCode?: Array<string>;
-
-  // Item variant name (optional)
   productName?: Array<{
     isoLanguageId: IsoLanguageIds;
     productName: string;
   }>;
-
   periodStartDate?: string;
   periodEndDate?: string;
-
   color?: string;
   colorImageUrl?: string;
   style?: string;
   size?: string;
-
-  // Fields related to productGroup but response is filtered with the specified productId
   spaceIds: string[];
   productName: ProductName[];
   productDescription: ProductDescription[];
@@ -298,7 +268,7 @@ Used for updating specific variant information without requiring the full produc
 
 ```json
 interface VariantUpdateFields {
-  productId: string; // variant's productId
+  productId: string;
   globalTradeItemNumber?: Array<string>;
   gtinName?: Array<string>;
   europeanArticleNumber?: Array<string>;
@@ -309,36 +279,30 @@ interface VariantUpdateFields {
   color?: string;
   style?: string;
   size?: string;
-
-  // Values only pertaining to the specified productId of variant
   productPriceList?: Array<{
     productId: string;
-    priceListType: PriceListTypeEnum; // 'Standard' OR 'Promotional'
-    listPrice: number; // float32
+    priceListType: PriceListTypeEnum;
+    listPrice: number;
     spaceId: string;
     isoLanguageId: IsoLanguageIds;
     isoCurrencyCode: string;
     pricingUomId?: string;
     periodStartTimestamp?: string;
     periodEndTimestamp?: string;
-    suggestedRetailPrice?: number; // float32
+    suggestedRetailPrice?: number;
   }>;
-
-  // Values only pertaining to the specified productId of variant
   productFeature?: Array<{
     productId: string;
     isoLanguageId: IsoLanguageIds;
     productFeatureType: string;
     productFeatureValue: string;
   }>;
-
-  // Values only pertaining to the specified productId of variant
   productItemQuantity?: Array<{
     productId: string;
     spaceId: string;
     productItemQuantityStartDate?: string;
     productItemQuantityEndDate?: string;
-    productItemQuantity: number; // int32
+    productItemQuantity: number;
   }>;
 }
 ```
@@ -417,7 +381,7 @@ type Space = {
   id: string;
   organizationId: string;
   displayName: string;
-  type: 'location' | 'section' | 'custom'; // defaults to location
+  type: 'location' | 'section' | 'custom';
   longitude: number;
   latitude: number;
   notes?: string;
