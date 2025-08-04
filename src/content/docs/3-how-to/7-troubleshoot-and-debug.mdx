@@ -38,7 +38,7 @@ Before beginning the troubleshooting process, ensure you have the following:
 
 ### ✅ Local Development Environment with PhyCLI Installed and Configured
 
-If you haven't set up CLI on your machine yet, refer to the [Local Environment Setup](/getting-started/local-environment-setup/) guide.
+If you haven't set up CLI on your machine yet, refer to the [Dev Environment Setup](/getting-started/dev-environment-setup/) guide.
 
 ### ✅ (Optional) Physical Keyboard and Monitor
 
@@ -51,6 +51,7 @@ To begin troubleshooting, you can access the device shell using the Phy CLI:
 ```shell
 phy dev shell <device-name>
 ```
+
 **Important:** Make sure you are logged into the Phy CLI and have selected the correct tenant.
 
 If the device is not reachable using PhyCLI, you can access the device shell by connecting a physical keyboard to the device.
@@ -270,13 +271,13 @@ adduser <username>
 ifconfig
 ```
 
-8. **Download logs from another device** (e.g., your laptop) by running:
+8. **Download logs from another device** (e.g., your computer) by running:
 
 ```shell
 scp <username>@<ip>:/root/logs_backup.txt /path/to/local/destination
 ```
 
-9. **Access the backup logs** - you should now be able to access `logs_backup.txt` at `/path/to/local/destination` on your laptop
+9. **Access the backup logs** - you should now be able to access `logs_backup.txt` at `/path/to/local/destination` on your computer
 
 **Expected output:** The log export should complete without errors:
 
@@ -446,7 +447,6 @@ docker logs <container-id> -f
 ```
 
 The `<container-id>` is displayed as the first column in the `docker ps` output.
-
 
 If no containers are available, there could be an issue during the image pulling process. To investigate this, run:
 
@@ -820,41 +820,64 @@ Remote debugging allows you to inspect and debug your Screen Apps in real-time u
 
 #### **Step 1: Set Up Port Forwarding**
 
-First, establish a port forwarding connection from your laptop to the device:
+First, establish a port forwarding connection from your computer to the device. Choose any available port (e.g., 12345):
 
 ```shell
-phy dev forward <device_namehttp://localhost:1234
+phy dev screen-devtools -p 12345 <device_name>
 ```
 
 **Expected output:** You should see confirmation of the port forwarding setup:
 
 ```shell
-Forwarding http://localhost:1234 -<device-name>:1234
-Port forwarding established successfully
+Starting Chrome DevTools session on port 12345...
+Opening stream
+Opening Chrome DevTools inspector...
+
+To debug the remote target:
+1. Click "Configure..." next to "Discover network targets" in Chrome DevTools
+2. Add "localhost:12345" to the target discovery settings
+3. Wait for the target to appear under "Remote Target"
+
+
+Press Ctrl+C when done.
 ```
 
 **What to expect:**
 
-- **Successful forwarding** will show the local and remote port mapping
-- **Connection errors** may indicate network issues or device accessibility problems
-- **Port conflicts** may occur if the local port is already in use
+- **Successful connection** will show "Opening stream" and setup instructions
+- **Port forwarding active** keeps the session running until you press Ctrl+C
+- **Connection errors** may indicate the device is unreachable or the port is already in use
+- **Keep the terminal open** - closing it will terminate the debugging session
 
 #### **Step 2: Access Chrome DevTools**
 
-1. **Copy the port number** from the new browser tab that opens automatically
-2. **Open Chrome** and navigate to `chrome://inspect/#devices`
-3. **Enable network discovery** by clicking on "Discover network targets" "Configure..."
-4. **Add the target** by entering `localhost:<port>` in the configuration dialog
-5. **Click "Inspect"** next to the "Phygrid App" entry that appears
+**Prerequisites:** Ensure Google Chrome is installed on your computer.
 
-**Expected output:** Chrome DevTools should open with access to your screen app
+1. **Note the localhost URL** from the CLI output (e.g., `localhost:12345`)
+2. **Open Google Chrome** and navigate to `chrome://inspect/#devices`
+3. **Configure network targets:**
+   - Scroll down to the "Discover network targets" section
+   - Click the **"Configure..."** button next to it
+   - In the dialog box, enter `localhost:12345` (replace with your actual port)
+   - Click **"Done"** to save the configuration
+4. **Wait for target discovery** - after a few seconds, you should see a "Phygrid App" entry appear under "Remote Target"
+5. **Start debugging** by clicking the **"Inspect"** link next to the "Phygrid App" entry
+
+**Expected output:** A new Chrome DevTools window should open displaying your screen app's debugging interface with multiple tabs (Elements, Console, Sources, Network, etc.)
 
 **What to expect:**
 
-- **DevTools interface** should load with your screen app's DOM structure
-- **Console access** will show real-time JavaScript logs and errors
-- **Network monitoring** allows inspection of HTTP requests and responses
-- **Live debugging** enables setting breakpoints and stepping through code
+- **DevTools interface** loads with your screen app's DOM structure visible in the Elements tab
+- **Console access** shows real-time JavaScript logs, errors, and warnings from your screen app
+- **Network monitoring** displays all HTTP requests, API calls, and resource loading activities
+- **Live debugging** allows setting breakpoints, stepping through code, and inspecting variables
+- **Real-time updates** reflect changes made on the physical device screen simultaneously
+
+**Troubleshooting:**
+
+- **No target appears:** Verify the port forwarding is still active and the device is reachable
+- **Connection refused:** Check that the port number matches between the CLI and Chrome configuration
+- **Blank DevTools:** The screen app may not be loaded yet - wait a few moments or refresh the page
 
 #### **Step 3: Debug Your Application**
 
@@ -866,7 +889,7 @@ Once DevTools is connected, you can:
 - **Set breakpoints** in JavaScript code for step-by-step debugging
 - **Monitor performance** using the Performance tab for optimization
 
-**Important Note:** All interactions in DevTools will reflect on both the device and your laptop simultaneously, allowing you to see real-time changes and debug issues as they occur.
+**Important Note:** All interactions in DevTools will reflect on both the device and your computer simultaneously, allowing you to see real-time changes and debug issues as they occur.
 
 ### **🖥️ VNC Remote Access**
 
@@ -967,7 +990,6 @@ tmpfs           6.3G     0  6.3G   0% /sys/fs/cgroup
 - **Available space** should be sufficient for app operations (recommended over 20% free)
 - **High usage** (over 80%) may indicate the need for cleanup or storage expansion
 - **Critical levels** (less than 10% free) can cause system instability and app failures
-
 
 #### **Signal Transmission Issues**
 

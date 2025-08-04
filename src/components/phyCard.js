@@ -11,6 +11,7 @@ const PhyCardComponent = ({
   grow,
   images,
   children,
+  stickyImage,
   ...props
 }) => {
   // If images are provided, render with image column layout
@@ -21,6 +22,7 @@ const PhyCardComponent = ({
         grow={grow}
         bodyStyle={{ padding: 0 }}
         images={images}
+        stickyImage={stickyImage}
         {...props}
       >
         {children}
@@ -41,7 +43,7 @@ const PhyCardComponent = ({
   )
 }
 
-const PhyCardWithImages = ({ images, children, ...props }) => {
+const PhyCardWithImages = ({ images, stickyImage, children, ...props }) => {
   // Render images - handle both JSX (legacy) and data array (new)
   const renderImages = () => {
     if (!images) return null
@@ -104,7 +106,7 @@ const PhyCardWithImages = ({ images, children, ...props }) => {
           sm={24}
           lg={12}
         >
-          <ImageWrapper>{renderImages()}</ImageWrapper>
+          <ImageWrapper sticky={stickyImage}>{renderImages()}</ImageWrapper>
         </Col>
       </Row>
     </PhyCard>
@@ -117,11 +119,29 @@ const ImageWrapper = styled.div`
   gap: var(--ant-margin-md);
   width: 100%;
   height: 100%;
+
+  ${props =>
+    props.sticky &&
+    `
+    .ant-image {    
+      position: sticky;
+      top: var(--ant-padding-md);
+  }
+  `}
 `
 
 const Content = styled.div`
   position: sticky;
   top: var(--ant-padding-md);
+
+  ul,
+  p,
+  ol {
+    color: var(--ant-color-text-secondary);
+  }
+
+  ul {
+  }
 `
 
 const PhyCard = styled(Card)`

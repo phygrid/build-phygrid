@@ -5,12 +5,9 @@ icon: "Cpu"
 
 This guide explores some of advanced PhyOS features that address real-world challenges developers face when building edge-based solutions and digital experiences.
 
-## 🛜 Advanced Network Configuration
-
-
 ## 🧑‍💻 Enabling Developer Mode
 
-Developer Mode allows you to directly deploy and test your Edge Apps and Screen Apps on the device without building and publishing them to the Console first. This feature significantly accelerates the development workflow by enabling rapid iteration and real-time debugging capabilities.
+Developer Mode allows you to directly deploy and test your apps on the device without building and publishing them to the Console first. This feature significantly accelerates the development workflow by enabling rapid iteration and real-time debugging capabilities.
 
 **Benefits of Developer Mode:**
 
@@ -81,3 +78,125 @@ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 # Display the public key to copy
 cat ~/.ssh/id_rsa.pub
 ```
+
+## 🌐 Proxy Settings
+
+All PhyOS devices connect to a regional platform proxy for security and simplified network configuration on-site. This default setup is recommended for optimal performance and ease of deployment. However, this may not be possible in corporate environments with mandatory proxy requirements or specific compliance and security policies.
+
+In these cases, you can configure PhyOS devices to connect to another proxy to maintain compliance with mandatory network policies.
+
+**Important:** Your custom proxy must allow traffic to the Phygrid platform. For specific network configuration requirements, contact **support@ombori.com**.
+
+### Setting Up Custom Proxy
+
+To configure a custom proxy on your PhyOS device, connect to your device:
+
+```shell
+phy dev shell <device-name>
+```
+
+Once connected to the device:
+
+1. Press `Enter` to bring up the interactive menu
+2. Select `Advanced` and press `Enter`
+3. Select `Set Custom Proxy` and press `Enter`
+4. Select `Set proxy settings` and press `Enter`
+5. Provide the following proxy configuration details:
+   - **Hostname**: Enter the proxy server hostname or IP address
+   - **Port**: Enter the proxy server port number (typically 8080, 3128, or 8888)
+   - **Username**: Enter your proxy authentication username
+   - **Password**: Enter your proxy authentication password
+
+**Important Considerations:**
+
+- Verify authentication credentials with your network administrator
+- Some proxy configurations may require additional certificates related configuration - see [Certificate Authority (CA) Configuration](#-certificate-authority-ca-configuration) section
+
+### Verifying Proxy Configuration
+
+To verify your custom proxy configuration is working correctly, test connectivity by running the following command in the device shell:
+
+```shell
+curl -v https://<hostname>
+```
+
+Choose a hostname that supports HTTPS and is accessible through your proxy configuration.
+
+**What to look for:**
+
+```bash
+* Uses proxy env variable https_proxy == 'http://proxy_username:proxy_password@<hostname>:<port>'
+```
+
+This output line confirms that your proxy configuration is active and being used by the system.
+
+**Successful Proxy Indicators:**
+
+- The command completes without connection errors
+- You see the proxy environment variable being used
+
+If you see this output, your custom proxy configuration is working correctly and all traffic from your PhyOS device will route through the specified proxy server.
+
+### Resetting Proxy Settings
+
+To remove custom proxy settings and restore default proxy configuration:
+
+1. In the interactive menu, select `Advanced`
+2. Select `Set Custom Proxy` and press `Enter`
+3. Select `Clear proxy settings` and press `Enter`
+
+> **💡 Tip:** Always test your proxy configuration in a development environment before deploying to production devices. Incorrect proxy settings can prevent your device from connecting to Phygrid services.
+
+## 🔐 Certificate Authority (CA) Configuration
+
+When using a [custom proxy](#-proxy-settings) that performs SSL/TLS inspection, you may need to install custom CA certificates on the device to ensure proper certificate validation for HTTPS connections.
+
+### Adding CA Certificates
+
+To configure custom Certificate Authority certificates on your PhyOS device:
+
+```shell
+phy dev shell <device-name>
+```
+
+Once connected to the device:
+
+1. Press `Enter` to bring up the interactive menu
+2. Select `Advanced` and press `Enter`
+3. Select `CA (add certificate authority trust)` and press `Enter`
+4. Enter the URL of the CA certificates when prompted
+5. Specify whether you need to use a proxy to download the certificate:
+
+   **Option 1: Direct Download (No Proxy)**
+
+   - Enter `n` when asked "Do you need to use a proxy to download the certificate?"
+   - The system will download and install the CA certificates directly
+
+   **Option 2: Proxy-Assisted Download**
+
+   - Enter `y` when asked "Do you need to use a proxy to download the certificate?"
+   - Provide the following proxy configuration details:
+     - **Hostname**: Enter the proxy server hostname or IP address for certificate download
+     - **Port**: Enter the proxy server port number (typically 8080, 3128, or 8888)
+     - **Username**: Enter your proxy authentication username (optional)
+     - **Password**: Enter your proxy authentication password (optional)
+
+### Certificate URL Formats
+
+The CA certificate URL should point to a valid certificate file or certificate bundle. Common formats include:
+
+- **PEM Format**: `https://your-ca-server.com/ca-certificate.pem`
+- **CRT Format**: `https://your-ca-server.com/ca-certificate.crt`
+- **Certificate Bundle**: `https://your-ca-server.com/ca-bundle.crt`
+
+### Verification
+
+After adding CA certificates, verify they are working as expected:
+
+```shell
+curl -v https://<hostname>
+```
+
+Choose a hostname that supports HTTPS and is accessible through your proxy configuration.
+
+> **⚠️ Security Note:** Only add CA certificates from trusted sources. Adding untrusted certificates can compromise the security of your device and network communications.
