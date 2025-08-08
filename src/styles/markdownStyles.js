@@ -481,6 +481,10 @@ export const markdownStyles = css`
     }
   }
 
+  .text-red {
+    color: #dc2626;
+  }
+
   /* Task lists */
   .task-list-item {
     list-style-type: none;
