@@ -40,12 +40,11 @@ Official Phygrid templates and examples use Node with TypeScript, offering moder
 Before you begin, make sure the following are set up and ready to go:
 
 ### ✅ A Phygrid Tenant
-
-You'll need access to a Phygrid tenant — your organization's managed environment where apps and devices are registered, deployed, and monitored. If you don't yet have one, please refer to the [Tenant Setup](/getting-started/tenant-setup) here.
+You'll need access to a Phygrid tenant. If you don't yet have one, please refer to the [Tenant Setup](/getting-started/tenant-setup/) guide.
 
 ### ✅ Local Development Environment with PhyCLI Installed and Configured
 
-If you haven't set up CLI on your machine yet, refer to the [Local Environment Setup](/getting-started/local-environment-setup/) guide.
+If you haven't set up CLI on your machine yet, refer to the [Dev Environment Setup](/getting-started/dev-environment-setup/) guide.
 
 ### ✅ A Docker Hub Account
 
@@ -56,20 +55,13 @@ For the purpose of this tutorial, you'll need a Docker.io account to publish you
 - **Push credentials** (with read/write access): used locally for publishing your app image
 - **Pull credentials** (read-only): embedded in your app and used by devices to fetch the image
 
-### ✅ Docker Installed
+### ✅ Docker Installed & Configured
 
-Ensure you have Docker Desktop installed and running on your development machine.
+Ensure you have Docker Desktop installed and configured for Phygrid.
 
-You must enable the **containerd image store**, a requirement for proper image handling with Phygrid.
+You must enable the **containerd image store**, a requirement for proper edge apps image handling with Phygrid.
 
-To do this:
-
-1. Open Docker Desktop
-2. Go to **Settings → General**
-3. Enable the option **"Use containerd for pulling and storing images"**
-4. Click **Apply & Restart**
-
-> This feature is available in Docker Desktop ≥ 4.29
+ If you haven't set this up yet, refer to the Docker configuration section in the [Dev Environment Setup](/getting-started/dev-environment-setup/#3-configure-docker-for-edge-apps) guide.
 
 ## 🛠 Step-by-Step: Creating and Publishing an Edge App
 
@@ -161,31 +153,34 @@ Now that your app is ready, the next step is to create an installation and deplo
 ### 📦 Create an Installation
 
 1. Log in to **console.phygrid.com**
-// KP TODO 2025-06-20: Be more specific
-2. Navigate to the **Marketplace** and locate your app
+2. Navigate to **Apps > Developer** and locate your app in the list
 3. Press the **Install** button and provide a name for your new installation
 4. After confirmation, you will be redirected to the **Installation** page
 5. A build of your app will be created automatically as part of the installation
 
 ### 🔌 Connect a PhyOS Device
 
-> **Note:** This step requires a freshly provisioned physical PhyOS device.
-> If you don't have a physical device available, skip to the [**Connect PhyOS VM**](#-connect-a-phyos-vm) section.
+In this step, you can connect an edge-compatible PhyOS device (virtual or physical) to your installation.
+
+For an overview of supported device types, refer to our [Device Setup](../../../getting-started/device-setup) guide.
+
+> If you don't have a physical or virtual device ready now, skip to the [**Connect a PhyVM**](#-connect-a-phyvm) section.
 
 1. Navigate to the **Devices** tab on your Installation page
 2. Press the **Connect a device** button
 3. In the modal that appears, click **Setup a new device**
-4. Select **x86-64** as the device type
-5. Enter:
+4. Choose your device type from the available options
+5. Follow the setup instructions displayed on the right side of the modal
+6. Enter:
    - A name for the device
    - The serial number or provisioning code shown on your PhyOS device's screen
-6. Confirm by pressing the **Connect device** button 
+7. Confirm by pressing the **Connect device** button
 
-For additional details on creating installations and connecting devices, check out this comprehensive guide (KP TODO 2025-06-20: Input link here)
+For additional details on connecting devices to installations, check out this [guide](https://learn.phygrid.com/installations/connect-a-new-device-to-an-installation/).
 
 Once the device is successfully connected, you should see:
 - The device name appear on the device screen
-- The connection status update on the physical screen of the device
+- The connection status update on the screen of the device
 - Your app will be automatically downloaded and started
 
 To verify deployment from your computer, run:
@@ -225,9 +220,9 @@ Settings: {
 
 If you run into issues at this stage, refer to the **[Troubleshoot & Debug](/how-to/troubleshoot-and-debug)** article of the documentation.
 
-### 💻 Connect a PhyOS VM
+### 💻 Connect a PhyVM
 
-VMs are a great option during development and for testing purposes. You can create a virtual PhyOS device using the Phy CLI. This is supported on macOS and Linux.
+PhyVMs are a great option during development and for testing purposes. You can create a virtual PhyOS device using the Phy CLI. This is supported on macOS and Linux.
 
 1. Run the following command:
 
@@ -251,7 +246,8 @@ phy vm start <vm-name>
 
 If dependencies are missing on your system, the CLI will prompt you to install them — confirm and wait for setup to complete.
 
-Once the VM is running, follow the same steps as in the physical device section to connect it to your installation and verify the deployment.
+Once the VM is running, follow the same steps as in the [Connect a PhyOS Device](#-connect-a-phyos-device) section to connect it to your installation and verify the deployment.
+Select **x86-64** as the device type from the available options.
 
 ### ✏️ Make Code Changes
 
@@ -268,13 +264,13 @@ setInterval(() => {
 }, 3000);
 ```
 
-### 🚧 Enable Development Mode
+### 🚧 Enable Development Mode on PhyVM
 
-Now let's deploy your code to the connected VM in development mode. Please note that this feature is intended for development and iteration, not for managing production devices.
+Now let's deploy your code to the connected PhyVM in development mode. Please note that this feature is intended for development and iteration, not for managing production devices.
 
 Developer Mode allows you to directly deploy and test your edge apps on the device without building and publishing them to the Console first. This feature significantly accelerates the development workflow by enabling rapid iteration and real-time debugging capabilities.
 
-To enable development mode on the PhyOS VM, please follow this guide: [Enabling Developer Mode](/how-to/advanced-phyos-features/#-enabling-developer-mode).
+To enable development mode on the PhyVM, please follow this guide: [Enabling Developer Mode](/how-to/advanced-phyos-features/#-enabling-developer-mode).
 
 For the best experience, we recommend using the **SSH public key** authentication method.
 
@@ -284,11 +280,50 @@ To deploy your local app changes directly to the VM running in development mode,
 yarn deploy <device-name>
 ```
 
-**Note:** You can also enable developer mode on a physical PhyOS device using the same steps. Keep in mind that `phy app deploy` requires both the device and your host machine to be discoverable on the same network. 
+This script uses the `phy app deploy` command, which performs the following operations:
+* Syncs your local app files to the target device
+* Executes a Docker build on the device using your local app's source code, creating a new container image
+* Creates a local twin configuration that instructs the device to run this newly built image
 
-To verify that your changes were deployed successfully, access your PhyOS shell:
- 
-// TODO KP 2025-06-20: How to verify this?
+**Note:** You can also enable developer mode on a physical or virtual PhyOS device using the same steps. Keep in mind that `phy app deploy` requires both the device and your host machine to be discoverable on the same network.
+
+To verify that your changes were deployed successfully, access your PhyOS shell again:
+
+```bash
+phy dev shell <device-name>
+```
+
+Verify the new image is running:
+
+```bash
+docker ps
+```
+
+Then inspect the logs:
+
+```bash
+docker logs <container-id> -f
+```
+
+You should see updated output reflecting your changes:
+
+```
+Hello, world! 3
+This is a test
+Settings: {
+  "testSetting": "New setting value"
+}
+```
+
+**Important:** When a device is in developer mode with a local deployment, it will ignore app version updates from regular Console deployments. However, the device will continue to use settings from the Console.
+
+Before proceeding to the next step, disable the local deployment by removing the local twins configuration:
+
+```bash
+rm /data/settings/phyhub/local-twins.json
+```
+
+After removing the file, restart your PhyVM (using `phy vm restart <vm-name>`) or reboot your PhyOS device.
 
 ### 🚀 Publish an Updated Version
 
@@ -325,35 +360,9 @@ yarn pub
 
 When you access the Settings tab of your installation, you'll see that the settings defined in your app's `schema.ts` appear in the Console as an editable form.
 
-After a few moments, your app will be redeployed with the new version.
+After a few moments, your app will be redeployed with the new version to all connected devices.
 
-Reconnect to your device:
-
-```bash
-phy dev shell <device-name>
-```
-
-Verify the new image is running:
-
-```bash
-docker ps
-```
-
-Then inspect the logs:
-
-```bash
-docker logs <container-id> -f
-```
-
-You should see updated output reflecting your changes:
-
-```
-Hello, world! 3
-This is a test
-Settings: {
-  "testSetting": "New setting value"
-}
-```
+You can connect to one of your devices using the same steps as before and verify your app's updated output by checking the container logs.
 
 ## 🎉 Success!
 

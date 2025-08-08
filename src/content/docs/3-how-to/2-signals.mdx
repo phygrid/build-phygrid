@@ -3,4 +3,350 @@ title: "Signals"
 icon: "PaperPlaneTilt"
 ---
 
-Hello world
+This comprehensive guide explains how to implement and utilize signals in the Phygrid platform to collect data from interaction points, track user behavior,
+and monitor application performance. Signals provide real-time comprehensive analytics and monitoring capabilities.
+
+## **📊 What Are Signals**
+
+Signals are the foundation of data collection, alerts and analytics in the Phygrid platform. They enable insights into user interactions,
+application performance, and custom analytics. The data collected through signals is processed by the Phygrid platform and presented in the Console's analytics dashboards.
+
+## **🚀 Getting Started with Signals**
+
+The `@phygrid/hub-client` package provides a comprehensive and robust API for initializing and utilizing signals in your applications.
+This powerful toolkit enables you to seamlessly integrate analytics, user behavior tracking, and application monitoring into your
+Phygrid applications. This section provides a detailed walkthrough of the setup process and demonstrates proven implementation
+patterns used in production environments.
+
+### **📱 Signals With Screen App Example**
+
+If you don't have a screen app project yet, you can create one by following the [Build your first screen app](/tutorials/build-your-first-screen-app/) tutorial.
+
+Signals are automatically pre-configured and ready to use when you create applications using the Phygrid
+screen app template, providing immediate out-of-the-box analytics
+capabilities. The hub-client library exposes a dedicated `initializeSignals()` method that handles the complete setup
+process.
+
+When you create a new application using the Phygrid template, you'll find the signals initialization process already
+implemented in your main `App.tsx` component. This initialization pattern ensures that signals are properly configured
+before your application begins collecting user interaction data and performance metrics:
+
+```typescript
+const initializeClient = useCallback(async () => {
+  try {
+    const client = await connectPhyClient()
+    const signals = await client.initializeSignals() // <----- signals initialization
+    const settings = (await client.getSettings()) as Settings
+
+    setState({ client, settings, signals })
+  } catch (err) {
+    console.error("Error initializing client:", err)
+  }
+}, [])
+```
+
+`initializeSignals()` automatically initializes client and session by fetching the device and app details from PhyOS and returns an object that can be used to send standard or custom events. In `App.tsx` you will also find how a standard signal **sendCartAdd** is generated:
+
+```typescript
+signals.sendCartAdd({ productId: "TEMPORARY-PRODUCT-ID-123", quantity: 1 })
+```
+
+**Note:** You can read more about how the generated signals can be visualized in Console in the reports guide.
+
+### **📈 Advanced Initialization Process**
+
+When implementing signals within a screen app or edge app deployed on a Phygrid device running on PhyOS, all required initialization parameters are automatically retrieved from the device and app configuration. For scenarios where signals are implemented in standalone scripts or applications running outside of the Phygrid device environment, manual parameter configuration is required to establish proper signal initialization.
+
+```typescript
+import { connectPhyClient } from "@phygrid/hub-client"
+
+const initParams = {
+  deviceId: "device-12345",
+  installationId: "install-67890",
+  spaceId: "space-abcdef",
+  tenantId: "tenant-xyz",
+  appVersion: "1.0.0",
+  appId: "com.example.app",
+  environment: "production",
+  dataResidency: "EU",
+  country: "SE",
+  installationVersion: "2.3.4",
+  accessToken: "eyJhbGciOiJIUzI1NiIsInR...",
+  clientUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+  ip: "192.168.1.100",
+}
+
+const client = await connectPhyClient()
+const signals = await client.initializeSignals(initParams)
+```
+
+**Note:** You can read more about parameter properties in the signals SDK reference.
+
+### **📋 Standard Events**
+
+**Instance Management:**
+
+1. `getInstanceProps()`: Returns the current instance properties and configuration.
+
+**Session Management:**
+
+2. `createSession(instanceParams?: Partial<SignalInstance>)`: Creates a new session and initializes the instance with the required parameters.
+
+3. `initialize(signalParams: InitSignalPayload)`: Initializes the SignalsService with the provided signal parameters.
+
+4. `initializeEdgeApp(signalParams: InitSignalPayload | {} = {})`: Initializes the SignalsService specifically for edge applications.
+
+**Application Tracking:**
+
+5. `sendAppOnline(message?: string)`: Tracks when the application comes online and becomes available for user interactions.
+
+6. `sendAppOffline(message?: string)`: Tracks when the application goes offline or becomes unavailable.
+
+**Transaction Events:**
+
+7. `sendCheckout(checkout: CheckoutEvent)`: Sends a checkout event with transaction details.
+
+8. `sendPurchase(purchase: PurchaseEvent)`: Sends a purchase completion event.
+
+**Session & Client Data:**
+
+9. `sendSession(session: Session)`: Sends session data to the server for tracking and analytics.
+
+10. `sendClient(client: Client)`: Sends client information to the server for user tracking and analytics.
+
+**Order Processing:**
+
+11. `sendProcessOrderStart()`: Tracks the start of an order processing workflow.
+
+12. `sendProcessOrderEnd()`: Tracks the completion of an order processing workflow.
+
+13. `sendProcessOrderSuccess()`: Tracks a successful order processing completion.
+
+14. `sendProcessOrderFailed()`: Tracks a failed order processing attempt.
+
+15. `sendOrderItem(params: { orderId: string; itemId: string; itemType: string })`: Tracks an individual item within an order.
+
+16. `sendProcessOrderItemDelivered(params: { orderId: string; itemId: string })`: Tracks successful delivery of an order item.
+
+17. `sendProcessOrderItemFailed(params: { orderId: string; itemId: string })`: Tracks failed delivery of an order item.
+
+**Authentication Events:**
+
+18. `sendAuthenticationSuccess()`: Tracks a successful user authentication event.
+
+19. `sendAuthenticationFailed()`: Tracks a failed user authentication attempt.
+
+**Barcode & Media Events:**
+
+20. `sendScanBarcode(params: { barcode: string })`: Tracks a barcode scan event from connected hardware.
+
+21. `sendMediaFinished(params: { id: string; type: string; name: string; duration: number; tags?: string[] })`: Tracks when media content has finished playing or been consumed.
+
+**Product & Cart Events:**
+
+22. `sendCategoryView(params: { categoryId: string })`: Tracks when a user views a product category.
+
+23. `sendProductView(params: { productId: string })`: Tracks when a user views a specific product.
+
+24. `sendCartAdd(params: { productId: string; quantity: number })`: Tracks when a product is added to the shopping cart.
+
+25. `sendCartView()`: Tracks when a user views their shopping cart.
+
+26. `sendCartRemove(params: { productId: string; quantity: number })`: Tracks when a product is removed from the shopping cart.
+
+27. `sendCartClear()`: Tracks when the shopping cart is completely cleared.
+
+**Search & Feedback:**
+
+28. `sendSearch(params: { searchQueryString: string })`: Tracks when a user performs a search operation.
+
+29. `sendSearchClear()`: Tracks when a user clears their search query.
+
+30. `sendRating(params: { rating: 1 | 2 | 3 | 4 | 5; interactionDelay?: number; comment?: string })`: Tracks user ratings of products, services, or experiences.
+
+31. `sendFeedback(params: { feedback: string; rating?: 1 | 2 | 3 | 4 | 5 })`: Tracks user feedback and comments.
+
+32. `sendQrScan()`: Tracks when a QR code is scanned.
+
+### **🎨 Custom Events**
+
+33. `sendEvent(event: Event)`: Sends a custom event to the server.
+
+34. `sendCustomEvent(event: TrackEvent)`: Sends a custom tracking event with predefined structure.
+
+**Note:** For more details, please see the signals SDK reference.
+
+## **📡 Signal Types**
+
+The Phygrid platform supports three distinct types of signals, each serving specific purposes and providing different levels of insight into your application's performance and user behavior.
+
+#### **1. Event Signals**
+
+Event signals are the most versatile and commonly used signal type. They capture specific user interactions and application events, providing detailed insights into user behavior and application functionality.
+
+**When generated:** Manually triggered by your application code
+
+**Data captured:**
+
+- Event type and category
+- User interaction details
+- Product or content information
+- Transaction data
+- Custom parameters
+
+**Example use cases:**
+
+- Track user searches and navigation patterns
+- Monitor e-commerce transactions and conversions
+- Capture user feedback and ratings
+- Track application errors and performance issues
+- Monitor specific business processes
+
+#### **2. Session Signals**
+
+Session signals track the lifecycle of application sessions, providing comprehensive insights into application usage patterns and user engagement. Events are tied to sessions, which helps in aggregating data for analytics and provides context for user behavior analysis. Sessions are generated automatically when you initialize signals by calling `initializeSignals()`.
+
+**When generated:** Automatically generated when `initializeSignals()` is called
+
+#### **3. Client Signals**
+
+Client signals capture essential information about the clients connecting to your application. Sessions are tied to clients and store necessary information about the client, such as IP address, device characteristics, and browser details. Client signals are also generated automatically upon the initialization of signals when `initializeSignals()` is invoked.
+
+**When generated:** Automatically generated when `initializeSignals()` is called and client is connected
+
+## **🎯 Common Use Cases**
+
+Signals can be implemented across various scenarios to enhance your application's analytics and monitoring capabilities:
+
+### **E-commerce Applications**
+
+- **Product interactions:** Track product views, category browsing, and search behavior
+- **Shopping cart management:** Monitor cart additions, removals, and checkout processes
+- **Purchase tracking:** Capture transaction details, payment methods, and order status
+- **User feedback:** Collect ratings, reviews, and customer satisfaction data
+
+### **Content and Media Applications**
+
+- **Content consumption:** Track video views, article reads, and media playback
+- **User engagement:** Monitor time spent on content, interaction rates, and completion rates
+- **Search behavior:** Analyze search queries, result clicks, and search refinement patterns
+- **Content discovery:** Track recommendations, featured content views, and navigation paths
+
+### **IoT and Edge Applications**
+
+- **Device monitoring:** Track device status, performance metrics, and error conditions
+- **Sensor data:** Capture environmental readings, device telemetry, and operational data
+- **System events:** Monitor application crashes, service restarts, and system health
+- **User interactions:** Track physical button presses, touch interactions, and device usage
+
+### **Analytics and Business Intelligence**
+
+- **User behavior analysis:** Understand user journeys, preferences, and pain points
+- **Performance monitoring:** Track application response times, error rates, and resource usage
+- **A/B testing:** Measure the effectiveness of different features and configurations
+- **Business metrics:** Monitor KPIs, conversion rates, and operational efficiency
+
+## **📈 Best Practices**
+
+Implementing signals effectively requires careful planning and adherence to best practices. Follow these guidelines to ensure optimal performance and data quality.
+
+### **Signal Design Principles**
+
+1. **Relevance:** Only send signals for events that provide meaningful insights
+2. **Consistency:** Use consistent naming conventions and data structures
+3. **Efficiency:** Avoid sending excessive or redundant signals
+4. **Privacy:** Ensure compliance with data protection regulations
+5. **Reliability:** Implement proper error handling and retry mechanisms
+
+### **Error Handling**
+
+1. **Logging:** Maintain detailed logs for debugging signal issues
+
+### **Data Quality**
+
+1. **Validation:** Validate signal data before transmission
+2. **Completeness:** Ensure all required fields are populated
+3. **Accuracy:** Verify data accuracy and consistency
+4. **Timeliness:** Send signals as close to the event occurrence as possible
+5. **Context:** Include relevant context information with each signal
+
+## **🔍 Troubleshooting**
+
+Common issues and solutions for signal implementation and transmission. For more details on troubleshooting, please see [Troubleshoot and Debug](/how-to/troubleshoot-and-debug/) secion.
+
+### **Connection Issues**
+
+**Symptoms:** Signals not being transmitted, timeout errors
+
+**Solutions:**
+
+- Verify network connectivity to Phygrid services
+- Ensure proper initialization sequence
+- Review firewall and proxy configurations
+
+### **Data Transmission Problems**
+
+**Symptoms:** Incomplete or missing signal data
+
+**Solutions:**
+
+- Validate signal payload structure and required fields
+- Check for data type mismatches and encoding issues
+- Verify signal service initialization parameters
+- Review application error logs for transmission failures
+
+### **Performance Issues**
+
+**Symptoms:** Slow signal transmission, application lag
+
+**Solutions:**
+
+- Optimize payload size and data compression
+- Use asynchronous signal transmission
+- Monitor system resources and network bandwidth
+
+### **Analytics Dashboard Issues**
+
+**Symptoms:** Signals not appearing in Console
+
+**Solutions:**
+
+- Verify signal format and data structure
+- Check signal service configuration and permissions
+- Review data processing pipeline and filters
+- Contact support for dashboard-specific issues
+
+## ✅ **Checkpoint**
+
+You now have a comprehensive understanding of signals in the Phygrid platform. This guide provides you with:
+
+**📊 Signal Fundamentals:**
+
+- **Complete signal type overview** - Client, Session, and Event signals with detailed explanations
+- **Use case scenarios** - Real-world applications across different industries and use cases
+- **Implementation patterns** - Best practices for signal design and transmission
+
+**🚀 Implementation Guide:**
+
+- **Step-by-step setup** - From installation to initialization and usage
+- **Comprehensive API reference** - All available methods with parameters and examples
+- **Code examples** - Practical implementations for common scenarios
+
+**🔧 Advanced Features:**
+
+- **Error handling** - Robust error handling and recovery mechanisms
+- **Performance optimization** - Strategies for efficient signal transmission
+
+**📈 Analytics and Monitoring:**
+
+- **Data quality assurance** - Guidelines for ensuring accurate and reliable signal data
+- **Troubleshooting procedures** - Common issues and their solutions
+- **Best practices** - Industry-standard approaches for signal implementation
+
+This signals guide empowers you to implement comprehensive analytics and monitoring capabilities in your Phygrid applications, enabling data-driven insights and improved user experiences.
+
+## 🔄 Next Steps
+
+Now that you understand signals, you can:
+
+- [Start creating reports](/how-to/reports/)
