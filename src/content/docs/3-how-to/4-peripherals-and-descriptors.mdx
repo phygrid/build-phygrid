@@ -1,0 +1,561 @@
+---
+title: "Peripherals & Descriptors"
+icon: "Usb"
+---
+
+## 🔌 What Are Peripherals?
+
+**Peripherals** are a concept in the Phygrid platform for connecting and managing external hardware devices that are not directly integrated into the platform itself. Examples include cameras, card readers, barcode scanners, and printers.
+
+Just like devices or apps, peripherals have their own **twins**, which are managed by apps running on platform-enabled devices. Using peripherals, developers can easily monitor, configure, and integrate all kinds of hardware as part of their solutions.
+
+Peripherals available in your tenant can be discovered, monitored, and configured via the Console, just like other devices or apps — significantly improving observability and maintainability in live physical environments.
+
+## 🔄 Peripheral Twin Lifecycle
+
+Let's explore how peripherals work in practice by examining a door controller integration. This example demonstrates how a physical door can be managed as a peripheral twin throughout its lifecycle:
+
+1. An edge app discovers and connects to a door controller on the local network.
+
+2. The app creates a peripheral twin representing the detected door.
+
+3. The edge app handles actions on the twin (e.g. open, close), controls the physical door, and emits relevant events.
+
+4. A screen app subscribes to the door twin and reacts to events and state changes (e.g., shows door status in the UI, triggers animations) or emits door actions.
+
+5. Door status and configuration can be monitored and managed via the Console, using the peripheral twin's properties.
+
+Thanks to Phyhub's smart routing, messages between twins are delivered either locally (on the same device) or via the cloud, depending on the setup. This enables **cross-device twin subscriptions**—any device in your tenant can subscribe to any peripheral twin, making it easy to build complex, connected and modular solutions.
+
+## 💪 Peripheral Flexibility
+
+Peripherals often represent **physical hardware devices**—such as scanners, sensors, or access controllers.
+
+However, in some cases, they can also represent **abstract or logical components** within a solution. For example, a "store" peripheral twin might represent whether a store is open, closed, or in maintenance mode, without being tied to any physical device.
+
+This flexibility allows developers to standardize interactions and status reporting for both tangible and intangible parts of their system—using the same twin and descriptor patterns throughout.
+
+To ensure the platform understands what a peripheral twin can do, descriptors are used when creating twins.
+
+## 📝 Descriptors
+
+To ensure the platform understands what a peripheral twin can do, **descriptors** are used when creating twins.
+
+Descriptors define the capabilities and interface of a twin. They describe:
+
+- **Actions** — commands the twin can receive and respond to
+- **Desired Properties** — configuration values the twin should follow, configurable in Console
+- **Reported Properties** — the current state of the twin, reported from the device to the platform
+- **Events** — structured outputs that other components can subscribe to
+
+Descriptors are created and managed in your tenant using PhyCLI, similar to how apps are created. When creating a peripheral twin, you typically specify which descriptor defines its capabilities and interface.
+
+Let's revisit the door scenario we mentioned earlier:
+
+1. An edge app includes a door descriptor identifier and version when creating the twin.
+
+2. The edge app handles twin actions (e.g., open, close) and emits standardized events as defined in the descriptor (e.g., doorOpened, doorClosed) and updates twin's state through reported properties.
+
+3. A screen app subscribes to the door twin and its events, configured via the Console.
+
+4. The screen app receives events and reacts to door status changes—without needing any knowledge of the underlying hardware or control logic.
+
+5. Importantly, the screen app does not need to run on the same device—thanks to Phyhub's routing, any subscribed device in your tenant can react to those events.
+
+This approach ensures consistent interfaces, decouples hardware handling from the app logic, and allows developers to build modular, scalable, and reusable solutions with minimal boilerplate.
+
+## ⭐ Benefits of Peripherals & Descriptors
+
+- **Improved observability and monitoring** of solution hardware
+
+- **Enables historical hardware status tracking** (with upcoming twin status history feature)
+
+- **Better separation of concerns:**
+  - Keeps low-level hardware settings out of app configs
+  - Reduces noise and promotes cleaner app configuration
+
+- **Promotes modularity and reusability** by abstracting certain hardware-specific logic away from business logic
+
+- **Enables scalable multi-device solutions** via standardized twin interfaces
+
+## 🚀 Get Started With Descriptors
+
+Creating descriptors is straightforward using PhyCLI. The process follows a similar pattern to app creation, making it familiar for developers who have already built apps on the platform.
+
+### 🧰 Prerequisites
+
+Before you begin, make sure the following are set up and ready to go:
+
+#### ✅ A Phygrid Tenant
+You'll need access to a Phygrid tenant. If you don't yet have one, please refer to the [Tenant Setup](/getting-started/tenant-setup/) guide.
+
+#### ✅ Local Development Environment with PhyCLI Installed and Configured
+
+If you haven't set up CLI on your machine yet, refer to the [Dev Environment Setup](/getting-started/dev-environment-setup/) guide.
+
+### 📦 Create Your First Descriptor
+
+To create your first descriptor project, run:
+
+```bash
+phy descriptor create example-descriptor-1
+```
+
+If you don't provide a name, you'll be prompted to input a name for your descriptor. The input should be in kebab-case.
+
+The CLI will:
+
+1. Pull the descriptor project Node TypeScript boilerplate to your local machine
+2. Install dependencies and build the project
+
+At this stage, the descriptor is not yet published to your tenant.
+
+After receiving confirmation that the project was created successfully, you can navigate to the descriptor directory and explore it in an IDE of your choice.
+
+In the directory with the project, you will find:
+
+- Inside the src directory:
+  - `schema.ts`: A descriptor schema TypeScript file which we will discuss more below.
+- Other files commonly found in Node projects, like `package.json` containing useful scripts, `tsconfig.json`, and more
+
+You'll find that `schema.ts` exports an interface that defines your descriptor's actions, events, desired properties, and reported properties — all of which we mentioned earlier.
+
+The boilerplate descriptor interface includes example definitions for each of these sections.
+
+The `schema.ts` file also contains a reference base interface to help you understand the expected shape of a descriptor interface:
+
+```typescript
+interface BaseTwinDescriptorSchema {
+    /**
+     * Available actions that can be performed on the twin
+     */
+    actions: {
+        [actionName: string]: {
+            params: Record<string, unknown>;
+            returns: Record<string, unknown>;
+        }
+    };
+    
+    /**
+     * Events that can be emitted by the twin
+     */
+    events: {
+        [eventName: string]: {
+            payload: Record<string, unknown>;
+        }
+    };
+    
+    /**
+     * Properties that can be set on the twin
+     */
+    desiredProperties: {
+        [otherPropName: string]: unknown;
+    };
+    
+    /**
+     * Properties that reflect the twin's current state
+     */
+    reportedProperties: Record<string, unknown>;
+}
+
+export interface Schema {
+    actions: {
+        exampleAction: {
+            params: {
+                text: string;
+            };
+            returns: {
+                success: boolean;
+            };
+        };
+    };
+    events: {
+        exampleEvent: {
+            payload: {
+                statusText: string;
+                timestamp: number;
+            };
+        };
+    };
+    desiredProperties: {
+        /**
+         * @title Configuration Value
+         * @default "Default configuration"
+         * @minLength 5
+         * @maxLength 100
+         */
+        exampleConfigurationValue: string;
+        /**
+         * @title Color
+         * @widget color
+         */
+        color?: string;
+    };
+    reportedProperties: {
+        temperature: number;
+    };
+}
+```
+
+### 🔄 How It Works
+
+Similar to app settings schemas, descriptors are defined as JSON Schema. However, rather than crafting complex schemas manually, we encourage developers to define their schemas using TypeScript interfaces and types.
+
+After executing the previous steps, you'll also find a `build` directory in your descriptor project.
+
+During the build process, `schema.ts` is transformed into:
+
+- `schema.json`: a standard JSON Schema defining the shape of your descriptor's properties, actions, and events
+- `meta-schema.json`: additional metadata that enables advanced UI widgets and form behaviors
+
+The Phygrid Console uses both files to render dynamic configuration forms with custom components and widgets.
+
+The descriptor schema is also used to validate available actions and events and their payloads, and enhances developer experience by providing TypeScript typing when you work with peripherals during development of your apps. 
+
+**Desired Properties** — This part defines configuration settings that can be modified through the Console interface on twin detail pages or in your app's code during runtime.
+
+When defining desired properties in your descriptor, you can use the same annotation system as app settings schemas. These annotations generate configuration forms and handle input validation within the Console.
+
+To learn more about [available data types and annotations](/how-to/settings-schemas/#-supported-types), see the settings schemas documentation.
+
+**Reported Properties** — Defines the structure of status data that your twin will report back to the platform. This validates property updates from your app and enables the Console to display twin status information on detail pages.
+
+**Actions** — Specifies the commands that other apps can invoke on this twin. This establishes a clear contract for inter-app communication, defining both available actions and their expected parameters. For example, a printer descriptor might define a `print` action that accepts document content as a parameter.
+
+**Events** — Defines the notifications that this twin can broadcast to subscribers. Apps listening to these events know exactly what data to expect when reacting to twin state changes. For example, a barcode scanner descriptor could emit a `scan` event containing the scanned code data.
+
+### 📤 Publish Your Descriptor
+
+Now that you've created your descriptor and understand the project contents, you can publish the descriptor version to your tenant.
+
+Run the publish script:
+
+```bash
+yarn pub
+```
+
+During the publish process, your descriptor schema will be built, validated, and uploaded to your tenant.
+
+If the descriptor doesn't exist yet, it will be created in your tenant automatically. A unique identifier will be generated in the format `<tenant-slug>/<descriptor-name>`, using the name you specified during creation.
+
+A new version of your descriptor will be created based on the version specified in `package.json`. Note that each descriptor version can only be published once.
+
+
+### ✅ Checkpoint
+
+After completing the steps above, you'll have:
+
+- A descriptor project on your local machine
+- A new descriptor available in your tenant that you can use during peripheral creation
+
+## 🔗 Create A Peripheral
+
+Now that you have a descriptor available in your tenant, you can use it in your application code when creating peripherals.
+
+### 🖥️ Edge App Example
+
+We'll use an edge app project to demonstrate how to use your descriptor in an app.
+
+> **Note:** If you don't have an edge app project yet, you can create one by following the [Build your first edge app](/tutorials/build-your-first-edge-app/) tutorial.
+
+Let's add the following code to your app:
+
+> **Note:** Make sure to replace `<tenant-slug>` with your actual tenant slug. You can find your tenant's unique slug in the Console by clicking on your tenant name dropdown in the left sidebar.
+
+```typescript
+// standard Phyhub client connection logic, present in every app
+const client: PhyHubClient = await connectPhyClient();
+const instance = await client.getInstance();
+
+const existingTwins = await instance.getPeripheralTwins();
+
+console.log('Existing peripheral twins:', JSON.stringify(existingTwins, null, 2));
+
+const peripheralUniqueHardwareId = '1234567890';
+const peripheralName = 'Peripheral 1';
+const descriptorUniqueName = '<tenant-slug>/example-descriptor-1';
+
+let peripheralTwin = existingTwins.find(
+  (twin) => twin.properties.desired.hardwareId === peripheralUniqueHardwareId
+) as TwinResponse;
+
+if (peripheralTwin) {
+  console.log('Found peripheral twin:', JSON.stringify(peripheralTwin, null, 2));
+} else {
+  console.log('Peripheral twin not found, creating new one...');
+
+  peripheralTwin = await instance.createPeripheralTwin(
+    peripheralName,
+    peripheralUniqueHardwareId,
+    { [descriptorUniqueName]: { color: '#cccccc' } },
+    { [descriptorUniqueName]: '0.1.0' }
+  );
+}
+
+const peripheralInstance = await client.getPeripheralInstance(peripheralTwin.id);
+
+setInterval(() => {
+  peripheralInstance.updateReported({
+    [descriptorUniqueName]: {
+      temperature: Math.floor(Math.random() * 51),
+    },
+    status: 'connected',
+  });
+}, 5000);
+
+peripheralInstance.onUpdateDesired((desiredProperties) => {
+  console.log('New desired properties:', JSON.stringify(desiredProperties, null, 2));
+});
+```
+
+This code demonstrates the peripheral lifecycle:
+
+1. **Retrieves existing peripheral twins** for this app instance using the PhyHub client (part of Phygrid SDKs). An app instance represents an installation deployed to a specific device.
+2. **Defines a hardcoded peripheral hardware ID** that we'll use for this guide
+3. **Checks for an existing twin** for this peripheral using the unique hardware ID
+4. **Creates a new peripheral twin** if one isn't found
+5. **Obtains a peripheral instance** using the PhyHub client
+6. **Sets up an interval** to simulate reporting peripheral properties
+7. **Registers a handler** for desired properties updates
+
+Let's explore the key concepts demonstrated in this example, focusing on the `createPeripheralTwin` function parameters:
+
+**Peripheral Name** — A human-readable label used to easily identify the peripheral, particularly in the Phygrid Console interface.
+
+**Peripheral Hardware ID** — Serves as the unique identifier for the peripheral. In real-world scenarios, this would typically be a serial number, MAC address, or other unique device identifier. Each hardware ID must be unique within a single app instance installation. 
+
+**Desired Properties Configuration** — Optional configuration values that can be passed during twin creation. In our example, we passed a value for the optional `color` desired property defined in our descriptor schema.
+
+> **Note:** Notice how descriptor-specific properties are nested under a key with the descriptor name. This structure is important to remember when updating desired properties from your app code. 
+
+**Descriptor Association** — Specifies which descriptors define the twin's capabilities, using the format `{ <tenant-slug>/<descriptor-name>: <semver> }`. 
+
+The example code also demonstrates reporting properties through a periodic interval. Like desired properties, descriptor-specific reported properties must be nested under the descriptor's unique identifier.
+
+Note that we also report a `status` property at the root level. This is a special property for peripheral twins that appears in the peripheral list view, typically used to display custom hardware status information.
+
+### 🚀 Deploy and Test
+
+After you've updated your code, deploy your app to a device to test the peripheral functionality.
+
+> **Note:** If you need guidance on deploying a new app version to your device or other steps in this section, refer to the [Build your first edge app](/tutorials/build-your-first-edge-app/) tutorial.
+
+Once you've successfully deployed the latest code to your device and confirmed it's running the new version, navigate to your tenant in the Phygrid Console.
+
+From the sidebar menu, navigate to **Operations → Peripherals**.
+
+You should see the peripheral you just created in the list, displaying its connection status, reported hardware status and associated device.
+
+Click on the peripheral name to open the twin details page.
+
+The twin details page for peripherals contains several key sections:
+
+- **Twin Overview** — Basic information about the twin, including ID, descriptors, and device reference
+- **Twin Configuration** — A dynamic form based on the peripheral type and associated descriptors
+- **Raw Properties View** — Direct access to twin properties for debugging and testing
+
+In the twin configuration section, you'll notice a section dedicated to your descriptor. This is where the descriptor's desired properties schema is rendered as an interactive form.
+
+You should see two fields defined in your example descriptor:
+- **Configuration Value** — Pre-populated with the default value from your schema
+- **Color** — Displays as a color picker with the value you provided during twin creation
+
+Let's test the configuration functionality:
+
+1. Modify one of the values in the form
+2. Click the **Save** button
+3. The changes will be propagated to your device automatically
+
+To verify the changes were received, view your app's container logs on the device:
+
+```bash
+docker logs <container-id>
+```
+
+Since we added a `console.log` statement in the desired properties change handler, the new settings will appear in the output.
+
+In real-world applications, desired properties change handlers enable dynamic configuration updates, allowing you to modify peripheral behavior without redeploying your app.
+
+On the twin details page, you can also view the current reported properties. Click **"View Reported Properties JSON"** to see the current temperature value. Your app reports a random integer for this property every 5 seconds.
+
+### ✅ Checkpoint
+
+After completing the steps above, you'll have:
+
+- A working edge app that creates and manages a peripheral instance
+- A new peripheral created in your tenant
+
+## ⚡ Peripheral Actions and Events
+
+Now that we have our peripheral connected to the platform through our edge app, we can control its configuration using desired properties and monitor current state through reported properties.
+
+Let's extend our edge app to demonstrate how actions and events work. Add the following code to your app:
+
+```typescript
+setInterval(() => {
+  peripheralInstance.emit('exampleEvent', {
+    statusText: ['🚀 To the moon!', '🍕 Pizza time!', '🎉 Party on!', '🤖 Beep boop!', '🌈 Chasing rainbows'][Math.floor(Math.random() * 5)],
+    timestamp: new Date().getTime(),
+  });
+}, 3000);
+
+peripheralInstance.on('exampleAction', (payload: Record<string, any>) => {
+  console.log('Example action received:', JSON.stringify(payload, null, 2));
+});
+```
+
+This code demonstrates two key capabilities:
+
+1. **Event Emission** — The peripheral periodically emits `exampleEvent` with random status text and timestamps, showing how peripherals can broadcast information to subscribers
+2. **Action Handling** — The peripheral listens for `exampleAction` commands and logs them, demonstrating how other apps can invoke actions on this peripheral
+
+Build and deploy the updated edge app to your device following the same process as before.
+
+### 📱 Screen App Example
+
+To demonstrate cross-app twin communication, we'll create a screen app that can subscribe to peripheral events and invoke actions.
+
+> **Note:** If you don't have a screen app project yet, you can create one by following the [Build your first screen app](/tutorials/build-your-first-screen-app/) tutorial.
+
+First, add a twin picker to your screen app's settings schema to allow users to select the peripheral twin:
+
+```typescript
+interface TwinPicker {
+  id: string
+  ref: "twin"
+}
+
+export default interface Settings {
+  /**
+   * @title Example Twin Picker
+   * @description Select a peripheral twin.
+   * @ui twinPicker
+   * @uiOptions {
+   * "twinTypes":["Peripheral"],
+   * "twinDescriptors":["<tenant-slug>/example-descriptor-1"]
+   * }
+   */
+  examplePeripheral?: TwinPicker
+}
+```
+
+This settings configuration enables users to select the peripheral twin we created in our edge app.
+
+Add the following code to your screen app (e.g., in `app.tsx`) where you have access to the PhyHub client:
+
+```typescript
+import { connectPhyClient, PhyHubClient, PeripheralInstance } from '@phygrid/hub-client';
+
+// ... other imports
+
+function App() {
+  const [state, setState] = useState<AppState>(initialState);
+  const [peripheralInstance, setPeripheralInstance] = useState<PeripheralInstance | null>(null);
+  const [statusText, setStatusText] = useState<string>('Empty status text');
+
+  const initializeClient = useCallback(async () => {
+    try {
+      const client = await connectPhyClient();
+      const signals = await client.initializeSignals();
+      const settings = await client.getSettings() as Settings;
+
+      setState({ client, settings, signals });
+
+      if (settings.examplePeripheral) {
+        // Get peripheral instance and set up event subscription
+        const peripheralInstance = await client.getPeripheralInstance(settings.examplePeripheral.id);
+        setPeripheralInstance(peripheralInstance);
+
+        peripheralInstance.on('exampleEvent', (data: Record<string, any>) => {
+          console.log('Received example event:', JSON.stringify(data, null, 2));
+          if (data.statusText) {
+            setStatusText(data.statusText);
+          }
+        });
+      }
+    } catch (err) {
+      console.error('Error initializing client:', err);
+    }
+  }, []);
+
+  useEffect(() => {
+    initializeClient();
+  }, [initializeClient]);
+
+  // Handle sending action to peripheral
+  const handleSendPeripheralActionButtonClick = useCallback(() => {
+    if (!peripheralInstance) return;
+    peripheralInstance.emit('exampleAction', {
+      text: 'Hello from the screen app!',
+    });
+  }, [peripheralInstance]);
+
+  return (
+    <Container>
+      <Content>
+        <Logo src={logo} alt="logo" />
+        <p>Current status text: {statusText}</p>
+        <StyledButton onClick={handleSendPeripheralActionButtonClick}>
+          Send Peripheral Action
+        </StyledButton>
+      </Content>
+    </Container>
+  );
+}
+
+...
+
+```
+
+This code snippet demonstrates bidirectional communication between screen app and the peripheral mangaged in our edge app:
+- **Event Subscription** — Listens for `exampleEvent` from the peripheral and updates the UI with status text. In real-world scenarios, these would typically be hardware-related events such as face detection from a camera or scan completion from a barcode reader
+- **Action Invocation** — Sends `exampleAction` to the peripheral when the button is clicked. In real use cases, this could be commands like triggering a printer to print a receipt or instructing a door controller to unlock
+
+### 🚀 Deploy and Test
+
+Now we'll deploy the screen app to a different device to demonstrate cross-device communication using Phyhub's smart routing.
+
+> **Note:** If you need guidance on creating installations or deploying apps, refer to the [Build your first screen app](/tutorials/build-your-first-screen-app/) tutorial.
+
+1. **Publish your screen app** to your tenant. If you don't have an installation yet, create one now.
+
+2. **Configure the twin picker** by navigating to your installation's global settings. You should see the twin picker control you added to your settings schema, with the peripheral twin created by your edge app available for selection.
+
+3. **Select and deploy** by choosing your peripheral twin, then clicking save with auto-deploy enabled.
+
+4. **Connect a device** to your screen app installation. For testing purposes, you can use a browser device or VM to run your screen app.
+
+Once the app is running on the device, you should observe:
+
+- **Real-time status updates** — The status text changes every few seconds as your edge app emits peripheral events with random payloads
+- **Action button** — A "Send Peripheral Action" button that triggers actions on the peripheral
+
+Click the action button in your screen app to test the communication flow.
+
+Since we added a console log handler for the action, you should see the following output in your edge app's logs:
+
+```json
+Example action received: {
+  "text": "Hello from the screen app!"
+}
+```
+
+If you run into issues at this stage, refer to the **[Troubleshoot & Debug](/how-to/troubleshoot-and-debug)** article of the documentation.
+
+### ✅ Checkpoint
+
+Congratulations! After completing the steps above, you'll have successfully built:
+
+- A working edge app that creates and manages peripheral instances
+- A peripheral twin deployed in your tenant with custom descriptors
+- A screen app that subscribes to peripheral events and invokes actions
+- Cross-device communication enabled through Phyhub's smart twin messaging
+
+
+## 🔄 Next Steps
+
+Now that you understand peripherals and descriptors, you can:
+
+- [Learn more about settings schemas for apps and descriptors](/how-to/settings-schemas/)
+- [Learn about troubleshooting and debugging](/how-to/troubleshoot-and-debug/)
+
