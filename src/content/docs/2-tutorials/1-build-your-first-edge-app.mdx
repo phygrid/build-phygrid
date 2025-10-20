@@ -81,6 +81,13 @@ Then you'll select the app type - choose **❯ Edge Application**
 
 This tells the CLI to scaffold a non-GUI containerized edge application.
 
+Next, you'll be asked to select the target architecture(s) for your edge app:
+- **amd64** - For x86-64 devices (Intel/AMD processors)
+- **arm64** - For ARM-based devices (e.g., Raspberry Pi, Apple Silicon)
+- **both** - Build for both architectures
+
+Select the architecture that matches your target devices. If you're unsure or plan to deploy to multiple device types, choose "both".
+
 ### 2. Set Up Your Container Registry
 
 Next, you'll configure the container registry where your app image will be published.
@@ -132,11 +139,33 @@ You can explore your newly created project. In the directory with the project, y
 - **src/** directory with:
   - `schema.ts` – settings schema for your application with example settings (to learn more about settings schemas, check this how-to guide)
   - `app.ts` – application entry point with simple example code that performs basic logging to standard output
-- Other files commonly found in Node projects, like `package.json` containing useful scripts, `.nvmrc`, `tsconfig.json`, and more
+- **package.json** containing useful scripts and configuration properties, including:
+  - `architectures` - Specifies the target architectures for your edge app (e.g., `["amd64"]`, `["arm64"]`, or `["amd64", "arm64"]`)
+  - Build and publish scripts
+- Other files commonly found in Node projects, like `.nvmrc`, `tsconfig.json`, and more
 
-The `app.ts` file demonstrates the usage of `@phygrid/hub-client` package for platform integration.
+The `app.ts` file demonstrates the usage of `@phystack/hub-client` package for platform integration.
 
 The example code retrieves app settings through the Hub Client and logs them to the console.
+
+### 📝 Architecture Configuration in package.json
+
+Your edge app's `package.json` includes an `architectures` property that defines which CPU architectures your app supports:
+
+```json
+{
+  "name": "my-edge-app",
+  "version": "0.1.0",
+  "architectures": ["amd64", "arm64"]
+}
+```
+
+You can modify this property at any time to change which architectures your app builds for:
+
+- **Single architecture:** `"architectures": ["amd64"]` or `"architectures": ["arm64"]`
+- **Multiple architectures:** `"architectures": ["amd64", "arm64"]`
+
+When you run `yarn build`, the CLI will automatically build Docker images for all specified architectures. This ensures your app can be deployed to different device types without rebuilding.
 
 ### ✅ Checkpoint
 

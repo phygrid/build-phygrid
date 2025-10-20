@@ -13,7 +13,7 @@ application performance, and custom analytics. The data collected through signal
 
 ## **🚀 Getting Started with Signals**
 
-The `@phygrid/hub-client` package provides a comprehensive and robust API for initializing and utilizing signals in your applications.
+The `@phystack/hub-client` package provides a comprehensive and robust API for initializing and utilizing signals in your applications.
 This powerful toolkit enables you to seamlessly integrate analytics, user behavior tracking, and application monitoring into your
 Phygrid applications. This section provides a detailed walkthrough of the setup process and demonstrates proven implementation
 patterns used in production environments.
@@ -58,7 +58,7 @@ signals.sendCartAdd({ productId: "TEMPORARY-PRODUCT-ID-123", quantity: 1 })
 When implementing signals within a screen app or edge app deployed on a Phygrid device running on PhyOS, all required initialization parameters are automatically retrieved from the device and app configuration. For scenarios where signals are implemented in standalone scripts or applications running outside of the Phygrid device environment, manual parameter configuration is required to establish proper signal initialization.
 
 ```typescript
-import { connectPhyClient } from "@phygrid/hub-client"
+import { connectPhyClient } from "@phystack/hub-client"
 
 const initParams = {
   deviceId: "device-12345",

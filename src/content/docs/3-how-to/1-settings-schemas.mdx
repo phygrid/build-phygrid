@@ -118,7 +118,7 @@ The example interface above generates the following output:
 
 You configure settings on your app's installation page in the Phygrid Console. When you modify and save installation settings, the platform creates a new build with those settings and deploys it to connected devices. 
 
-In Phygrid apps, you access settings using the `@phygrid/hub-client` package. When an installation is deployed to a device, settings values are delivered to devices through twins, which the Hub Client then makes available to your app code.
+In Phygrid apps, you access settings using the `@phystack/hub-client` package. When an installation is deployed to a device, settings values are delivered to devices through twins, which the Hub Client then makes available to your app code.
 
 ## 🛠️ How to Define a Settings Schema
 
@@ -161,7 +161,7 @@ Update your `app.tsx` to use the newly defined setting:
 ```ts
 import React, { useCallback, useEffect, useState } from "react"
 import styled from "styled-components"
-import { connectPhyClient, PhyHubClient } from "@phygrid/hub-client"
+import { connectPhyClient, PhyHubClient } from "@phystack/hub-client"
 import { getDevSettings, isDevMode } from "./utils/dev-mode"
 import Settings from "./schema"
 
