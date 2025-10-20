@@ -5,23 +5,23 @@ import styled from "@emotion/styled"
 const ApiDocLayout = ({ children }) => {
   return (
     <ApiContainer>
-      <Row>
-        {children}
-      </Row>
+      <Row>{children}</Row>
     </ApiContainer>
   )
 }
 
 const ApiSection = ({ children, type = "left" }) => {
   const isLeft = type === "left"
-  
+
   return (
     <Col
       xs={24}
       lg={isLeft ? 12 : 12}
       style={{
         padding: isLeft ? "var(--ant-padding-lg)" : "var(--ant-padding-md)",
-        borderRight: isLeft ? "1px solid var(--ant-color-border-secondary)" : "none",
+        borderRight: isLeft
+          ? "1px solid var(--ant-color-border-secondary)"
+          : "none",
         background: isLeft ? "transparent" : "var(--ant-color-bg-container)",
       }}
     >
@@ -50,9 +50,7 @@ const ParameterList = ({ title = "Parameters", children }) => {
   return (
     <ParameterListContainer>
       <h4>{title}</h4>
-      <ParameterListItems>
-        {children}
-      </ParameterListItems>
+      <ParameterListItems>{children}</ParameterListItems>
     </ParameterListContainer>
   )
 }
@@ -80,8 +78,9 @@ const ApiContainer = styled.div`
 const StickyContent = styled.div`
   position: sticky;
   top: var(--ant-padding-lg);
-  
-  h3, h4 {
+
+  h3,
+  h4 {
     margin-top: 0;
   }
 `
@@ -89,7 +88,7 @@ const StickyContent = styled.div`
 const CodeContent = styled.div`
   background: var(--ant-color-bg-container);
   min-height: 100vh;
-  
+
   pre {
     background: var(--ant-color-bg-layout) !important;
     border-radius: var(--ant-border-radius);
@@ -122,17 +121,22 @@ const MethodBadge = styled.span`
   color: white;
   background: ${props => {
     switch (props.method) {
-      case 'GET': return 'var(--ant-color-success)'
-      case 'POST': return 'var(--ant-color-info)'
-      case 'PATCH': return 'var(--ant-color-warning)'
-      case 'DELETE': return 'var(--ant-color-error)'
-      default: return 'var(--ant-color-text-secondary)'
+      case "GET":
+        return "var(--ant-color-success)"
+      case "POST":
+        return "var(--ant-color-info)"
+      case "PATCH":
+        return "var(--ant-color-warning)"
+      case "DELETE":
+        return "var(--ant-color-error)"
+      default:
+        return "var(--ant-color-text-secondary)"
     }
   }};
 `
 
 const EndpointPath = styled.code`
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: var(--ant-font-size);
   color: var(--ant-color-text-heading);
   background: transparent;
@@ -141,7 +145,7 @@ const EndpointPath = styled.code`
 
 const ParameterListContainer = styled.div`
   margin: var(--ant-margin-md) 0;
-  
+
   h4 {
     margin-bottom: var(--ant-margin-sm);
     color: var(--ant-color-text-heading);
@@ -158,7 +162,7 @@ const ParameterListItems = styled.div`
 const ParameterItem = styled.div`
   padding-bottom: var(--ant-padding-sm);
   border-bottom: 1px solid var(--ant-color-border-secondary);
-  
+
   &:last-child {
     border-bottom: none;
   }
@@ -220,19 +224,20 @@ const ParameterTable = styled.table`
   width: 100%;
   border-collapse: collapse;
   margin: var(--ant-margin-md) 0;
-  
-  th, td {
+
+  th,
+  td {
     padding: var(--ant-padding-xs) var(--ant-padding-sm);
     text-align: left;
     border-bottom: 1px solid var(--ant-color-border-secondary);
   }
-  
+
   th {
     font-weight: 600;
     color: var(--ant-color-text-heading);
     background: var(--ant-color-bg-layout);
   }
-  
+
   code {
     background: var(--ant-color-bg-layout);
     padding: 2px 4px;
@@ -243,7 +248,7 @@ const ParameterTable = styled.table`
 
 const ResponseContainer = styled.div`
   margin: var(--ant-margin-md) 0;
-  
+
   h4 {
     margin-bottom: var(--ant-margin-sm);
     color: var(--ant-color-text-heading);
@@ -259,5 +264,14 @@ const AuthBadge = styled.span`
   font-weight: 500;
 `
 
-export { ApiDocLayout, ApiSection, ApiEndpoint, ParameterList, Parameter, ParameterTable, ResponseContainer, AuthBadge }
-export default ApiDocLayout 
+export {
+  ApiDocLayout,
+  ApiSection,
+  ApiEndpoint,
+  ParameterList,
+  Parameter,
+  ParameterTable,
+  ResponseContainer,
+  AuthBadge,
+}
+export default ApiDocLayout

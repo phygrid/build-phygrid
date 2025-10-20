@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from '@emotion/styled';
+import React from "react"
+import styled from "@emotion/styled"
 
 const StyledButton = styled.a`
   display: flex;
@@ -21,14 +21,14 @@ const StyledButton = styled.a`
   &:hover {
     background: rgba(255, 255, 255, 0.3);
   }
-`;
+`
 
 const ButtonSecondary = ({ href, title }) => {
   return (
     <StyledButton href={href} title={title}>
       {title}
     </StyledButton>
-  );
-};
+  )
+}
 
-export default ButtonSecondary;
+export default ButtonSecondary
