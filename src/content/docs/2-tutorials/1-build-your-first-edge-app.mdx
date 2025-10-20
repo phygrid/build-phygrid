@@ -81,6 +81,13 @@ Then you'll select the app type - choose **❯ Edge Application**
 
 This tells the CLI to scaffold a non-GUI containerized edge application.
 
+Next, you'll be asked to select the target architecture(s) for your edge app:
+- **amd64** - For x86-64 devices (Intel/AMD processors)
+- **arm64** - For ARM-based devices (e.g., Raspberry Pi, Apple Silicon)
+- **both** - Build for both architectures
+
+Select the architecture that matches your target devices. If you're unsure or plan to deploy to multiple device types, choose "both".
+
 ### 2. Set Up Your Container Registry
 
 Next, you'll configure the container registry where your app image will be published.
@@ -132,11 +139,49 @@ You can explore your newly created project. In the directory with the project, y
 - **src/** directory with:
   - `schema.ts` – settings schema for your application with example settings (to learn more about settings schemas, check this how-to guide)
   - `app.ts` – application entry point with simple example code that performs basic logging to standard output
-- Other files commonly found in Node projects, like `package.json` containing useful scripts, `.nvmrc`, `tsconfig.json`, and more
+- **package.json** containing useful scripts and Docker configuration in the `docker-credentials` property
+- Other files commonly found in Node projects, like `.nvmrc`, `tsconfig.json`, and more
 
-The `app.ts` file demonstrates the usage of `@phygrid/hub-client` package for platform integration.
+The `app.ts` file demonstrates the usage of `@phystack/hub-client` package for platform integration.
 
 The example code retrieves app settings through the Hub Client and logs them to the console.
+
+### 📝 Docker Configuration in package.json
+
+Your edge app's `package.json` includes a `docker-credentials` property that contains all Docker-related configuration:
+
+```json
+{
+  "name": "my-edge-app",
+  "version": "0.1.0",
+  "docker-credentials": {
+    "registry": "docker.io",
+    "image": "docker.io/myusername/my-edge-app",
+    "architectures": ["amd64", "arm64"],
+    "isPrivate": true,
+    "pull": {
+      "username": "myusername",
+      "password": "read-only-token"
+    }
+  }
+}
+```
+
+#### docker-credentials Properties
+
+- **registry** - The container registry URL (e.g., `"docker.io"`, `"ghcr.io"`)
+- **image** - The full image name including registry and namespace (e.g., `"docker.io/myorg/myapp"`)
+- **architectures** - Array of target CPU architectures for your edge app:
+  - **Single architecture:** `["amd64"]` or `["arm64"]`
+  - **Multiple architectures:** `["amd64", "arm64"]`
+- **isPrivate** - Boolean indicating whether the Docker repository is private (`true`) or public (`false`)
+- **pull** - Read-only credentials used by devices to pull the container image:
+  - **username** - Docker registry username
+  - **password** - Read-only access token or password
+
+> **Security Note:** The `pull` credentials should have read-only access. Never use credentials with push/write access in this property, as they are deployed to devices.
+
+When you run `yarn build`, the CLI will automatically build Docker images for all architectures specified in the `architectures` array. This ensures your app can be deployed to different device types without rebuilding.
 
 ### ✅ Checkpoint
 

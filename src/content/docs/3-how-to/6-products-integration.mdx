@@ -106,7 +106,7 @@ Inside your app directory, run the following command:
 
 ```bash
 cd <app-name>
-yarn add @phygrid/products-react
+yarn add @phystack/products-react
 ```
 
 ### Create an Example Product in Console
@@ -450,7 +450,7 @@ After downloading the settings, you'll find them in `src/settings/index.json`:
 
 ### Integrate Product Information and Run the App Locally
 
-After installing the `@phygrid/products-react` package,
+After installing the `@phystack/products-react` package,
 we'll fetch the product details and display the product in the app.
 
 Now let's create a React component that displays products using the SDK:
@@ -536,7 +536,7 @@ Update `app.tsx`:
 ```typescript
 import React, { useCallback, useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { connectPhyClient, PhyHubClient } from '@phygrid/hub-client';
+import { connectPhyClient, PhyHubClient } from '@phystack/hub-client';
 import { getDevSettings, isDevMode } from './utils/dev-mode';
 import Settings from './schema';
 import { useProduct } from './hooks/useProduct';
