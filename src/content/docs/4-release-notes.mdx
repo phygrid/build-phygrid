@@ -9,254 +9,258 @@ PhyOS is Phygrid's edge operating system designed for running apps and AI at the
 
 ---
 
-## PhyOS 5.11.0
+## PhyOS 5.2.0 (Current Release)
 
-**Release Date:** September 30, 2024
+**Release Date:** October 16, 2025
+**Status:** Privately released
+
+### Version Information
+
+```json
+{
+  "phyos": "5.2.0",
+  "phygrid-npm": "4.4.24"
+}
+```
+
+### Download Links
+
+- **amd64 installer:** [griddevice.5.2.0.amd64.img.xz](https://os.phygrid.com/griddevice.5.2.0.amd64.img.xz)
+- **dn74 installer:** [griddevice.5.2.0.arm64-dn74.img.xz](https://os.phygrid.com/griddevice.5.2.0.arm64-dn74.img.xz)
+- **VMware OVA:** [phyos.5.2.0.amd64.ova](https://os.phygrid.com/phyos.5.2.0.amd64.ova)
+- **Hyper-V image:** [phyos.5.2.0.amd64.vhdx.tar.gz](https://os.phygrid.com/phyos.5.2.0.amd64.vhdx.tar.gz)
+- **QCOW2 image:** [phyos.5.2.0.amd64.qcow2.tar.gz](https://os.phygrid.com/phyos.5.2.0.amd64.qcow2.tar.gz)
 
 ### New Features
 
-- **Enhanced GPU Acceleration**: Improved NVIDIA GPU support with optimized CUDA runtime for edge AI workloads
-- **OTA Update Improvements**: Added automatic rollback on failed updates with health check validation
-- **Container Registry Integration**: Direct pull from private container registries with authentication support
-- **Enhanced Monitoring**: Real-time system metrics streaming to Phyhub with configurable alert thresholds
-
-### Improvements
-
-- Reduced boot time by 40% through optimized systemd service initialization
-- Improved network resilience with automatic reconnection and connection pooling
-- Enhanced peripheral detection with hot-plug support for USB devices
-- Optimized memory management for long-running edge applications
+- Added support for Jetson Orin Nano developer kit
+- Improved installer UI for amd64 and dn74 with system information menu and installation progress bar
+- Enabled hardware-accelerated video playback on Jetson Orin Nano developer kit
 
 ### Bug Fixes
 
-- Fixed issue where OTA updates could fail on slow network connections
-- Resolved GPU memory leak in continuous inference workloads
-- Corrected timezone handling for scheduled tasks
-- Fixed peripheral descriptor registration race condition on system startup
-
-### Security Updates
-
-- Updated container runtime to address CVE-2024-XXXXX
-- Enhanced certificate validation for secure boot
-- Improved RBAC enforcement for device-level operations
+None
 
 ---
 
-## PhyOS 5.10.2
+## PhyOS 5.0.174
 
-**Release Date:** August 15, 2024
+**Release Date:** October 3, 2025
+**Status:** Privately released
+
+### Version Information
+
+```json
+{
+  "phyos": "5.0.174",
+  "phygrid-npm": "4.4.24"
+}
+```
+
+### Download Links
+
+- **VMware OVA:** [phyos.5.0.174.amd64.ova](https://os.phygrid.com/phyos.5.0.174.amd64.ova)
+- **Hyper-V image:** [phyos.5.0.174.amd64.vhdx.tar.gz](https://os.phygrid.com/phyos.5.0.174.amd64.vhdx.tar.gz)
+- **QCOW2 image:** [phyos.5.0.174.amd64.qcow2.tar.gz](https://os.phygrid.com/phyos.5.0.174.amd64.qcow2.tar.gz)
 
 ### New Features
 
-- **Multi-Architecture Support**: Added ARM64 architecture support for Raspberry Pi and NVIDIA Jetson devices
-- **Edge AI Model Cache**: Local model caching to reduce bandwidth and improve inference startup time
-- **Advanced Logging**: Structured logging with log aggregation and remote shipping capabilities
-
-### Improvements
-
-- Enhanced Docker image layer caching for faster application deployments
-- Improved WiFi stability with better roaming support
-- Optimized filesystem I/O for high-frequency data logging scenarios
-- Added support for custom DNS configurations per network interface
+- **QCOW2 image:** Automatic zpool expansion on first boot when deployed on Openshift
 
 ### Bug Fixes
 
-- Fixed issue where device registration could fail with special characters in device names
-- Resolved container restart policy inconsistencies
-- Corrected signal processing delays during high CPU utilization
-- Fixed peripheral communication timeout on USB hubs
+None
 
 ---
 
-## PhyOS 5.10.0
+## PhyOS 5.0.173
 
-**Release Date:** July 10, 2024
+**Release Date:** September 1, 2025
+**Status:** Released
+
+### Version Information
+
+```json
+{
+  "phyos": "5.0.173",
+  "phygrid-npm": "4.4.24"
+}
+```
+
+### Download Links
+
+- **amd64 installer:** [griddevice.5.0.173.amd64.img.xz](https://os.phygrid.com/griddevice.5.0.173.amd64.img.xz)
+- **dn74 installer:** [griddevice.5.0.173.arm64-dn74.img.xz](https://os.phygrid.com/griddevice.5.0.173.arm64-dn74.img.xz)
+- **VMware OVA:** [phyos.5.0.173.amd64.ova](https://os.phygrid.com/phyos.5.0.173.amd64.ova)
+- **Hyper-V image:** [phyos.5.0.173.amd64.vhdx.tar.gz](https://os.phygrid.com/phyos.5.0.173.amd64.vhdx.tar.gz)
+- **QCOW2 image:** [phyos.5.0.173.amd64.qcow2.tar.gz](https://os.phygrid.com/phyos.5.0.173.amd64.qcow2.tar.gz)
 
 ### New Features
 
-- **Digital Twin Synchronization**: Real-time device state synchronization with cloud-based digital twins
-- **Edge Inference Pipeline**: Built-in ML inference pipeline with preprocessing and postprocessing hooks
-- **Device Clustering**: Support for multi-device coordination and workload distribution
-- **Enhanced Security**: TPM 2.0 integration for hardware-based security and attestation
-
-### Improvements
-
-- Streamlined device provisioning with QR code-based configuration
-- Enhanced peripheral driver framework with automatic driver updates
-- Improved power management for battery-operated edge devices
-- Optimized network protocol stack for low-latency applications
+None
 
 ### Bug Fixes
 
-- Fixed intermittent WebSocket disconnections during network transitions
-- Resolved issue with time synchronization on isolated networks
-- Corrected GPU allocation conflicts between concurrent applications
-- Fixed edge case in container volume mount permissions
-
-### Breaking Changes
-
-- Legacy peripheral API v1 deprecated in favor of v2 descriptor-based API
-- Minimum required Phyhub version is now 5.10.0 for digital twin features
+- Completely disable zero-copy gbm path which causes video freeze
+- Fix missing initial journalctl logs for phydevice during first ever boot
 
 ---
 
-## PhyOS 5.9.5
+## PhyOS 5.0.171
 
-**Release Date:** June 5, 2024
+**Release Date:** August 28, 2025
+**Status:** Released
+
+### Version Information
+
+```json
+{
+  "phyos": "5.0.171",
+  "phygrid-npm": "4.4.24"
+}
+```
+
+### Download Links
+
+- **amd64 installer:** [griddevice.5.0.171.amd64.img.xz](https://os.phygrid.com/griddevice.5.0.171.amd64.img.xz)
+- **dn74 installer:** [griddevice.5.0.171.arm64-dn74.img.xz](https://os.phygrid.com/griddevice.5.0.171.arm64-dn74.img.xz)
+- **VMware OVA:** [phyos.5.0.171.amd64.ova](https://os.phygrid.com/phyos.5.0.171.amd64.ova)
+- **Hyper-V image:** [phyos.5.0.171.amd64.vhdx.tar.gz](https://os.phygrid.com/phyos.5.0.171.amd64.vhdx.tar.gz)
+- **QCOW2 image:** [phyos.5.0.171.amd64.qcow2.tar.gz](https://os.phygrid.com/phyos.5.0.171.amd64.qcow2.tar.gz)
 
 ### New Features
 
-- **Bluetooth LE Support**: Native support for Bluetooth Low Energy peripherals with automatic pairing
-- **VPN Integration**: Built-in VPN client support for secure remote access to private networks
-- **Container Resource Limits**: Granular CPU and memory limits per application container
-
-### Improvements
-
-- Enhanced diagnostic tools with system health reports and automated troubleshooting
-- Improved application startup time through parallel initialization
-- Better handling of intermittent network connectivity
-- Enhanced support for industrial protocols (Modbus, OPC-UA)
+None
 
 ### Bug Fixes
 
-- Fixed memory leak in peripheral connection manager
-- Resolved issue with container network isolation
-- Corrected date/time format inconsistencies in logs
-- Fixed rare race condition in application state transitions
+- Device crash occurs when provisioning is attempted during first boot
+- Display freezes during extended runtime (overnight)
 
 ---
 
-## PhyOS 5.9.0
+## PhyOS 5.0.170
 
-**Release Date:** May 1, 2024
+**Release Date:** August 26, 2025
+**Status:** Released
+
+### Version Information
+
+```json
+{
+  "phyos": "5.0.170",
+  "phygrid-npm": "4.4.24"
+}
+```
+
+### Download Links
+
+- **amd64 installer:** [griddevice.5.0.170.amd64.img.xz](https://os.phygrid.com/griddevice.5.0.170.amd64.img.xz)
+- **dn74 installer:** [griddevice.5.0.170.arm64-dn74.img.xz](https://os.phygrid.com/griddevice.5.0.170.arm64-dn74.img.xz)
+- **VMware OVA:** [phyos.5.0.170.amd64.ova](https://os.phygrid.com/phyos.5.0.170.amd64.ova)
+- **Hyper-V image:** [phyos.5.0.170.amd64.vhdx.tar.gz](https://os.phygrid.com/phyos.5.0.170.amd64.vhdx.tar.gz)
+- **QCOW2 image:** [phyos.5.0.170.amd64.qcow2.tar.gz](https://os.phygrid.com/phyos.5.0.170.amd64.qcow2.tar.gz)
 
 ### New Features
 
-- **Multi-Tenant Isolation**: Enhanced security boundaries for multi-tenant deployments
-- **Custom Kernel Modules**: Support for loading custom kernel modules for specialized hardware
-- **Advanced Analytics**: On-device analytics processing with configurable data pipelines
-- **Remote Shell Access**: Secure SSH-based remote shell access via Phyhub Console
-
-### Improvements
-
-- Optimized disk I/O for edge databases and time-series data
-- Enhanced camera support with V4L2 and GStreamer integration
-- Improved application health monitoring with custom health check endpoints
-- Better handling of system resource constraints and graceful degradation
+- **Persistent System Logging:** physcreen-manager, phydevice, and system logs are now persistent across reboots
+- All logs accessible via journalctl command for improved debugging and monitoring
 
 ### Bug Fixes
 
-- Fixed issue where applications could not access GPU after system resume
-- Resolved container networking issues with custom bridge networks
-- Corrected peripheral event handling under high load
-- Fixed edge case in OTA update verification process
+None
 
 ---
 
-## PhyOS 5.8.2
+## PhyOS 5.0.165
 
-**Release Date:** April 1, 2024
+**Release Date:** July 14, 2025
+**Status:** Released
+
+### Version Information
+
+```json
+{
+  "phyos": "5.0.165",
+  "phygrid-npm": "4.4.15"
+}
+```
+
+### Download Links
+
+- **amd64 installer:** [griddevice.5.0.165.amd64.img.xz](https://os.phygrid.com/griddevice.5.0.165.amd64.img.xz)
+- **dn74 installer:** [griddevice.5.0.165.arm64-dn74.img.xz](https://os.phygrid.com/griddevice.5.0.165.arm64-dn74.img.xz)
+- **VMware OVA:** [phyos.5.0.165.amd64.ova](https://os.phygrid.com/phyos.5.0.165.amd64.ova)
+- **Hyper-V image:** [phyos.5.0.165.amd64.vhdx.tar.gz](https://os.phygrid.com/phyos.5.0.165.amd64.vhdx.tar.gz)
+- **QCOW2 image:** [phyos.5.0.165.amd64.qcow2.tar.gz](https://os.phygrid.com/phyos.5.0.165.amd64.qcow2.tar.gz)
 
 ### New Features
 
-- **Enhanced Failover**: Automatic failover to backup configuration on critical failures
-- **Peripheral Templates**: Pre-configured peripheral templates for common device types
-- **Custom Metrics**: Support for application-defined custom metrics and telemetry
-
-### Improvements
-
-- Reduced system overhead for idle applications
-- Enhanced Docker image pruning to reclaim disk space
-- Improved logging performance with asynchronous log processing
-- Better error messages and diagnostics throughout the system
+None
 
 ### Bug Fixes
 
-- Fixed timezone-related issues in scheduled tasks
-- Resolved rare deadlock in device registration process
-- Corrected USB peripheral enumeration on certain hardware
-- Fixed inconsistent behavior in signal publishing under network partitions
+- Device identification issue with duplicate serial numbers
 
 ---
 
-## PhyOS 5.8.0
+## PhyOS 5.0.164
 
-**Release Date:** March 1, 2024
+**Release Date:** July 9, 2025
+**Status:** Released
+
+### Version Information
+
+```json
+{
+  "phyos": "5.0.164",
+  "phygrid-npm": "4.4.14"
+}
+```
+
+### Download Links
+
+- **amd64 installer:** [griddevice.5.0.164.amd64.img.xz](https://os.phygrid.com/griddevice.5.0.164.amd64.img.xz)
+- **dn74 installer:** [griddevice.5.0.164.arm64-dn74.img.xz](https://os.phygrid.com/griddevice.5.0.164.arm64-dn74.img.xz)
+- **VMware OVA:** [phyos.5.0.164.amd64.ova](https://os.phygrid.com/phyos.5.0.164.amd64.ova)
+- **Hyper-V image:** [phyos.5.0.164.amd64.vhdx.tar.gz](https://os.phygrid.com/phyos.5.0.164.amd64.vhdx.tar.gz)
+- **QCOW2 image:** [phyos.5.0.164.amd64.qcow2.tar.gz](https://os.phygrid.com/phyos.5.0.164.amd64.qcow2.tar.gz)
 
 ### New Features
 
-- **Fleet Management**: Bulk operations for managing multiple devices simultaneously
-- **Edge-to-Edge Communication**: Direct device-to-device messaging without cloud relay
-- **Advanced Peripheral Control**: Fine-grained control over peripheral power management and sleep states
-- **Data Retention Policies**: Configurable local data retention with automatic cleanup
-
-### Improvements
-
-- Enhanced system stability under low-memory conditions
-- Improved compatibility with legacy peripheral devices
-- Optimized network bandwidth usage for signal streaming
-- Better handling of partial OTA update failures with automatic recovery
+- **Docker I/O images Support:** Supports docker io images hosted on docker.io
 
 ### Bug Fixes
 
-- Fixed issue where system time could drift on devices without RTC
-- Resolved application container restart loops under specific conditions
-- Corrected GPU memory allocation for multi-application scenarios
-- Fixed peripheral descriptor validation edge cases
+None
 
 ---
 
-## PhyOS 5.7.0
+## PhyOS 5.0.162
 
-**Release Date:** February 1, 2024
+**Release Date:** Not specified
+**Status:** Released
 
-### New Features
+### Version Information
 
-- **Edge AI Marketplace Integration**: One-command deployment of models from Hugging Face
-- **Advanced Logging Filters**: Runtime log filtering and aggregation capabilities
-- **Custom Network Routes**: Support for complex network routing scenarios
-- **Device Groups**: Logical grouping of devices for configuration management
+```json
+{
+  "phyos": "5.0.162",
+  "phygrid-npm": "4.4.14"
+}
+```
 
-### Improvements
+### Download Links
 
-- Enhanced boot reliability with fsck and filesystem recovery
-- Improved peripheral communication error handling and retry logic
-- Optimized CPU scheduling for real-time application workloads
-- Better memory usage reporting and profiling tools
-
-### Bug Fixes
-
-- Fixed race condition in network interface initialization
-- Resolved issue with large file transfers during OTA updates
-- Corrected signal timestamp accuracy in distributed deployments
-- Fixed edge case in container volume cleanup
-
----
-
-## PhyOS 5.6.0
-
-**Release Date:** January 15, 2024
+- **amd64 installer:** [griddevice.5.0.162.amd64.img.xz](https://os.phygrid.com/griddevice.5.0.162.amd64.img.xz)
 
 ### New Features
 
-- **GPU Sharing**: Multiple applications can share GPU resources with dynamic allocation
-- **Enhanced Debugging**: Built-in debugger support for containerized applications
-- **Network Bonding**: Link aggregation and failover for multiple network interfaces
-- **Custom Boot Splash**: Configurable boot splash screen and branding
-
-### Improvements
-
-- Faster application deployment through improved container extraction
-- Enhanced peripheral autodiscovery with more device types supported
-- Improved error recovery for transient network failures
-- Better support for high-resolution displays and multiple monitors
+- **Docker I/O images Support:** Supports docker io images hosted on docker.io
 
 ### Bug Fixes
 
-- Fixed memory usage reporting inaccuracies
-- Resolved container DNS resolution issues in certain network configurations
-- Corrected GPIO control timing issues
-- Fixed rare kernel panic on system shutdown
+None
 
 ---
 
@@ -264,9 +268,9 @@ PhyOS is Phygrid's edge operating system designed for running apps and AI at the
 
 For assistance with PhyOS or to report issues:
 
-- **Documentation**: [build.phygrid.com](https://build.phygrid.com)
-- **Support**: [hello@phygrid.com](mailto:hello@phygrid.com)
-- **Community**: Join our [Discord community](https://discord.gg/phygrid)
+- **Documentation:** [build.phygrid.com](https://build.phygrid.com)
+- **Support:** [hello@phygrid.com](mailto:hello@phygrid.com)
+- **Community:** Join our [Discord community](https://discord.gg/phygrid)
 
 ## Upgrade Instructions
 
@@ -280,4 +284,4 @@ phy device update <device-name>
 # Navigate to Devices → Select Device → System → Update OS
 ```
 
-**Note**: Always review the breaking changes section before upgrading production devices.
+**Note:** Always review the release notes and backup your configuration before upgrading production devices.
