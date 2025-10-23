@@ -1,4 +1,4 @@
-You're assisting with writing documentation for the **Phygrid Console**. Our goal is to produce **structured, high-quality, and consistent documentation**, aligned with the four-quadrant model outlined in `.cursor/rules`.
+You're assisting with writing documentation for the **PhyStack Console**. Our goal is to produce **structured, high-quality, and consistent documentation**, aligned with the four-quadrant model outlined in `.cursor/rules`.
 
 ### 🗂️ Document Classification
 
