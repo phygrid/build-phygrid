@@ -1,9 +1,9 @@
 module.exports = {
   siteMetadata: {
-    title: `Build Phygrid`,
-    description: `Learn how to use the Phygrid platform with tips, tricks, and user guides`,
-    author: `@phygrid`,
-    siteUrl: `https://build.phygrid.com`,
+    title: `Build PhyStack`,
+    description: `Learn how to use the PhyStack platform with tips, tricks, and user guides`,
+    author: `@phystack`,
+    siteUrl: `https://build.phystack.com`,
   },
   plugins: [
     `gatsby-plugin-image`,
@@ -53,7 +53,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Phygrid User Guides`,
+        name: `PhyStack developer documentation`,
         short_name: `Docs`,
         start_url: `/`,
         background_color: `#ffffff`,

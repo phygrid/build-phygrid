@@ -4,11 +4,11 @@ icon: 💻
 ---
 ## 💻 What Are Screen Apps?
 
-Screen Apps are web-based applications that run across multiple platforms, including PhyOS VMs and devices, Tizen devices, and modern browsers. They provide a graphical user interface, delivering user-facing experiences that function as control panels or client interfaces for interacting with the Phygrid services and connected devices in your ecosystem.
+Screen Apps are web-based applications that run across multiple platforms, including PhyOS VMs and devices, Tizen devices, and modern browsers. They provide a graphical user interface, delivering user-facing experiences that function as control panels or client interfaces for interacting with the PhyStack services and connected devices in your ecosystem.
 
 Just like edge apps, screen apps are:
 
-- Published and managed via your Phygrid tenant
+- Published and managed via your PhyStack tenant
 - Deployed and configured using the Console
 - Integrated with platform features, including:
   - App versioning
@@ -18,7 +18,7 @@ Just like edge apps, screen apps are:
 
 ## 🔧 Common Use Cases for Screen Apps
 
-Screen Apps are ideal for creating interactive user experiences and visual interfaces that connect to the Phygrid platform. Common applications include:
+Screen Apps are ideal for creating interactive user experiences and visual interfaces that connect to the PhyStack platform. Common applications include:
 
 - Digital signage and content displays
 - Interactive kiosks for customer engagement and self-service
@@ -31,23 +31,23 @@ Screen Apps are ideal for creating interactive user experiences and visual inter
 ## ⚙️ How Screen Apps Work
 
 - **Runtime:** Powered by modern browser engines across all supported platforms
-- **Deployment:** Hosted and delivered by Phygrid's app hosting service
+- **Deployment:** Hosted and delivered by PhyStack's app hosting service
 - **Flexible Stack:** Often built with React + TypeScript, though any modern web framework is supported
 - **Offline Support:** Apps and media assets work offline on compatible platforms
 
-Apps are tightly integrated into the Phygrid ecosystem, meaning:
+Apps are tightly integrated into the PhyStack ecosystem, meaning:
 
 - Updates and content management at scale through versioning
 - Event-driven UI updates using Signals and peripheral twins
 
 ## 🧰 Prerequisites
 
-Official Phygrid templates and examples use React with TypeScript, offering modern tooling, strong typing, and native SDK support. This is the stack we'll be working with throughout this tutorial.
+Official PhyStack templates and examples use React with TypeScript, offering modern tooling, strong typing, and native SDK support. This is the stack we'll be working with throughout this tutorial.
 
 Before you begin, make sure the following are set up and ready to go:
 
-### ✅ A Phygrid Tenant
-You'll need access to a Phygrid tenant. If you don't yet have one, please refer to the [Tenant Setup](/getting-started/tenant-setup/) guide.
+### ✅ A PhyStack Tenant
+You'll need access to a PhyStack tenant. If you don't yet have one, please refer to the [Tenant Setup](/getting-started/tenant-setup/) guide.
 
 ### ✅ Local Development Environment with PhyCLI Installed and Configured
 
@@ -77,9 +77,9 @@ The CLI will now:
 
 1. Pull the screen app boilerplate to your local machine
 3. Build the boilerplate React project
-4. Create and upload the app to your Phygrid tenant
+4. Create and upload the app to your PhyStack tenant
 
-Once complete, your app will be available in the Phygrid Console, ready to be installed and deployed to any capable device. We will cover this part later in the tutorial.
+Once complete, your app will be available in the PhyStack Console, ready to be installed and deployed to any capable device. We will cover this part later in the tutorial.
 
 You can explore your newly created project. In the directory with the project, you will find:
 
@@ -94,7 +94,7 @@ The `app.tsx` file demonstrates the usage of `@phystack/hub-client` package for 
 
 The initialization logic in this project is designed to work both locally and on devices:
 - **Local development**: Uses local settings from `settings/index.json` for testing
-- **Device deployment**: Connects to the Phygrid platform to receive real settings and establish communication 
+- **Device deployment**: Connects to the PhyStack platform to receive real settings and establish communication 
 
 The component also includes example initialization of Signals for event tracking. Signals are not covered in this tutorial, but you can learn more about them in our [dedicated Signals guide](/how-to/signals/).
 
@@ -132,7 +132,7 @@ Now that your app is ready, the next step is to create an installation and deplo
 
 ### 💻 Connect a browser device
 
-Browser devices provide a convenient way to test your screen app directly on your computer in an environment that simulates a real Phygrid device. This option is good for development and testing, but not intended for production deployments.
+Browser devices provide a convenient way to test your screen app directly on your computer in an environment that simulates a real PhyStack device. This option is good for development and testing, but not intended for production deployments.
 
 1. Navigate to the **Devices** tab on your Installation page
 2. Press the **Connect a device** button
@@ -210,7 +210,7 @@ Open `src/app.tsx` and update the code by adding an additional header element:
   return (
     <Container>
       <ProductInfo>
-        <h1>Hello Phygrid!</h1> // <-- added
+        <h1>Hello PhyStack!</h1> // <-- added
         <Logo src={logo} alt="logo" />
         <p>Product name: {productName}</p>
         <p>Product price: {productPrice}</p>
@@ -250,7 +250,7 @@ yarn pub
 
 ### 🧪 Test the New Version in Console
 
-1. Go back to your installation in the Phygrid Console
+1. Go back to your installation in the PhyStack Console
 2. Open the **Settings** tab and press **Edit settings**
 3. Change the value of "Product name"
 4. In the **Version** dropdown, select the latest version that you have pushed.
@@ -260,13 +260,13 @@ When you access the Settings tab of your installation, you'll see that the setti
 
 After a few moments, your app will be redeployed to connected devices with the new version.
 
-You should now see the newly added "Hello Phygrid!" heading and the updated product name from your settings on both the device screen and the connected browser window.
+You should now see the newly added "Hello PhyStack!" heading and the updated product name from your settings on both the device screen and the connected browser window.
 
 ## 🎉 Success!
 
 Your app is now running the updated version with modified code and updated settings.
 
-You've successfully gone from creation to deployment, iteration, and production publishing — all with full integration into the Phygrid platform.
+You've successfully gone from creation to deployment, iteration, and production publishing — all with full integration into the PhyStack platform.
 
 ### ✅ Checkpoint
 

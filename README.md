@@ -1,4 +1,4 @@
-# Phygrid Developer Documentation 🚀
+# PhyStack Developer Documentation 🚀
 
 The site is organized using a folder-based structure, with support for MDX files.
 
@@ -6,7 +6,7 @@ The site is organized using a folder-based structure, with support for MDX files
 
 ## Table of Contents
 
-- [Phygrid Developer Documentation 🚀](#phygrid-developer-documentation-)
+- [PhyStack Developer Documentation 🚀](#phystack-developer-documentation-)
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
   - [Project Structure](#project-structure)

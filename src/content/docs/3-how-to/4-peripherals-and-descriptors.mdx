@@ -5,7 +5,7 @@ icon: "Usb"
 
 ## 🔌 What Are Peripherals?
 
-**Peripherals** are a concept in the Phygrid platform for connecting and managing external hardware devices that are not directly integrated into the platform itself. Examples include cameras, card readers, barcode scanners, and printers.
+**Peripherals** are a concept in the PhyStack platform for connecting and managing external hardware devices that are not directly integrated into the platform itself. Examples include cameras, card readers, barcode scanners, and printers.
 
 Just like devices or apps, peripherals have their own **twins**, which are managed by apps running on platform-enabled devices. Using peripherals, developers can easily monitor, configure, and integrate all kinds of hardware as part of their solutions.
 
@@ -86,8 +86,8 @@ Creating descriptors is straightforward using PhyCLI. The process follows a simi
 
 Before you begin, make sure the following are set up and ready to go:
 
-#### ✅ A Phygrid Tenant
-You'll need access to a Phygrid tenant. If you don't yet have one, please refer to the [Tenant Setup](/getting-started/tenant-setup/) guide.
+#### ✅ A PhyStack Tenant
+You'll need access to a PhyStack tenant. If you don't yet have one, please refer to the [Tenant Setup](/getting-started/tenant-setup/) guide.
 
 #### ✅ Local Development Environment with PhyCLI Installed and Configured
 
@@ -208,7 +208,7 @@ During the build process, `schema.ts` is transformed into:
 - `schema.json`: a standard JSON Schema defining the shape of your descriptor's properties, actions, and events
 - `meta-schema.json`: additional metadata that enables advanced UI widgets and form behaviors
 
-The Phygrid Console uses both files to render dynamic configuration forms with custom components and widgets.
+The PhyStack Console uses both files to render dynamic configuration forms with custom components and widgets.
 
 The descriptor schema is also used to validate available actions and events and their payloads, and enhances developer experience by providing TypeScript typing when you work with peripherals during development of your apps. 
 
@@ -310,7 +310,7 @@ peripheralInstance.onUpdateDesired((desiredProperties) => {
 
 This code demonstrates the peripheral lifecycle:
 
-1. **Retrieves existing peripheral twins** for this app instance using the PhyHub client (part of Phygrid SDKs). An app instance represents an installation deployed to a specific device.
+1. **Retrieves existing peripheral twins** for this app instance using the PhyHub client (part of PhyStack SDKs). An app instance represents an installation deployed to a specific device.
 2. **Defines a hardcoded peripheral hardware ID** that we'll use for this guide
 3. **Checks for an existing twin** for this peripheral using the unique hardware ID
 4. **Creates a new peripheral twin** if one isn't found
@@ -320,7 +320,7 @@ This code demonstrates the peripheral lifecycle:
 
 Let's explore the key concepts demonstrated in this example, focusing on the `createPeripheralTwin` function parameters:
 
-**Peripheral Name** — A human-readable label used to easily identify the peripheral, particularly in the Phygrid Console interface.
+**Peripheral Name** — A human-readable label used to easily identify the peripheral, particularly in the PhyStack Console interface.
 
 **Peripheral Hardware ID** — Serves as the unique identifier for the peripheral. In real-world scenarios, this would typically be a serial number, MAC address, or other unique device identifier. Each hardware ID must be unique within a single app instance installation. 
 
@@ -340,7 +340,7 @@ After you've updated your code, deploy your app to a device to test the peripher
 
 > **Note:** If you need guidance on deploying a new app version to your device or other steps in this section, refer to the [Build your first edge app](/tutorials/build-your-first-edge-app/) tutorial.
 
-Once you've successfully deployed the latest code to your device and confirmed it's running the new version, navigate to your tenant in the Phygrid Console.
+Once you've successfully deployed the latest code to your device and confirmed it's running the new version, navigate to your tenant in the PhyStack Console.
 
 From the sidebar menu, navigate to **Operations → Peripherals**.
 

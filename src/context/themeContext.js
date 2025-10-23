@@ -7,7 +7,7 @@ const themeConfig = {
   algorithm: theme.darkAlgorithm,
   cssVar: { key: "phygrid" },
   token: {
-    colorPrimary: "#00b140", // Phygrid Matrix Green
+    colorPrimary: "#00b140", // PhyStack Matrix Green
     colorLink: "#00b140",
     fontFamily: "'IBM Plex Mono', monospace",
     fontWeightStrong: 500,
