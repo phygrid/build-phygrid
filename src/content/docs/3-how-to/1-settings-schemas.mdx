@@ -11,9 +11,9 @@ used within an application—defining fields,
 their types, constraints (like required fields or value ranges),
 and how the data should be structured.
 
-**Settings** can be consumed by all types of Phygrid applications during runtime, for example to perform relevant business logic or establish connectivity to other solution components. 
+**Settings** can be consumed by all types of PhyStack applications during runtime, for example to perform relevant business logic or establish connectivity to other solution components. 
 
-Settings values are configured through the Phygrid Console installation page. PhyCLI includes starter settings schemas in all new app projects.
+Settings values are configured through the PhyStack Console installation page. PhyCLI includes starter settings schemas in all new app projects.
 
 After completing this guide, you should understand:
 
@@ -26,7 +26,7 @@ After completing this guide, you should understand:
 
 The Settings Schema serves multiple purposes:
 
-- **Settings Form:** The Phygrid Console uses this schema to generate UI forms that match your defined settings structure, enabling effortless configuration management across all your applications.
+- **Settings Form:** The PhyStack Console uses this schema to generate UI forms that match your defined settings structure, enabling effortless configuration management across all your applications.
 - **Validation:** Ensures that the configuration entered by users is valid and complete.
 - **Consistency:** Maintains consistency across different parts of the application that rely on settings.
 
@@ -79,7 +79,7 @@ is automatically converted into two files by PhyCLI:
 - `schema.json`: a standard JSON Schema defining the shape of your app's settings
 - `meta-schema.json`: additional metadata that enables advanced UI widgets and form behaviors
 
-The Phygrid Console uses both files to render dynamic configuration forms with custom components and widgets.
+The PhyStack Console uses both files to render dynamic configuration forms with custom components and widgets.
 
 The example interface above generates the following output:
 
@@ -116,13 +116,13 @@ The example interface above generates the following output:
 
 ### 💻 Settings Usage
 
-You configure settings on your app's installation page in the Phygrid Console. When you modify and save installation settings, the platform creates a new build with those settings and deploys it to connected devices. 
+You configure settings on your app's installation page in the PhyStack Console. When you modify and save installation settings, the platform creates a new build with those settings and deploys it to connected devices. 
 
-In Phygrid apps, you access settings using the `@phystack/hub-client` package. When an installation is deployed to a device, settings values are delivered to devices through twins, which the Hub Client then makes available to your app code.
+In PhyStack apps, you access settings using the `@phystack/hub-client` package. When an installation is deployed to a device, settings values are delivered to devices through twins, which the Hub Client then makes available to your app code.
 
 ## 🛠️ How to Define a Settings Schema
 
-All Phygrid boilerplate projects include a settings schema definition by default.
+All PhyStack boilerplate projects include a settings schema definition by default.
 When you create a new app using the CLI, you'll find a `schema.ts` file in the
 `src/` directory that defines your app's configuration structure.
 
@@ -267,7 +267,7 @@ Once your settings schema is updated, it's time to publish a new app version.
 
 > **Note:** If you need more information about the steps above, refer to the [Build your first screen app](/tutorials/build-your-first-screen-app/#-publish-an-updated-version) tutorial.
 
-Navigate to your app's installation settings page in the Phygrid Console (or [create one](/tutorials/build-your-first-screen-app/#-create-an-installation) if you don't have one yet).
+Navigate to your app's installation settings page in the PhyStack Console (or [create one](/tutorials/build-your-first-screen-app/#-create-an-installation) if you don't have one yet).
 
 Make sure to select the latest app version in the installation settings to see your defined settings schema rendered as a form:
 
@@ -288,7 +288,7 @@ Settings can be overridden at different levels to provide flexibility in configu
 - **Device Level:** Settings can be overridden for specific devices, allowing device-specific configurations
 - **Space Level:** Settings can be overridden for specific spaces, enabling space-specific customizations
 
-When your app is deployed to a Phygrid device, the platform automatically merges global, device, and space-level settings overrides to provide the correct configuration for that specific deployment.
+When your app is deployed to a PhyStack device, the platform automatically merges global, device, and space-level settings overrides to provide the correct configuration for that specific deployment.
 
 > **Note:** For more information about settings overrides, see the [learn.phygrid.com](https://learn.phygrid.com) documentation.
 
@@ -1295,7 +1295,7 @@ export default interface Settings {
 
 ### 🔧 Twin/Peripheral Picker
 
-The twin picker allows users to select any twin within their tenant, enabling powerful integration scenarios between different components in your Phygrid environment.
+The twin picker allows users to select any twin within their tenant, enabling powerful integration scenarios between different components in your PhyStack environment.
 
 A common use case is selecting peripheral twins such as barcode scanners, printers, or other hardware devices connected to your system.
 
@@ -1590,11 +1590,11 @@ export default interface Settings {
 
 ### 📋 Queue Picker
 
-> **Note:** The queue picker is part of Phygrid's Queue Management solution. For more information about queue system functionality, visit [learn.phygrid.com](https://learn.phygrid.com).
+> **Note:** The queue picker is part of PhyStack's Queue Management solution. For more information about queue system functionality, visit [learn.phygrid.com](https://learn.phygrid.com).
 
 The queue picker allows users to select a specific queue from their tenant, enabling access to queue-specific data and customization options.
 
-This picker is designed for applications that integrate with Phygrid's visitor management ecosystem, including Queue Management and Appointment Booking solutions.
+This picker is designed for applications that integrate with PhyStack's visitor management ecosystem, including Queue Management and Appointment Booking solutions.
 
 **`schema.ts`**
 

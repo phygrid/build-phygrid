@@ -3,31 +3,31 @@ title: "Signals"
 icon: "PaperPlaneTilt"
 ---
 
-This comprehensive guide explains how to implement and utilize signals in the Phygrid platform to collect data from interaction points, track user behavior,
+This comprehensive guide explains how to implement and utilize signals in the PhyStack platform to collect data from interaction points, track user behavior,
 and monitor application performance. Signals provide real-time comprehensive analytics and monitoring capabilities.
 
 ## **📊 What Are Signals**
 
-Signals are the foundation of data collection, alerts and analytics in the Phygrid platform. They enable insights into user interactions,
-application performance, and custom analytics. The data collected through signals is processed by the Phygrid platform and presented in the Console's analytics dashboards.
+Signals are the foundation of data collection, alerts and analytics in the PhyStack platform. They enable insights into user interactions,
+application performance, and custom analytics. The data collected through signals is processed by the PhyStack platform and presented in the Console's analytics dashboards.
 
 ## **🚀 Getting Started with Signals**
 
 The `@phystack/hub-client` package provides a comprehensive and robust API for initializing and utilizing signals in your applications.
 This powerful toolkit enables you to seamlessly integrate analytics, user behavior tracking, and application monitoring into your
-Phygrid applications. This section provides a detailed walkthrough of the setup process and demonstrates proven implementation
+PhyStack applications. This section provides a detailed walkthrough of the setup process and demonstrates proven implementation
 patterns used in production environments.
 
 ### **📱 Signals With Screen App Example**
 
 If you don't have a screen app project yet, you can create one by following the [Build your first screen app](/tutorials/build-your-first-screen-app/) tutorial.
 
-Signals are automatically pre-configured and ready to use when you create applications using the Phygrid
+Signals are automatically pre-configured and ready to use when you create applications using the PhyStack
 screen app template, providing immediate out-of-the-box analytics
 capabilities. The hub-client library exposes a dedicated `initializeSignals()` method that handles the complete setup
 process.
 
-When you create a new application using the Phygrid template, you'll find the signals initialization process already
+When you create a new application using the PhyStack template, you'll find the signals initialization process already
 implemented in your main `App.tsx` component. This initialization pattern ensures that signals are properly configured
 before your application begins collecting user interaction data and performance metrics:
 
@@ -55,7 +55,7 @@ signals.sendCartAdd({ productId: "TEMPORARY-PRODUCT-ID-123", quantity: 1 })
 
 ### **📈 Advanced Initialization Process**
 
-When implementing signals within a screen app or edge app deployed on a Phygrid device running on PhyOS, all required initialization parameters are automatically retrieved from the device and app configuration. For scenarios where signals are implemented in standalone scripts or applications running outside of the Phygrid device environment, manual parameter configuration is required to establish proper signal initialization.
+When implementing signals within a screen app or edge app deployed on a PhyStack device running on PhyOS, all required initialization parameters are automatically retrieved from the device and app configuration. For scenarios where signals are implemented in standalone scripts or applications running outside of the PhyStack device environment, manual parameter configuration is required to establish proper signal initialization.
 
 ```typescript
 import { connectPhyClient } from "@phystack/hub-client"
@@ -178,7 +178,7 @@ const signals = await client.initializeSignals(initParams)
 
 ## **📡 Signal Types**
 
-The Phygrid platform supports three distinct types of signals, each serving specific purposes and providing different levels of insight into your application's performance and user behavior.
+The PhyStack platform supports three distinct types of signals, each serving specific purposes and providing different levels of insight into your application's performance and user behavior.
 
 #### **1. Event Signals**
 
@@ -280,7 +280,7 @@ Common issues and solutions for signal implementation and transmission. For more
 
 **Solutions:**
 
-- Verify network connectivity to Phygrid services
+- Verify network connectivity to PhyStack services
 - Ensure proper initialization sequence
 - Review firewall and proxy configurations
 
@@ -318,7 +318,7 @@ Common issues and solutions for signal implementation and transmission. For more
 
 ## ✅ **Checkpoint**
 
-You now have a comprehensive understanding of signals in the Phygrid platform. This guide provides you with:
+You now have a comprehensive understanding of signals in the PhyStack platform. This guide provides you with:
 
 **📊 Signal Fundamentals:**
 
@@ -343,7 +343,7 @@ You now have a comprehensive understanding of signals in the Phygrid platform. T
 - **Troubleshooting procedures** - Common issues and their solutions
 - **Best practices** - Industry-standard approaches for signal implementation
 
-This signals guide empowers you to implement comprehensive analytics and monitoring capabilities in your Phygrid applications, enabling data-driven insights and improved user experiences.
+This signals guide empowers you to implement comprehensive analytics and monitoring capabilities in your PhyStack applications, enabling data-driven insights and improved user experiences.
 
 ## 🔄 Next Steps
 

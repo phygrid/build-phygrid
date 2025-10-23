@@ -5,9 +5,9 @@ import { Global, css } from "@emotion/react"
 // Our shared theme configuration
 const themeConfig = {
   algorithm: theme.darkAlgorithm,
-  cssVar: { key: "phygrid" },
+  cssVar: { key: "phystack" },
   token: {
-    colorPrimary: "#00b140", // Phygrid Matrix Green
+    colorPrimary: "#00b140", // PhyStack Matrix Green
     colorLink: "#00b140",
     fontFamily: "'IBM Plex Mono', monospace",
     fontWeightStrong: 500,

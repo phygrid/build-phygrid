@@ -53,7 +53,7 @@ const Header = ({ siteTitle, onToggleSidebar, sidebarCollapsed }) => {
 export default Header
 
 const Logo = styled.img`
-  height: 40px;
+  height: var(--ant-font-size);
   margin: 0;
 `
 

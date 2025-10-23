@@ -5,11 +5,11 @@ icon: "Cpu"
 
 ## 🧠 What Are Edge Apps?
 
-Edge apps are a type of application that runs on Phygrid-connected devices without a graphical user interface. These apps execute locally in the field as fully managed Phygrid containers, providing compute power and logic right where it's needed — at the edge.
+Edge apps are a type of application that runs on PhyStack-connected devices without a graphical user interface. These apps execute locally in the field as fully managed PhyStack containers, providing compute power and logic right where it's needed — at the edge.
 
 Edge apps run on PhyOS-enabled devices. Just like screen apps, edge apps are:
 
-- Published and managed via your Phygrid tenant
+- Published and managed via your PhyStack tenant
 - Deployed and configured using the Console
 - Integrated with platform features, including:
   - App versioning
@@ -31,16 +31,16 @@ Edge apps are ideal for tasks that require local processing or interaction with 
 - **Runtime:** Powered by Docker — each edge app runs inside an isolated container on the device.
 - **Language Flexibility:** You can build edge apps in any language that runs in a Docker container.
 
-Whether you're building hardware integrations, deploying AI workloads, or processing data locally, edge apps give you full control at the device level — all while being securely managed by the Phygrid platform.
+Whether you're building hardware integrations, deploying AI workloads, or processing data locally, edge apps give you full control at the device level — all while being securely managed by the PhyStack platform.
 
 ## 🧰 Prerequisites
 
-Official Phygrid templates and examples use Node with TypeScript, offering modern tooling, strong typing, and native SDK support. This is the stack we'll be working with throughout this tutorial.
+Official PhyStack templates and examples use Node with TypeScript, offering modern tooling, strong typing, and native SDK support. This is the stack we'll be working with throughout this tutorial.
 
 Before you begin, make sure the following are set up and ready to go:
 
-### ✅ A Phygrid Tenant
-You'll need access to a Phygrid tenant. If you don't yet have one, please refer to the [Tenant Setup](/getting-started/tenant-setup/) guide.
+### ✅ A PhyStack Tenant
+You'll need access to a PhyStack tenant. If you don't yet have one, please refer to the [Tenant Setup](/getting-started/tenant-setup/) guide.
 
 ### ✅ Local Development Environment with PhyCLI Installed and Configured
 
@@ -57,9 +57,9 @@ For the purpose of this tutorial, you'll need a Docker.io account to publish you
 
 ### ✅ Docker Installed & Configured
 
-Ensure you have Docker Desktop installed and configured for Phygrid.
+Ensure you have Docker Desktop installed and configured for PhyStack.
 
-You must enable the **containerd image store**, a requirement for proper edge apps image handling with Phygrid.
+You must enable the **containerd image store**, a requirement for proper edge apps image handling with PhyStack.
 
  If you haven't set this up yet, refer to the Docker configuration section in the [Dev Environment Setup](/getting-started/dev-environment-setup/#3-configure-docker-for-edge-apps) guide.
 
@@ -129,9 +129,9 @@ With both sets of credentials in place, the CLI will now:
 1. Pull the edge app boilerplate to your local machine
 2. Build the app image using Docker
 3. Push the image to your container registry
-4. Create and upload the app to your Phygrid tenant
+4. Create and upload the app to your PhyStack tenant
 
-Once complete, your app will be available in the Phygrid Console, ready to be installed and deployed to any edge capable device. We will cover this part later in the tutorial.
+Once complete, your app will be available in the PhyStack Console, ready to be installed and deployed to any edge capable device. We will cover this part later in the tutorial.
 
 You can explore your newly created project. In the directory with the project, you will find a containerized Node TypeScript application, including:
 
@@ -397,7 +397,7 @@ yarn pub
 
 ### 🧪 Test the New Version in Console
 
-1. Go back to your installation in the Phygrid Console
+1. Go back to your installation in the PhyStack Console
 2. Open the **Settings** tab and press **Edit settings**
 3. Change the value of "A test setting" to "New setting value"
 4. In the **Version** dropdown, select **0.2.0**
@@ -413,7 +413,7 @@ You can connect to one of your devices using the same steps as before and verify
 
 Your app is now running the updated version with modified code and updated settings.
 
-You've successfully gone from creation to deployment, iteration, and production publishing — all with full integration into the Phygrid platform.
+You've successfully gone from creation to deployment, iteration, and production publishing — all with full integration into the PhyStack platform.
 
 ### ✅ Checkpoint
 

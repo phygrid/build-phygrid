@@ -5,12 +5,12 @@ icon: "Basket"
 
 ## 🛍️ What Are Products?
 
-In Phygrid, Products represent the core entities for showcasing and managing inventory.
+In PhyStack, Products represent the core entities for showcasing and managing inventory.
 Each product serves as a detailed, structured data object that includes attributes such as 
 multilingual names and descriptions, product types, pricing, availability across physical 
 locations (spaces), and configuration variants like color or size.
 
-Products are centrally maintained through the Phygrid Console and are designed to integrate
+Products are centrally maintained through the PhyStack Console and are designed to integrate
 seamlessly into Screen Apps and Edge Apps, enabling rich, dynamic, and data-driven customer experiences.
 
 **Each product includes:**
@@ -35,7 +35,7 @@ seamlessly into Screen Apps and Edge Apps, enabling rich, dynamic, and data-driv
 
 ## 🚀 Integration Options
 
-There are several methods to integrate products into your Phygrid ecosystem, 
+There are several methods to integrate products into your PhyStack ecosystem, 
 each suited for different use cases and technical requirements.
 
 ### API-Based Integration
@@ -113,7 +113,7 @@ yarn add @phystack/products-react
 
 Before diving into code, let's create a sample product to work with:
 
-1. Navigate to **Content → Products** in the Phygrid Console
+1. Navigate to **Content → Products** in the PhyStack Console
 2. Click **New Product** in the Products tab
 3. Fill in the basic information:
    - **Title:** "Sample Product"
@@ -131,7 +131,7 @@ Before diving into code, let's create a sample product to work with:
 
 ### Create an Example Product Using Products Push API
 
-1. Navigate to **Apps → Developer → Access tokens** in the Phygrid Console
+1. Navigate to **Apps → Developer → Access tokens** in the PhyStack Console
 2. Create a token that can be used to authorize the API
 3. Using Postman:
    - **API URL:** `https://api.phygrid.com/regions/<Data-Residency>/products/v1/tenants/<tenant-Id>/<environment>/products-push`

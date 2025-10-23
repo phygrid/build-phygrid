@@ -116,7 +116,7 @@ const AppLayout = ({ children }) => {
       </Layout>
       <StyledFooter>
         <p>
-          © {new Date().getFullYear()} &middot; Phygrid. An{" "}
+          © {new Date().getFullYear()} &middot; PhyStack. An{" "}
           <a href="https://ombori.com">Ombori</a> company
         </p>
       </StyledFooter>

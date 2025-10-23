@@ -3,18 +3,18 @@ title: "Dev Environment Setup"
 icon: "Laptop"
 ---
 
-Your local development environment is where you'll build, test, and publish Phygrid apps using the Phygrid CLI.
+Your local development environment is where you'll build, test, and publish PhyStack apps using the PhyStack CLI.
 
-Once configured, you'll be able to create edge apps, screen apps, and manage other aspects of your Phygrid workflow from your terminal.
+Once configured, you'll be able to create edge apps, screen apps, and manage other aspects of your PhyStack workflow from your terminal.
 
 ## 🧰 Prerequisites
 
-### ✅ A Phygrid Tenant
-You'll need access to a Phygrid tenant. If you don't yet have one, please refer to the [Tenant Setup](../tenant-setup) guide.
+### ✅ A PhyStack Tenant
+You'll need access to a PhyStack tenant. If you don't yet have one, please refer to the [Tenant Setup](../tenant-setup) guide.
 
 ### ✅ Software Requirements
 
-Before installing the Phygrid CLI, make sure your development machine meets these requirements:
+Before installing the PhyStack CLI, make sure your development machine meets these requirements:
 
 #### Supported Operating Systems
 - **macOS 15.4+** 
@@ -32,7 +32,7 @@ If you plan to build edge apps, you'll also need:
 
 ## 🛠 Step-by-Step: Environment Setup
 
-### 1. Install the Phygrid CLI
+### 1. Install the PhyStack CLI
 
 Install the CLI globally using npm:
 
@@ -50,7 +50,7 @@ If you see the CLI version printed without errors, you're ready to proceed.
 
 ### 2. Authenticate
 
-Connect your CLI to your Phygrid tenant:
+Connect your CLI to your PhyStack tenant:
 
 ```bash
 phy login
@@ -58,10 +58,10 @@ phy login
 
 This command will:
 - Open your default web browser
-- Prompt you to authenticate with your Phygrid account  
+- Prompt you to authenticate with your PhyStack account  
 - Ask you to confirm the login from your device
 
-If you're already logged into your Phygrid tenant in your browser, you can confirm the operation without re-entering credentials.
+If you're already logged into your PhyStack tenant in your browser, you can confirm the operation without re-entering credentials.
 
 #### 🔐 Headless Authentication
 
@@ -86,7 +86,7 @@ If you see your tenant's name displayed without any errors, your authentication 
 
 ### 3. Configure Docker (For Edge Apps)
 
-You must enable the **containerd image store**, a requirement for proper edge apps image handling with Phygrid.
+You must enable the **containerd image store**, a requirement for proper edge apps image handling with PhyStack.
 
 To do this:
 
@@ -101,7 +101,7 @@ To do this:
 
 After completing these steps, you should have:
 
-- Phygrid CLI installed, authenticated and working
+- PhyStack CLI installed, authenticated and working
 - Docker configured (if building edge apps)
 
 ## 🔄 Next Steps

@@ -5,7 +5,7 @@ icon: "Terminal"
 
 # PhyCLI
 
-**PhyCLI** (`phy`) is the official command-line tool for Phygrid development. It helps you create, build, deploy, and manage applications on the Phygrid platform.
+**PhyCLI** (`phy`) is the official command-line tool for PhyStack development. It helps you create, build, deploy, and manage applications on the PhyStack platform.
 
 ## Installation
 
@@ -39,7 +39,7 @@ phy --version
 
 #### `phy login`
 
-Authenticate with Phygrid. Opens your browser to complete the login process.
+Authenticate with PhyStack. Opens your browser to complete the login process.
 
 ```bash
 phy login [options]
@@ -173,7 +173,7 @@ phy tenant select --clear
 
 ## Applications
 
-The `phy app` command group allows you to create, build, deploy, and manage Phygrid applications.
+The `phy app` command group allows you to create, build, deploy, and manage PhyStack applications.
 
 **System Requirements:**
 - Node.js 16+ for application development
@@ -182,7 +182,7 @@ The `phy app` command group allows you to create, build, deploy, and manage Phyg
 
 #### `phy app create`
 
-Create a new Phygrid application. This command will guide you through the setup process.
+Create a new PhyStack application. This command will guide you through the setup process.
 
 ```bash
 phy app create [name] [options]
@@ -301,13 +301,13 @@ Description updated
 - Creates a sample installation for testing
 - Applies default app settings and schema
 - Installs dependencies and builds the project
-- Publishes the app to the Phygrid marketplace
+- Publishes the app to the PhyStack marketplace
 - Uploads screenshots and description
 
 **Post-Creation Flow:**
 1. **App Registration**: App is registered in your organization's private marketplace
 2. **Installation Creation**: A sample installation is created for testing
-3. **Console Integration**: App appears in Phygrid Console under Apps → Developer section
+3. **Console Integration**: App appears in PhyStack Console under Apps → Developer section
 4. **Device Connection**: You can connect devices to the installation for testing
 5. **Build & Publish**: App is automatically built and published to the marketplace
 
@@ -397,7 +397,7 @@ phy app deploy mydevice
 
 #### `phy app publish`
 
-Publish your application to the Phygrid marketplace.
+Publish your application to the PhyStack marketplace.
 
 ```bash
 phy app publish [app-id] [options]
@@ -413,7 +413,7 @@ phy app publish [app-id] [options]
 
 **Publishing Process:**
 - Validates application package
-- Uploads to Phygrid marketplace
+- Uploads to PhyStack marketplace
 - Creates new version entry
 - Makes application available for installation
 
@@ -490,7 +490,7 @@ phy app list -phyhub
 
 #### `phy app import`
 
-Import an existing HTML project as a Phygrid application.
+Import an existing HTML project as a PhyStack application.
 
 ```bash
 phy app import [source] [output] [options]
@@ -506,7 +506,7 @@ phy app import [source] [output] [options]
 
 **Import Process:**
 - Analyzes HTML project structure
-- Converts to Phygrid application format
+- Converts to PhyStack application format
 - Adds necessary configuration files
 - Creates deployable package
 
@@ -909,7 +909,7 @@ phy vm remove dev-vm --force
 The `phy dev` command group provides developer tools and emulation capabilities for device development and testing.
 
 **System Requirements:**
-- Active Phygrid account with device access
+- Active PhyStack account with device access
 - Network connectivity to PhyHub
 - Device must be online and accessible
 
@@ -1301,7 +1301,7 @@ phy flash [image] [options]
 ```
 
 **Arguments:**
-- `image` - Image filename (optional, fetches latest released version from Phygrid if not provided)
+- `image` - Image filename (optional, fetches latest released version from PhyStack if not provided)
 
 **Options:**
 - `--raw` - Show all disks including system disks (use with caution)
@@ -1650,7 +1650,7 @@ phy app create myapp
 ## Flashing PhyOS
 
 ```bash
-# 1. Flash latest PhyOS image (fetches from Phygrid)
+# 1. Flash latest PhyOS image (fetches from PhyStack)
 phy flash
 
 # 2. Flash specific image
